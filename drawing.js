@@ -10,6 +10,7 @@ let drawingsBySlide = {}; // Store drawings per slide: { slideIndex: [paths] }
 let drawingSVG = null;
 let whiteoutSVG = null;
 let lastEKeyTime = 0;
+let scrollListenerAttached = false;
 const DOUBLE_CLICK_THRESHOLD = 300; // milliseconds
 // Note: lastMouseX and lastMouseY are declared in app.js
 
@@ -77,28 +78,72 @@ function restoreSlideDrawings(slideIndex) {
     });
 }
 
+// Sync SVG positions with previewContent scroll
+function syncSVGScroll() {
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return;
+    const scrollTop = previewContent.scrollTop;
+    const topOffset = previewContent.offsetTop;
+    const yPos = topOffset - scrollTop;
+    if (drawingSVG) {
+        drawingSVG.style.top = yPos + 'px';
+    }
+    if (whiteoutSVG) {
+        whiteoutSVG.style.top = yPos + 'px';
+    }
+}
+
 // Initialize drawing canvas
 function initDrawingCanvas() {
     const shareArea = document.querySelector('.share-area');
     const previewContent = document.getElementById('previewContent');
     if (!shareArea || !previewContent) return;
 
+    // Wait for images to load before getting dimensions
+    const images = previewContent.querySelectorAll('img');
+    const imagesLoaded = Array.from(images).every(img => img.complete);
+
+    if (!imagesLoaded) {
+        Promise.all(
+            Array.from(images)
+                .filter(img => !img.complete)
+                .map(img => new Promise(resolve => {
+                    img.addEventListener('load', resolve, { once: true });
+                    img.addEventListener('error', resolve, { once: true });
+                }))
+        ).then(() => {
+            setTimeout(() => initDrawingCanvas(), 50);
+        });
+        return;
+    }
+
+    // Get previewContent dimensions and position
+    const contentHeight = previewContent.scrollHeight;
+    const contentWidth = previewContent.clientWidth;
+    const topOffset = previewContent.offsetTop;
+    const leftOffset = previewContent.offsetLeft;
+
     // Create regular drawing SVG (below text)
     if (!drawingSVG) {
         drawingSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         drawingSVG.id = 'drawingSVG';
         drawingSVG.style.position = 'absolute';
-        drawingSVG.style.top = '0';
-        drawingSVG.style.left = '0';
-        drawingSVG.style.width = shareArea.clientWidth + 'px';
-        drawingSVG.style.height = shareArea.clientHeight + 'px';
+        drawingSVG.style.top = topOffset + 'px';
+        drawingSVG.style.left = leftOffset + 'px';
+        drawingSVG.style.width = contentWidth + 'px';
+        drawingSVG.style.height = contentHeight + 'px';
         drawingSVG.style.pointerEvents = 'auto';
         drawingSVG.style.zIndex = '5';
         drawingSVG.style.transition = 'opacity 0.2s ease-out';
         drawingSVG.style.opacity = '1';
         drawingSVG.style.display = 'none';
-
-        previewContent.appendChild(drawingSVG);
+        drawingSVG.style.overflow = 'visible';
+        shareArea.appendChild(drawingSVG);
+    } else {
+        drawingSVG.style.top = topOffset + 'px';
+        drawingSVG.style.left = leftOffset + 'px';
+        drawingSVG.style.width = contentWidth + 'px';
+        drawingSVG.style.height = contentHeight + 'px';
     }
 
     // Create whiteout SVG (above text)
@@ -106,31 +151,32 @@ function initDrawingCanvas() {
         whiteoutSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         whiteoutSVG.id = 'whiteoutSVG';
         whiteoutSVG.style.position = 'absolute';
-        whiteoutSVG.style.top = '0';
-        whiteoutSVG.style.left = '0';
-        whiteoutSVG.style.width = shareArea.clientWidth + 'px';
-        whiteoutSVG.style.height = shareArea.clientHeight + 'px';
+        whiteoutSVG.style.top = topOffset + 'px';
+        whiteoutSVG.style.left = leftOffset + 'px';
+        whiteoutSVG.style.width = contentWidth + 'px';
+        whiteoutSVG.style.height = contentHeight + 'px';
         whiteoutSVG.style.pointerEvents = 'auto';
         whiteoutSVG.style.zIndex = '200';
         whiteoutSVG.style.display = 'none';
         whiteoutSVG.style.transition = 'opacity 0.2s ease-out';
         whiteoutSVG.style.opacity = '1';
-
-        previewContent.appendChild(whiteoutSVG);
+        whiteoutSVG.style.overflow = 'visible';
+        shareArea.appendChild(whiteoutSVG);
+    } else {
+        whiteoutSVG.style.top = topOffset + 'px';
+        whiteoutSVG.style.left = leftOffset + 'px';
+        whiteoutSVG.style.width = contentWidth + 'px';
+        whiteoutSVG.style.height = contentHeight + 'px';
     }
 
-    // Update SVG dimensions when share area changes
-    const resizeObserver = new ResizeObserver(() => {
-        if (drawingSVG && shareArea) {
-            drawingSVG.style.width = shareArea.clientWidth + 'px';
-            drawingSVG.style.height = shareArea.clientHeight + 'px';
-        }
-        if (whiteoutSVG && shareArea) {
-            whiteoutSVG.style.width = shareArea.clientWidth + 'px';
-            whiteoutSVG.style.height = shareArea.clientHeight + 'px';
-        }
-    });
-    resizeObserver.observe(shareArea);
+    // Listen to previewContent scroll to keep SVGs aligned with content
+    if (!scrollListenerAttached) {
+        previewContent.addEventListener('scroll', syncSVGScroll);
+        scrollListenerAttached = true;
+    }
+
+    // Sync immediately in case already scrolled
+    syncSVGScroll();
 }
 
 // Get tool settings
@@ -161,18 +207,15 @@ function getToolSettings(tool) {
 
 // Convert screen coordinates to SVG coordinates
 function getSVGCoordinates(e) {
-    const shareArea = document.querySelector('.share-area');
-    if (!shareArea) return { x: e.clientX, y: e.clientY };
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return { x: e.clientX, y: e.clientY };
 
-    // Get scroll position of share area
-    const scrollTop = shareArea.scrollTop;
-    const scrollLeft = shareArea.scrollLeft;
-
-    // Get share area's bounding rect
-    const rect = shareArea.getBoundingClientRect();
+    // Use previewContent's bounding rect (this is the actual scroll container)
+    const rect = previewContent.getBoundingClientRect();
+    const scrollTop = previewContent.scrollTop;
 
     return {
-        x: e.clientX - rect.left + scrollLeft,
+        x: e.clientX - rect.left,
         y: e.clientY - rect.top + scrollTop
     };
 }
