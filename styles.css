@@ -1,0 +1,1583 @@
+/* ============================================
+   Custom Branding & Typography
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --ui-blue: #01413e;
+    --primary: #01413e;
+    --accent: #4a674c;
+    --neutral-light: #f0efed;
+    --neutral-medium: #D9D1C8;
+    --neutral-dark: #8B8680;
+    --text-dark: #2A2A2A;
+    --text-light: #5A5A5A;
+    --white: #FFFFFF;
+    
+    /* Spacing (reduced from Notion defaults) */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+    --spacing-2xl: 32px;
+    
+    /* Line height (tighter) */
+    --line-height-heading: 1.3;
+    --line-height-body: 1.5;
+
+    /* Typography CSS Variables (dynamically updated by settings) */
+    --font-family-custom: 'Poppins', sans-serif;
+    --font-size-h1: 2rem;
+    --font-size-h2: 4rem;
+    --font-size-h3: 3.125rem;
+    --font-size-h4h6: 1.25rem;
+    --font-size-body: 2.875rem;
+    --line-height-heading-custom: 1.0;
+    --line-height-body-custom: 1.2;
+    --letter-spacing-custom: -1px;
+    --heading-letter-spacing-custom: -1px;
+    --heading-spacing-top: var(--spacing-lg);
+    --heading-spacing-bottom: var(--spacing-md);
+    --paragraph-spacing: var(--spacing-md);
+
+    /* Presentation aspect ratio */
+    --presentation-ratio: 1187 / 1080; /* aspect ratio: ~1.099 */
+}
+
+/* Hide scrollbars in all browsers */
+* {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+/* ============================================
+   Reset & Base Styles
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 500;
+    color: var(--text-dark);
+    background-color: #f0efed;
+    line-height: var(--line-height-body);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* ============================================
+   Main Container Styles
+   ============================================ */
+
+/* ============================================
+   Drop Zone Styles
+   ============================================ */
+
+.drop-zone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0efed;
+    z-index: 1000;
+    padding: var(--spacing-2xl);
+    overflow: hidden;
+}
+
+.drop-zone::before {
+    content: '';
+    flex: 1;
+    min-height: 0;
+}
+
+.drop-zone::after {
+    content: '';
+    flex: 1;
+    min-height: 0;
+}
+
+
+.brand-logo {
+    height: 60px;
+    margin-bottom: var(--spacing-2xl);
+    object-fit: contain;
+}
+
+.drop-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px dashed var(--ui-blue);
+    border-radius: 16px;
+    padding: 80px 60px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: rgba(1, 65, 62, 0.03);
+    max-width: 600px;
+    width: 100%;
+}
+
+.drop-area:hover {
+    border-color: var(--ui-blue);
+    background-color: rgba(1, 65, 62, 0.08);
+    transform: scale(1.02);
+}
+
+.drop-zone.drag-over .drop-area {
+    border-color: var(--ui-blue);
+    background-color: rgba(1, 65, 62, 0.15);
+    transform: scale(1.02);
+}
+
+.drop-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--ui-blue);
+    margin-bottom: var(--spacing-lg);
+}
+
+.drop-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ui-blue);
+    margin-bottom: var(--spacing-sm);
+}
+
+.drop-subtext {
+    color: var(--neutral-dark);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.demo-button {
+    margin-top: var(--spacing-xl);
+    font-family: 'Poppins', sans-serif;
+    background-color: #d8dad5;
+    color: var(--ui-blue);
+    border: none;
+    padding: var(--spacing-md) var(--spacing-2xl);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.demo-button:hover {
+    opacity: 0.85;
+    background-color: #d8dad5;
+    transform: scale(1.05);
+}
+
+.shuffle-button {
+    position: fixed;
+    bottom: var(--spacing-2xl);
+    right: var(--spacing-2xl);
+    width: 56px;
+    height: 56px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    z-index: 10;
+}
+
+.shuffle-button svg {
+    width: 32px;
+    height: 32px;
+    color: var(--ui-blue);
+}
+
+.shuffle-button:hover {
+    transform: rotate(15deg);
+}
+
+.shuffle-button.rotating {
+    animation: fullSpin 0.6s ease-in-out;
+}
+
+@keyframes fullSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ============================================
+   Recent Files
+   ============================================ */
+
+.recent-files {
+    display: none !important;
+    margin-top: var(--spacing-2xl);
+    max-width: 600px;
+    width: 100%;
+}
+
+.recent-files[style*="display: none"],
+.recent-files[style*="display: none"] * {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
+.recent-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.recent-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.recent-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: rgba(1, 65, 62, 0.05);
+    border: 1px solid rgba(1, 65, 62, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.recent-item:hover {
+    background-color: rgba(1, 65, 62, 0.1);
+    border-color: var(--ui-blue);
+    transform: translateX(4px);
+}
+
+.recent-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.recent-item-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.recent-item-date {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+.recent-item-delete {
+    background: none;
+    border: none;
+    color: var(--neutral-dark);
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    font-size: 1.2rem;
+    transition: color 0.2s ease;
+    margin-left: var(--spacing-md);
+}
+
+.recent-item-delete:hover {
+    color: #cc451c;
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: var(--spacing-2xl);
+    z-index: 2000;
+}
+
+.spinner {
+    border: 4px solid var(--neutral-light);
+    border-top: 4px solid var(--ui-blue);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto var(--spacing-lg);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    color: var(--ui-blue);
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+
+/* ============================================   Drag Overlay (for presentation view)
+   ============================================ */
+
+.drag-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(1, 65, 62, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.drag-overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px dashed white;
+    border-radius: 16px;
+    padding: 80px 60px;
+    background-color: rgba(255, 255, 255, 0.1);
+    max-width: 600px;
+    transition: all 0.3s ease;
+}
+
+.drag-overlay.active .drag-overlay-content {
+    border-width: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+}
+
+.drag-overlay-icon {
+    width: 80px;
+    height: 80px;
+    color: white;
+    margin-bottom: var(--spacing-lg);
+}
+
+.drag-overlay-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+}
+
+/* ============================================
+   Laser Pointer
+   ============================================ */
+
+.laser-pointer {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 0.8) 25%, rgba(255, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 100000;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    border: none;
+    outline: none;
+}
+
+body.laser-active {
+    cursor: none !important;
+}
+
+body.laser-active * {
+    cursor: none !important;
+}
+
+.laser-pointer-trail {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 0, 0, 0.3) 50%, rgba(255, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+}
+
+body.laser-active,
+body.laser-active *,
+body.laser-active img,
+body.laser-active .preview-content img {
+    cursor: none !important;
+}
+
+/* ============================================   Error Message
+   ============================================ */
+
+.error-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FEE;
+    border: 1px solid #FCC;
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    color: #cc451c;
+    font-size: 0.9rem;
+    z-index: 3000;
+    max-width: 600px;
+}
+
+/* ============================================
+   Transition Overlay
+   ============================================ */
+
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #f0efed;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.transition-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.transition-overlay.show .transition-logo {
+    animation: scaleUp 0.5s ease forwards;
+}
+
+.transition-logo {
+    height: 80px;
+    object-fit: contain;
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+@keyframes scaleUp {
+    0% { 
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% { 
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   Preview Content (Styled Notion HTML)
+   ============================================ */
+
+/* Presentation Container - Two Column Layout */
+.presentation-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f0efed;
+    overflow: hidden;
+}
+
+/* Share Area - Aspect Ratio Constrained Presentation Viewport */
+.share-area {
+    position: relative;
+    width: 100vw;
+    aspect-ratio: 1187 / 1080; /* Maintains ratio automatically */
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #f0efed;
+}
+
+/* Presentation boundary marker - shows where presentation area ends */
+.share-area::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    border-bottom: 3px dashed var(--accent);
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* ============================================
+   Bottom Bar
+   ============================================ */
+
+.bottom-bar {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f0efed;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 4px 24px 6px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.bottom-bar-next {
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #7a306c;
+    padding-bottom: 4px;
+}
+
+.bottom-bar-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.bottom-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.logo-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.logo-button:hover {
+    transform: scale(1.05);
+}
+
+.presentation-logo {
+    height: 30px;
+    object-fit: contain;
+    display: block;
+}
+
+.slide-indicator {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ui-blue);
+    white-space: nowrap;
+}
+
+.bottom-bar-center {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.timer-time {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #447247;
+    text-align: center;
+    outline: none;
+    cursor: text;
+    caret-color: #447247;
+    min-width: 80px;
+    background: transparent;
+    border: none;
+    line-height: 1;
+}
+
+.timer-time:empty:before {
+    content: '\200B';
+    color: transparent;
+}
+
+.timer-time:focus {
+    outline: none;
+    cursor: text;
+}
+
+.timer-icon-button {
+    padding: 6px;
+    background-color: transparent;
+    color: var(--ui-blue);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.timer-icon-button svg {
+    width: 18px;
+    height: 18px;
+}
+
+.timer-icon-button:hover {
+    background-color: rgba(1, 65, 62, 0.1);
+    transform: scale(1.05);
+}
+
+.timer-icon-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.bottom-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.bottom-bar-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #01413e;
+    text-align: center;
+    padding: 2px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bottom-bar-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: 0;
+}
+
+.timer-goal {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-light);
+    white-space: nowrap;
+    align-self: flex-end;
+}
+
+.progress-bar-container {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    background-color: rgba(1, 65, 62, 0.3);
+    border-radius: 6px;
+    margin-bottom: 0;
+    border: none;
+    line-height: 12px;
+}
+
+.slide-dot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.scroll-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #01413e;
+    border-radius: 7px;
+    z-index: 1;
+    transition: width 0.2s ease;
+    overflow: hidden;
+}
+
+.time-progress {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 5px !important;
+    height: calc(100% + 20px);
+    background: #ea2a10;
+    box-shadow: 0 0 6px rgba(234, 42, 16, 0.6);
+    z-index: 6;
+    border-radius: 3px;
+    transition: left 0.15s linear;
+}
+
+
+
+.preview-content {
+    background-color: #f0efed;
+    padding: var(--spacing-lg);
+    box-sizing: border-box;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Notion HTML Styling Overrides */
+
+.preview-content h1,
+.preview-content h2,
+.preview-content h3,
+.preview-content h4,
+.preview-content h5,
+.preview-content h6,
+.preview-content .notion-heading {
+    font-family: var(--font-family-custom) !important;
+    color: var(--primary) !important;
+    font-weight: 700 !important;
+    line-height: var(--line-height-heading-custom) !important;
+    margin-top: var(--heading-spacing-top) !important;
+    margin-bottom: var(--heading-spacing-bottom) !important;
+    letter-spacing: var(--heading-letter-spacing-custom) !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+.preview-content h1 {
+    font-size: var(--font-size-h1) !important;
+}
+
+.preview-content h2 {
+    font-size: var(--font-size-h2) !important;
+}
+
+.preview-content h3 {
+    font-size: var(--font-size-h3) !important;
+}
+
+.preview-content h4 {
+    font-size: var(--font-size-h4h6) !important;
+}
+
+.preview-content h5 {
+    font-size: var(--font-size-h4h6) !important;
+}
+
+.preview-content h6 {
+    font-size: var(--font-size-h4h6) !important;
+}
+
+.preview-content p,
+.preview-content li,
+.preview-content td,
+.preview-content span,
+.preview-content .notion-text,
+.preview-content .notion-block {
+    font-family: var(--font-family-custom) !important;
+    font-weight: 500 !important;
+    color: #01413e !important;
+    line-height: var(--line-height-body-custom) !important;
+    font-size: var(--font-size-body) !important;
+    letter-spacing: var(--letter-spacing-custom) !important;
+    background-color: transparent !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Notion highlight colors - remove backgrounds and apply text colors */
+.preview-content .highlight-teal,
+.preview-content [class*="highlight-teal"] {
+    color: #447247 !important;
+    background-color: transparent !important;
+}
+
+.preview-content .highlight-red,
+.preview-content [class*="highlight-red"] {
+    color: #cc451c !important;
+    background-color: transparent !important;
+}
+
+/* Remove backgrounds from all highlight classes */
+.preview-content [class*="highlight-"] {
+    background-color: transparent !important;
+}
+
+.preview-content p {
+    margin-bottom: var(--paragraph-spacing) !important;
+}
+
+.preview-content li {
+    margin-bottom: var(--spacing-sm) !important;
+}
+
+.preview-content ul,
+.preview-content ol {
+    margin-left: var(--spacing-lg) !important;
+    margin-bottom: var(--spacing-md) !important;
+    padding-left: var(--spacing-lg) !important;
+}
+
+/* Links */
+.preview-content a {
+    color: var(--accent) !important;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.preview-content a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* Code blocks */
+.preview-content code,
+.preview-content pre {
+    background-color: var(--neutral-light) !important;
+    border-radius: 4px;
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+.preview-content pre {
+    overflow-x: auto;
+    padding: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-md) !important;
+}
+
+/* Tables */
+.preview-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.preview-content th {
+    background-color: var(--neutral-light);
+    color: var(--primary);
+    font-family: 'Poppins', sans-serif;
+    padding: var(--spacing-md) !important;
+    text-align: left;
+    font-weight: 600 !important;
+}
+
+.preview-content td {
+    border-bottom: 1px solid var(--neutral-light);
+    padding: var(--spacing-md) !important;
+}
+
+.preview-content tr:hover {
+    background-color: rgba(1, 65, 62, 0.03);
+}
+
+/* Callouts & Block Elements */
+.preview-content .notion-callout,
+.preview-content [class*="callout"] {
+    background-color: rgba(74, 103, 76, 0.1) !important;
+    border-left: 4px solid var(--accent) !important;
+    padding: var(--spacing-md) var(--spacing-lg) !important;
+    margin: var(--spacing-md) 0 !important;
+    border-radius: 4px !important;
+}
+
+/* Blockquote */
+.preview-content blockquote {
+    border-left: 4px solid var(--primary);
+    padding-left: var(--spacing-lg);
+    margin-left: 0;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-light);
+}
+
+/* Divider/HR */
+.preview-content hr {
+    border: none;
+    height: 2px;
+    background-color: var(--neutral-light);
+    margin: var(--spacing-xl) 0 !important;
+}
+
+/* Images */
+.preview-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+    pointer-events: none !important;
+    user-select: none;
+    position: relative;
+    opacity: 1 !important;
+    filter: none !important;
+    margin: var(--spacing-md) 0 !important;
+    cursor: inherit;
+    z-index: 1;
+}
+
+/* Disable hover effects on links containing images */
+.preview-content a:has(img) {
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
+body.laser-active .preview-content a:has(img) {
+    cursor: none !important;
+}
+
+.preview-content a:has(img):hover {
+    opacity: 1 !important;
+    text-decoration: none !important;
+}
+
+/* General Notion Element Spacing Reduction */
+.preview-content .notion-block {
+    padding: var(--spacing-sm) 0 !important;
+    margin: var(--spacing-sm) 0 !important;
+}
+
+.preview-content div[class*="notion"] {
+    padding: 0 !important;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 968px) {
+    .presentation-container {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-content {
+        padding: var(--spacing-lg) var(--spacing-lg) 140px var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .brand-logo {
+        height: 40px;
+    }
+
+    .transition-logo {
+        height: 60px;
+    }
+
+    .drop-area {
+        padding: 60px 40px;
+    }
+
+    .drop-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .drop-text {
+        font-size: 1.25rem;
+    }
+
+    .drop-subtext {
+        font-size: 0.9rem;
+    }
+
+    .demo-button {
+        margin-top: var(--spacing-lg);
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: 0.9rem;
+    }
+
+    .recent-files {
+        margin-top: 32px;
+        padding: 0 var(--spacing-md);
+    }
+
+    .recent-title {
+        font-size: 1.1rem;
+    }
+
+    .recent-item {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .recent-item-name {
+        font-size: 0.85rem;
+    }
+
+    .recent-item-date {
+        font-size: 0.75rem;
+    }
+
+    .preview-content {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* ============================================
+   Checkbox Styles (for Notion HTML imports)
+   ============================================ */
+
+.checkbox {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    vertical-align: middle;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin: 0 8px 0 0;
+    flex-shrink: 0;
+    position: relative;
+    top: -1px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.checkbox:hover {
+    transform: scale(1.1);
+}
+
+.checkbox-on {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20rx%3D%223%22%20fill%3D%22%234a674c%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E") !important;
+}
+
+.checkbox-off {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20rx%3D%222.25%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E") !important;
+}
+
+/* Confetti animation */
+@keyframes confetti-fall {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 10000;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
+}
+
+/* To-do list (checkbox list) styles */
+ul.to-do-list {
+    padding-inline-start: 1.5em;
+    margin-left: 0;
+}
+
+ul.to-do-list > li {
+    list-style: none;
+    position: relative;
+    padding-left: 0;
+}
+
+ul.to-do-list > li .checkbox {
+    position: absolute;
+    left: -24px;
+    top: 2px;
+    margin: 0;
+}
+
+.to-do-children-checked {
+    text-decoration: line-through;
+    opacity: 0.375;
+}
+
+.to-do-children-unchecked {
+    /* Normal display for unchecked items */
+}
+
+/* Pixelate effect for strike-through text */
+.to-do-children-checked,
+[style*="text-decoration: line-through"],
+[style*="text-decoration:line-through"],
+s,
+del {
+    position: relative;
+    display: inline-block;
+}
+
+.pixelated {
+    cursor: pointer;
+    user-select: none;
+    color: transparent !important;
+}
+
+.pixelated::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -4px;
+    right: -4px;
+    bottom: -2px;
+    background: var(--accent);
+    border-radius: 12px;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.unpixelated {
+    text-decoration: none !important;
+    filter: none;
+    cursor: default;
+}
+
+
+/* Hide Notion properties table */
+table.properties {
+    display: none !important;
+}
+
+/* ============================================
+   Bottom Bar Buttons (Settings & Shortcuts)
+   ============================================ */
+
+.bottom-bar .shortcuts-button,
+.bottom-bar .settings-button {
+    position: static;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.bottom-bar .shortcuts-button svg,
+.bottom-bar .settings-button svg {
+    width: 24px;
+    height: 24px;
+    color: var(--ui-blue);
+    transition: all 0.2s ease;
+}
+
+.bottom-bar .shortcuts-button:hover,
+.bottom-bar .settings-button:hover {
+    transform: scale(1.1);
+}
+
+.bottom-bar .shortcuts-button:hover svg,
+.bottom-bar .settings-button:hover svg {
+    color: var(--accent);
+}
+
+/* ============================================
+   Settings Modal
+   ============================================ */
+
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.settings-modal-content {
+    background-color: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 1px solid var(--neutral-medium);
+}
+
+.settings-modal-header h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ui-blue);
+    margin: 0;
+}
+
+.settings-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.settings-modal-close:hover {
+    background-color: var(--neutral-light);
+}
+
+.settings-modal-close svg {
+    width: 24px;
+    height: 24px;
+    color: var(--text-dark);
+}
+
+.settings-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.setting-item {
+    margin-bottom: 24px;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.setting-description {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 12px;
+}
+
+.setting-control {
+    width: 100%;
+}
+
+.setting-control input[type="text"],
+.setting-control input[type="number"],
+.setting-control select,
+.setting-control textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--neutral-medium);
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    transition: border-color 0.2s ease;
+}
+
+.setting-control input[type="text"]:focus,
+.setting-control input[type="number"]:focus,
+.setting-control select:focus,
+.setting-control textarea:focus {
+    outline: none;
+    border-color: var(--ui-blue);
+}
+
+.setting-control textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.setting-control input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--ui-blue);
+}
+
+.setting-control label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.settings-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 24px;
+    border-top: 1px solid var(--neutral-medium);
+}
+
+.settings-modal-button {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.settings-modal-button:not(.secondary) {
+    background-color: var(--ui-blue);
+    color: white;
+}
+
+.settings-modal-button:not(.secondary):hover {
+    background-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.settings-modal-button.secondary {
+    background-color: var(--neutral-light);
+    color: var(--text-dark);
+}
+
+.settings-modal-button.secondary:hover {
+    background-color: var(--neutral-medium);
+}
+
+/* ============================================
+   Keyboard Shortcuts Modal
+   ============================================ */
+
+.shortcuts-modal {
+    position: fixed;
+    bottom: 130px;
+    right: var(--spacing-xl);
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10001;
+    min-width: 300px;
+}
+
+.shortcuts-content {
+    padding: 24px;
+}
+
+.shortcuts-content h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.25rem;
+    color: var(--ui-blue);
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.shortcut-item kbd {
+    background-color: var(--neutral-light);
+    border: 1px solid var(--neutral-medium);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-family: 'Poppins', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    min-width: 50px;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.shortcut-item span {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+/* ============================================
+   Slide System
+   ============================================ */
+
+.slide {
+    display: none;
+    padding: 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    background-color: transparent;
+}
+
+.slide.active {
+    display: block;
+    animation: slideIn 0.15s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide.slide-out {
+    animation: slideOut 0.1s ease-out;
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+}
+
+/* slide-indicator is now styled in the bottom bar section above */
+
+/* ============================================
+   Settings Modal Section Headers
+   ============================================ */
+
+.settings-section-header {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--neutral-light);
+}
+
+.settings-section-header:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.settings-section-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}

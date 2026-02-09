@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="drop-zone" id="dropZone">
+        <img src="logo.svg" alt="MARKUP" class="brand-logo">
+        <div class="drop-area">
+            <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 16 12 6 2 16"></polyline>
+                <polyline points="12 6 12 16"></polyline>
+            </svg>
+            <p class="drop-text">Drop your Notion ZIP file here</p>
+            <p class="drop-subtext">or click to select</p>
+            <input type="file" id="fileInput" accept=".zip" style="display: none;">
+        </div>
+        <button class="demo-button" id="demoButton">Demo</button>
+        <div class="recent-files" id="recentFiles" style="display: none;">
+            <div class="recent-list" id="recentList"></div>
+        </div>
+    </div>
+
+    <div class="loading" id="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing Notion export...</p>
+    </div>
+
+    <div class="presentation-container" id="presentationContainer" style="display: none;">
+        <div class="share-area">
+            <div class="preview-content" id="previewContent"></div>
+        </div>
+
+        <div class="bottom-bar" id="bottomBar">
+            <div class="bottom-bar-next" id="bottomBarNext" style="display: none;">
+                <span id="nextSlideTitle"></span>
+            </div>
+
+            <div class="bottom-bar-main">
+                <div class="bottom-bar-left">
+                    <button class="logo-button" id="logoButton">
+                        <img src="logo.svg" alt="MARKUP" class="presentation-logo">
+                    </button>
+                    <div class="slide-indicator" id="slideIndicator"></div>
+                </div>
+
+                <div class="bottom-bar-center">
+                    <div class="timer-time" id="timerTime" contenteditable="true">00:00</div>
+                    <input type="number" id="durationInput" min="1" max="180" style="display: none;" />
+                    <button class="timer-icon-button" id="startTimerBtn" title="Start/Pause Timer">
+                        <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                        </svg>
+                    </button>
+                    <button class="timer-icon-button" id="resetTimerBtn" title="Reset Timer" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="bottom-bar-right">
+                    <button class="settings-button" id="settingsButton" title="Settings">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                    <button class="shortcuts-button" id="shortcutsButton" title="Keyboard Shortcuts">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                            <path d="M6 8h.01"></path>
+                            <path d="M10 8h.01"></path>
+                            <path d="M14 8h.01"></path>
+                            <path d="M18 8h.01"></path>
+                            <path d="M8 12h.01"></path>
+                            <path d="M12 12h.01"></path>
+                            <path d="M16 12h.01"></path>
+                            <path d="M7 16h10"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bottom-bar-title" id="presentationTitle"></div>
+
+            <div class="bottom-bar-progress">
+                <div class="timer-goal" id="timerGoal" style="display: none;"></div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar scroll-progress" id="scrollProgress"></div>
+                    <div class="progress-bar time-progress" id="timeProgress"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="shortcuts-modal" id="shortcutsModal" style="display: none;">
+            <div class="shortcuts-content">
+                <h3>Keyboard Shortcuts</h3>
+                <div class="shortcuts-list">
+                    <div class="shortcut-item">
+                        <kbd>D</kbd>
+                        <span>Pen Tool (Blue)</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>F</kbd>
+                        <span>Highlighter Tool (Yellow)</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>W</kbd>
+                        <span>Whiteout Tool</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>E</kbd>
+                        <span>Eraser Tool</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>E E</kbd>
+                        <span>Clear All Drawings</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>V</kbd>
+                        <span>Laser Pointer</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>←</kbd>
+                        <span>Previous Slide</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>→</kbd>
+                        <span>Next Slide</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>T</kbd>
+                        <span>Play/Pause Timer</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>⌘ Click</kbd>
+                        <span>Reset Timer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="error-message" id="errorMessage" style="display: none;"></div>
+
+    <div class="drag-overlay" id="dragOverlay" style="display: none;">
+        <div class="drag-overlay-content">
+            <svg class="drag-overlay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 16 12 6 2 16"></polyline>
+                <polyline points="12 6 12 16"></polyline>
+            </svg>
+            <p class="drag-overlay-text">Drop to load new presentation</p>
+        </div>
+    </div>
+
+    <div class="laser-pointer" id="laserPointer" style="display: none;"></div>
+
+    <div class="transition-overlay" id="transitionOverlay">
+        <img src="logo.svg" alt="MARKUP" class="transition-logo">
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settingsModal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h2>Settings</h2>
+                <button class="settings-modal-close" id="settingsModalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="settings-modal-body" id="settingsModalBody">
+                <!-- Settings will be dynamically added here -->
+            </div>
+            <div class="settings-modal-footer">
+                <button class="settings-modal-button secondary" id="settingsReset">Reset to Defaults</button>
+                <div style="flex: 1;"></div>
+                <button class="settings-modal-button secondary" id="settingsCancel">Cancel</button>
+                <button class="settings-modal-button" id="settingsSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="app.js"></script>
+    <script src="settings.js"></script>
+    <script src="drawing.js"></script>
+    <script src="shortcuts.js"></script>
+</body>
+</html>
