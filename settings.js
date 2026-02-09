@@ -151,7 +151,7 @@ const settingsConfig = {
         type: 'number',
         label: 'Heading Letter Spacing',
         description: 'Space between characters in headings (px)',
-        defaultValue: -1,
+        defaultValue: -2,
         min: -2,
         max: 4,
         step: 0.5

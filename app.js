@@ -413,7 +413,7 @@ function applyTypographySettings() {
     const headingLineHeight = window.markupSettings.get('headingLineHeight', 1.0);
     const bodyLineHeight = window.markupSettings.get('bodyLineHeight', 1.2);
     const letterSpacing = window.markupSettings.get('letterSpacing', -1);
-    const headingLetterSpacing = window.markupSettings.get('headingLetterSpacing', -1);
+    const headingLetterSpacing = window.markupSettings.get('headingLetterSpacing', -2);
     const headingSpacing = window.markupSettings.get('headingSpacing', 16);
     const paragraphSpacing = window.markupSettings.get('paragraphSpacing', 12);
 
