@@ -18,6 +18,108 @@ const dragOverlay = document.getElementById('dragOverlay');
 const laserPointer = document.getElementById('laserPointer');
 const shuffleButton = document.getElementById('shuffleButton');
 
+// Custom cursor
+const customCursor = document.createElement('div');
+customCursor.className = 'custom-cursor';
+document.body.appendChild(customCursor);
+
+let cursorDefaultSize = 20;
+let cursorDefaultColor = 'rgba(150, 150, 150, 0.3)';
+
+document.addEventListener('mousemove', (e) => {
+    customCursor.style.left = e.clientX + 'px';
+    customCursor.style.top = e.clientY + 'px';
+});
+
+// Hide cursor when leaving window
+document.addEventListener('mouseleave', () => {
+    customCursor.style.opacity = '0';
+});
+
+document.addEventListener('mouseenter', () => {
+    customCursor.style.opacity = '1';
+});
+
+// Update cursor based on drawing tool
+function updateCursorForTool(tool) {
+    const settingsAPI = window.markupSettings;
+
+    if (tool === 'pen') {
+        const thickness = settingsAPI ? settingsAPI.get('penThickness', 10) : 10;
+        const color = settingsAPI ? settingsAPI.get('penColor', '#0085ff') : '#0085ff';
+        customCursor.style.width = thickness + 'px';
+        customCursor.style.height = thickness + 'px';
+        customCursor.style.backgroundColor = color;
+        customCursor.style.boxShadow = `0 0 0 2px ${darkenColor(color)}`;
+    } else if (tool === 'highlighter') {
+        const thickness = settingsAPI ? settingsAPI.get('highlighterThickness', 40) : 40;
+        const color = settingsAPI ? settingsAPI.get('highlighterColor', '#f1b03d') : '#f1b03d';
+        customCursor.style.width = thickness + 'px';
+        customCursor.style.height = thickness + 'px';
+        // Make highlighter semi-transparent
+        const rgb = hexToRgb(color);
+        customCursor.style.backgroundColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+        customCursor.style.boxShadow = `0 0 0 2px ${darkenColor(color)}`;
+    } else if (tool === 'whiteout') {
+        const thickness = settingsAPI ? settingsAPI.get('whiteoutThickness', 15) : 15;
+        customCursor.style.width = thickness + 'px';
+        customCursor.style.height = thickness + 'px';
+        customCursor.style.backgroundColor = '#ffffff';
+        customCursor.style.boxShadow = '0 0 0 2px rgba(150, 150, 150, 0.8)';
+    } else if (tool === 'eraser') {
+        customCursor.style.width = '30px';
+        customCursor.style.height = '30px';
+        customCursor.style.backgroundColor = 'rgba(255, 100, 100, 0.4)';
+        customCursor.style.boxShadow = 'none';
+    } else {
+        // Reset to default
+        customCursor.style.width = cursorDefaultSize + 'px';
+        customCursor.style.height = cursorDefaultSize + 'px';
+        customCursor.style.backgroundColor = cursorDefaultColor;
+        customCursor.style.boxShadow = 'none';
+    }
+}
+
+// Helper function to convert hex to RGB
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
+}
+
+// Helper function to darken a color
+function darkenColor(hex, amount = 0.3) {
+    const rgb = hexToRgb(hex);
+    return `rgba(${Math.floor(rgb.r * (1 - amount))}, ${Math.floor(rgb.g * (1 - amount))}, ${Math.floor(rgb.b * (1 - amount))}, 0.8)`;
+}
+
+// Listen for drawing tool activation
+document.addEventListener('keydown', (e) => {
+    if (presentationContainer.style.display === 'none') return;
+
+    const key = e.key.toLowerCase();
+    if (key === 'd') {
+        updateCursorForTool('pen');
+    } else if (key === 'f') {
+        updateCursorForTool('highlighter');
+    } else if (key === 'w') {
+        updateCursorForTool('whiteout');
+    } else if (key === 'e') {
+        updateCursorForTool('eraser');
+    }
+});
+
+// Reset cursor when keys are released
+document.addEventListener('keyup', (e) => {
+    const key = e.key.toLowerCase();
+    if (key === 'd' || key === 'f' || key === 'w' || key === 'e') {
+        updateCursorForTool(null);
+    }
+});
+
 let laserActive = false;
 let lastMouseX = 0;
 let lastMouseY = 0;
