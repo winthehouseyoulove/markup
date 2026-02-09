@@ -26,9 +26,26 @@ document.body.appendChild(customCursor);
 let cursorDefaultSize = 20;
 let cursorDefaultColor = 'rgba(150, 150, 150, 0.3)';
 
+// Flashlight overlay
+const flashlightOverlay = document.createElement('div');
+flashlightOverlay.className = 'flashlight-overlay';
+document.body.appendChild(flashlightOverlay);
+
+let flashlightActive = false;
+let flashlightX = 0;
+let flashlightY = 0;
+
 document.addEventListener('mousemove', (e) => {
     customCursor.style.left = e.clientX + 'px';
     customCursor.style.top = e.clientY + 'px';
+
+    // Update flashlight position
+    flashlightX = e.clientX;
+    flashlightY = e.clientY;
+
+    if (flashlightActive) {
+        updateFlashlight();
+    }
 });
 
 // Hide cursor when leaving window
@@ -39,6 +56,33 @@ document.addEventListener('mouseleave', () => {
 document.addEventListener('mouseenter', () => {
     customCursor.style.opacity = '1';
 });
+
+// Flashlight functions
+function updateFlashlight() {
+    const spotlightSize = 200; // Size of the illuminated circle
+    const fadeStart = 0.5; // Start fading at 50% of radius (very soft edge)
+    flashlightOverlay.style.background = `radial-gradient(circle ${spotlightSize}px at ${flashlightX}px ${flashlightY}px,
+        transparent 0%,
+        transparent ${fadeStart * 100}%,
+        rgba(0, 0, 0, 0.9) 100%)`;
+}
+
+function activateFlashlight() {
+    if (!flashlightActive && presentationContainer.style.display !== 'none') {
+        flashlightActive = true;
+        flashlightOverlay.classList.add('active');
+        customCursor.style.opacity = '0'; // Hide cursor during flashlight
+        updateFlashlight();
+    }
+}
+
+function deactivateFlashlight() {
+    if (flashlightActive) {
+        flashlightActive = false;
+        flashlightOverlay.classList.remove('active');
+        customCursor.style.opacity = '1'; // Show cursor again
+    }
+}
 
 // Update cursor based on drawing tool
 function updateCursorForTool(tool) {
@@ -109,6 +153,8 @@ document.addEventListener('keydown', (e) => {
         updateCursorForTool('whiteout');
     } else if (key === 'e') {
         updateCursorForTool('eraser');
+    } else if (e.key === 'Shift') {
+        activateFlashlight();
     }
 });
 
@@ -117,6 +163,8 @@ document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
     if (key === 'd' || key === 'f' || key === 'w' || key === 'e') {
         updateCursorForTool(null);
+    } else if (e.key === 'Shift') {
+        deactivateFlashlight();
     }
 });
 
