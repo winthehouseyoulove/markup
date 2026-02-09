@@ -60,7 +60,17 @@
    Custom iPad-style Cursor
    ============================================ */
 
-* {
+*,
+*::before,
+*::after,
+img,
+a,
+button,
+input,
+select,
+textarea,
+svg,
+canvas {
     cursor: none !important;
 }
 
@@ -1033,14 +1043,14 @@ body.laser-active .preview-content img {
     opacity: 1 !important;
     filter: none !important;
     margin: var(--spacing-md) 0 !important;
-    cursor: inherit;
+    cursor: none !important;
     z-index: 1;
 }
 
 /* Disable hover effects on links containing images */
 .preview-content a:has(img) {
     pointer-events: none !important;
-    cursor: default !important;
+    cursor: none !important;
 }
 
 body.laser-active .preview-content a:has(img) {
