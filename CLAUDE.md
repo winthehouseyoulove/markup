@@ -123,3 +123,41 @@ Two contexts:
 3. **Event delegation**: Checkboxes use delegation on `previewContent` for dynamic content
 4. **Debounced saves**: Sticker positions saved with 500ms debounce timeout
 5. **Drawing persistence**: Always save before slide transition, restore after
+
+## Customizing Notion Export Styles
+
+When users want to customize how Notion elements (callouts, highlights, etc.) appear in uploaded presentations:
+
+**DO:**
+- Add custom CSS to `styles.css` (not to individual HTML files)
+- Use high specificity selectors with `!important` to override Notion defaults
+- Target both the element classes AND any `<mark>` or `[class*="highlight"]` elements inside them
+- Remember that uploaded HTML has its `<style>` tags stripped during processing (app.js:804-810)
+
+**Common Notion class patterns:**
+- Callouts: `<figure class="callout block-color-{name}">` or `<figure class="callout block-color-{name}_background">`
+  - Examples: `block-color-default`, `block-color-teal_background`, `block-color-red_background`, `block-color-purple_background`
+- Highlights: `<mark class="highlight-{color}">`
+  - Examples: `highlight-teal`, `highlight-red`, `highlight-default`
+- Text colors: Elements may have nested `<mark>` tags that override parent text colors
+
+**Example pattern for styling callouts:**
+```css
+.callout.block-color-teal_background {
+    background: rgba(68, 114, 71, 0.15) !important;
+    border: none !important;
+    padding: 1.75rem !important;
+}
+
+.callout.block-color-teal_background h3,
+.callout.block-color-teal_background p,
+.callout.block-color-teal_background li,
+.callout.block-color-teal_background mark,
+.callout.block-color-teal_background [class*="highlight"] {
+    color: #447247 !important;
+    background-color: transparent !important;
+}
+```
+
+**Why styles.css, not inline HTML?**
+The app strips most `<style>` tags from uploaded HTML files (app.js:804-810) to avoid conflicting Notion styles. Only styles containing 'font-family' or 'Custom Callout Styles' are preserved. Therefore, to apply custom styling to ALL uploaded presentations, add CSS to the app's `styles.css` file.

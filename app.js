@@ -803,8 +803,8 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
 
     // Remove existing stylesheets to avoid conflicting Notion styles
     doc.querySelectorAll('link[rel="stylesheet"], style').forEach(el => {
-        // Keep critical styles, remove Notion's default styling
-        if (!el.textContent.includes('font-family')) {
+        // Keep critical styles and custom callout styles, remove Notion's default styling
+        if (!el.textContent.includes('font-family') && !el.textContent.includes('Custom Callout Styles')) {
             el.remove();
         }
     });

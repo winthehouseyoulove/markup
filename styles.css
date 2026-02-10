@@ -1631,3 +1631,95 @@ table.properties {
     letter-spacing: 0.5px;
     margin: 0;
 }
+
+/* ============================================
+   Custom Callout Styles for Notion Exports
+   ============================================ */
+
+/* Custom Callout Styles - Border Only (Default) */
+.callout.block-color-default {
+    background: none !important;
+    border: 2px solid #01413e !important;
+    padding: 1.75rem !important;
+    box-shadow: none !important;
+    border-radius: 20px !important;
+}
+
+.callout.block-color-default h3,
+.callout.block-color-default p,
+.callout.block-color-default li,
+.callout.block-color-default mark,
+.callout.block-color-default [class*="highlight"] {
+    color: #01413e !important;
+    background-color: transparent !important;
+}
+
+.callout.block-color-default li::marker {
+    color: #01413e !important;
+}
+
+/* Custom Callout Styles - Green Background */
+.callout.block-color-teal_background {
+    background: rgba(68, 114, 71, 0.15) !important;
+    border: none !important;
+    padding: 1.75rem !important;
+    box-shadow: none !important;
+    border-radius: 20px !important;
+}
+
+.callout.block-color-teal_background h3,
+.callout.block-color-teal_background p,
+.callout.block-color-teal_background li,
+.callout.block-color-teal_background mark,
+.callout.block-color-teal_background [class*="highlight"] {
+    color: #447247 !important;
+    background-color: transparent !important;
+}
+
+.callout.block-color-teal_background li::marker {
+    color: #447247 !important;
+}
+
+/* Custom Callout Styles - Red Background */
+.callout.block-color-red_background {
+    background: rgba(204, 69, 28, 0.15) !important;
+    border: none !important;
+    padding: 1.75rem !important;
+    box-shadow: none !important;
+    border-radius: 20px !important;
+}
+
+.callout.block-color-red_background h3,
+.callout.block-color-red_background p,
+.callout.block-color-red_background li,
+.callout.block-color-red_background mark,
+.callout.block-color-red_background [class*="highlight"] {
+    color: #cc451c !important;
+    background-color: transparent !important;
+}
+
+.callout.block-color-red_background li::marker {
+    color: #cc451c !important;
+}
+
+/* Custom Callout Styles - Purple Background */
+.callout.block-color-purple_background {
+    background: rgba(122, 48, 108, 0.15) !important;
+    border: none !important;
+    padding: 1.75rem !important;
+    box-shadow: none !important;
+    border-radius: 20px !important;
+}
+
+.callout.block-color-purple_background h3,
+.callout.block-color-purple_background p,
+.callout.block-color-purple_background li,
+.callout.block-color-purple_background mark,
+.callout.block-color-purple_background [class*="highlight"] {
+    color: #7a306c !important;
+    background-color: transparent !important;
+}
+
+.callout.block-color-purple_background li::marker {
+    color: #7a306c !important;
+}
