@@ -1269,6 +1269,94 @@ table.properties {
 }
 
 /* ============================================
+   KaTeX Equation Styling (Notion Exports)
+   ============================================ */
+
+/* Equation container styling */
+.equation {
+    text-align: center !important;
+    padding: 1.5rem 2rem !important;
+    margin: 1rem 0 !important;
+    color: #01413e;
+}
+
+.equation-container {
+    display: inline-block !important;
+}
+
+/* Scale equations up for presentation readability */
+.katex-display {
+    font-size: 1.4em !important;
+    margin: 0 !important;
+}
+
+/* Hide KaTeX MathML to prevent duplicate equation rendering */
+.preview-content .katex-mathml {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden !important;
+}
+
+/* Reset broad preview-content overrides for KaTeX internals */
+.preview-content .katex span {
+    font-size: inherit !important;
+    line-height: 0.85 !important;
+    letter-spacing: var(--letter-spacing-custom) !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+    z-index: auto !important;
+}
+
+/* Override KaTeX fonts to use Poppins (matching body font) */
+.preview-content .katex .mathnormal,
+.preview-content .katex .mord,
+.preview-content .katex .mrel,
+.preview-content .katex .mbin,
+.preview-content .katex .mpunct,
+.preview-content .katex .mord.text {
+    font-family: var(--font-family-custom) !important;
+}
+
+.preview-content .katex .textbf,
+.preview-content .katex .mathbf,
+.preview-content .katex .mord.mathbf {
+    font-family: var(--font-family-custom) !important;
+    font-weight: 700 !important;
+}
+
+/* Map KaTeX inline colors to brand colors */
+.preview-content .katex [style*="color:red"],
+.preview-content .katex [style*="color: red"] {
+    color: #cc451c !important;
+}
+
+.preview-content .katex [style*="color:green"],
+.preview-content .katex [style*="color: green"] {
+    color: #447247 !important;
+}
+
+.preview-content .katex [style*="color:blue"],
+.preview-content .katex [style*="color: blue"] {
+    color: #01413e !important;
+}
+
+.preview-content .katex [style*="color:purple"],
+.preview-content .katex [style*="color: purple"] {
+    color: #7a306c !important;
+}
+
+/* Thicker sum line in equations, nudged up to center between rows */
+.preview-content .katex .hline {
+    border-bottom-width: 0.08em !important;
+    border-bottom-color: #01413e !important;
+    transform: translateY(-0.3em) !important;
+}
+
+/* ============================================
    Bottom Bar Buttons (Settings & Shortcuts)
    ============================================ */
 
