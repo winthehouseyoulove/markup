@@ -114,6 +114,7 @@ Two contexts:
 ## Dependencies
 
 - **JSZip** (CDN): `https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js`
+- **KaTeX CSS** (CDN): `https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex.min.css` — loaded globally in `index.html` for equation rendering
 - No build tools, no npm, no bundler
 
 ## Important Patterns
@@ -158,6 +159,25 @@ When users want to customize how Notion elements (callouts, highlights, etc.) ap
     background-color: transparent !important;
 }
 ```
+
+**KaTeX Equation patterns:**
+Notion exports equations as pre-rendered KaTeX HTML inside `<figure class="equation">` elements. No JS needed — the KaTeX CSS CDN in `index.html` handles rendering.
+
+Key challenges and how they're solved in `styles.css`:
+- **Duplicate rendering**: Each equation has a `.katex-mathml` (screen reader) and `.katex-html` (visual) section. The broad `.preview-content span { position: relative !important }` rule breaks the absolute positioning that hides `.katex-mathml`. Fix: force-hide `.katex-mathml` with high-specificity clip rules.
+- **Colors overridden**: The broad `.preview-content span { color: #01413e !important }` overrides inline `style="color:red"` etc. Fix: reset `.preview-content .katex span { color: inherit !important }` then map colors via attribute selectors `[style*="color:red"]` (higher specificity).
+- **Font-size blown up**: The broad `font-size: var(--font-size-body)` on all spans overrides KaTeX sizing. Fix: `font-size: inherit !important` on `.preview-content .katex span`.
+
+Color mapping (inline KaTeX color → brand color):
+- `color:red` → `#cc451c` (brand red)
+- `color:green` → `#447247` (accent green)
+- `color:blue` → `#01413e` (primary)
+- `color:purple` → `#7a306c` (brand purple)
+
+Other equation styles:
+- `.hline` (sum/total line): thickened to `0.08em`, nudged up with `translateY(-0.3em)` for even spacing
+- KaTeX fonts overridden to Poppins via `var(--font-family-custom)`
+- Line-height tightened to `0.85` and letter-spacing set to `var(--letter-spacing-custom)`
 
 **Why styles.css, not inline HTML?**
 The app strips most `<style>` tags from uploaded HTML files (app.js:804-810) to avoid conflicting Notion styles. Only styles containing 'font-family' or 'Custom Callout Styles' are preserved. Therefore, to apply custom styling to ALL uploaded presentations, add CSS to the app's `styles.css` file.
