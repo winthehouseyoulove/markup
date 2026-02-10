@@ -1636,6 +1636,29 @@ table.properties {
    Custom Callout Styles for Notion Exports
    ============================================ */
 
+/* Callout emoji/icon alignment - only when emoji is present */
+.callout > div:has(.icon) {
+    display: flex !important;
+    align-items: flex-start !important;
+    margin-right: 0.75rem !important;
+    padding-top: 0.9rem !important;
+}
+
+/* Align bullets with heading in callouts */
+.callout ul {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.callout li {
+    margin-left: 1.2em !important;
+}
+
+.callout .icon {
+    align-items: flex-start !important;
+    line-height: 1 !important;
+}
+
 /* Custom Callout Styles - Border Only (Default) */
 .callout.block-color-default {
     background: none !important;
