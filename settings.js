@@ -52,7 +52,7 @@ const settingsConfig = {
     'whiteoutThickness': {
         type: 'range',
         label: 'Whiteout Thickness',
-        defaultValue: 15,
+        defaultValue: 40,
         min: 5,
         max: 50,
         step: 5,
@@ -181,7 +181,15 @@ function loadSettings() {
     const saved = localStorage.getItem('markupSettings');
     if (saved) {
         try {
-            return JSON.parse(saved);
+            const settings = JSON.parse(saved);
+
+            // Migration: Update old whiteout thickness default (15) to new default (40)
+            if (settings.whiteoutThickness === 15) {
+                settings.whiteoutThickness = 40;
+                saveSettings(settings);
+            }
+
+            return settings;
         } catch (e) {
             console.error('Error loading settings:', e);
         }

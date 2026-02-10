@@ -108,7 +108,7 @@ function updateCursorForTool(tool) {
         customCursor.style.backgroundColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
         customCursor.style.boxShadow = `0 0 0 2px ${darkenColor(color)}`;
     } else if (tool === 'whiteout') {
-        const thickness = settingsAPI ? settingsAPI.get('whiteoutThickness', 15) : 15;
+        const thickness = settingsAPI ? settingsAPI.get('whiteoutThickness', 40) : 40;
         customCursor.style.width = thickness + 'px';
         customCursor.style.height = thickness + 'px';
         customCursor.style.backgroundColor = '#ffffff';
@@ -156,7 +156,7 @@ document.addEventListener('keydown', (e) => {
         updateCursorForTool('whiteout');
     } else if (key === 'e') {
         updateCursorForTool('eraser');
-    } else if (e.key === 'c' || e.key === 'C') {
+    } else if (e.key === 'a' || e.key === 'A') {
         activateFlashlight();
     }
 });
@@ -166,7 +166,7 @@ document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
     if (key === 'd' || key === 'f' || key === 'w' || key === 'e') {
         updateCursorForTool(null);
-    } else if (e.key === 'c' || e.key === 'C') {
+    } else if (e.key === 'a' || e.key === 'A') {
         deactivateFlashlight();
     }
 });
@@ -516,7 +516,7 @@ document.addEventListener('mousemove', (e) => {
 
 // Show laser pointer when V key is held down
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'v' || e.key === 'V') {
+    if (e.key === 's' || e.key === 'S') {
         if (!laserActive && presentationContainer.style.display !== 'none') {
             laserActive = true;
             document.body.classList.add('laser-active');
@@ -530,7 +530,7 @@ document.addEventListener('keydown', (e) => {
 
 // Hide laser pointer when V key is released
 document.addEventListener('keyup', (e) => {
-    if (e.key === 'v' || e.key === 'V') {
+    if (e.key === 's' || e.key === 'S') {
         laserActive = false;
         document.body.classList.remove('laser-active');
         laserPointer.style.display = 'none';
@@ -1547,10 +1547,10 @@ document.addEventListener('keydown', (e) => {
     if (presentationContainer.style.display === 'none') return;
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
     
-    if (e.key === 'ArrowRight') {
+    if (e.key === 'ArrowRight' || e.key === 'c' || e.key === 'C') {
         e.preventDefault();
         nextSlide();
-    } else if (e.key === 'ArrowLeft') {
+    } else if (e.key === 'ArrowLeft' || e.key === 'x' || e.key === 'X') {
         e.preventDefault();
         previousSlide();
     } else if (e.key === 't' || e.key === 'T') {

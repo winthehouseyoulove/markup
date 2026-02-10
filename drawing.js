@@ -198,7 +198,7 @@ function getToolSettings(tool) {
     } else if (tool === 'whiteout') {
         return {
             color: '#f0efed', // Background color
-            thickness: settingsAPI ? settingsAPI.get('whiteoutThickness', 15) : 15,
+            thickness: settingsAPI ? settingsAPI.get('whiteoutThickness', 40) : 40,
             opacity: 1
         };
     }
