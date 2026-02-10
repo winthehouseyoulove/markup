@@ -1525,7 +1525,8 @@ function updateNextSlidePreview() {
         }
     } else {
         // No next slide (we're on the last slide)
-        preview.style.display = 'none';
+        titleElement.textContent = 'End';
+        preview.style.display = 'block';
     }
 }
 
