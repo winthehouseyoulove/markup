@@ -49,12 +49,15 @@ document.addEventListener('mousemove', (e) => {
 });
 
 // Hide cursor when leaving window
-document.addEventListener('mouseleave', () => {
-    customCursor.style.opacity = '0';
+window.addEventListener('mouseout', (e) => {
+    // Check if mouse is actually leaving the window (not just entering a child element)
+    if (!e.relatedTarget || e.relatedTarget.nodeName === 'HTML') {
+        customCursor.style.display = 'none';
+    }
 });
 
-document.addEventListener('mouseenter', () => {
-    customCursor.style.opacity = '1';
+window.addEventListener('mouseover', () => {
+    customCursor.style.display = 'block';
 });
 
 // Flashlight functions
