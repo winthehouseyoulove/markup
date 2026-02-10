@@ -156,7 +156,7 @@ document.addEventListener('keydown', (e) => {
         updateCursorForTool('whiteout');
     } else if (key === 'e') {
         updateCursorForTool('eraser');
-    } else if (e.key === 'Shift') {
+    } else if (e.key === 'c' || e.key === 'C') {
         activateFlashlight();
     }
 });
@@ -166,7 +166,7 @@ document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
     if (key === 'd' || key === 'f' || key === 'w' || key === 'e') {
         updateCursorForTool(null);
-    } else if (e.key === 'Shift') {
+    } else if (e.key === 'c' || e.key === 'C') {
         deactivateFlashlight();
     }
 });
