@@ -1,15 +1,14 @@
 #!/bin/bash
 
 # Launch Markup application
-cd "/Users/kyleseagraves/Documents/Markup"
+MARKUP_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Check if server is already running
 if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null ; then
     echo "Server already running on port 8000"
 else
-    # Start the Python server in the background
-    cd "/Users/kyleseagraves/Documents/Markup"
-    python3 -m http.server 8000 &
+    # Start the Python server in the background from the Markup directory
+    python3 -m http.server 8000 --directory "$MARKUP_DIR" &
     echo "Server started on port 8000"
     # Wait for server to start
     sleep 3
