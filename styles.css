@@ -955,13 +955,14 @@ body.laser-active .preview-content img {
 /* Links */
 .preview-content a {
     color: var(--accent) !important;
-    text-decoration: none;
+    text-decoration: underline !important;
+    text-decoration-thickness: 4px !important;
+    text-underline-offset: 3px !important;
     transition: opacity 0.2s ease;
 }
 
 .preview-content a:hover {
     opacity: 0.8;
-    text-decoration: underline;
 }
 
 /* Code blocks */

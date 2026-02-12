@@ -1288,9 +1288,11 @@ function setPresentationTitle(title) {
 function initializeImageScrollEffects() {
     // No effects - images display as static elements
     
-    // Disable all links on images
+    // Open all links in new tab, disable image links
     const imageLinks = previewContent.querySelectorAll('a');
     imageLinks.forEach(link => {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
         if (link.querySelector('img')) {
             // Remove href to prevent navigation
             link.removeAttribute('href');
