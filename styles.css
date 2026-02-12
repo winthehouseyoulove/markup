@@ -1970,3 +1970,44 @@ table.properties {
     z-index: auto !important;
 }
 
+/* ============================================
+   US State Map
+   ============================================ */
+
+.preview-content .state-map-container {
+    max-width: 900px !important;
+    margin: 1.5rem auto !important;
+}
+
+.preview-content .state-map-container svg {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.preview-content .state-map-default {
+    fill: rgba(1, 65, 62, 0.3) !important;
+    stroke: #f0efed !important;
+    stroke-width: 1.5 !important;
+}
+
+.preview-content .state-map-teal {
+    fill: #01413e !important;
+    stroke: #f0efed !important;
+    stroke-width: 1.5 !important;
+}
+
+.preview-content .state-map-red {
+    fill: #cc451c !important;
+    stroke: #f0efed !important;
+    stroke-width: 1.5 !important;
+}
+
+/* Override broad span rules inside state map */
+.preview-content .state-map-container span {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    z-index: auto !important;
+}
+
