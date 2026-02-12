@@ -954,15 +954,17 @@ body.laser-active .preview-content img {
 
 /* Links */
 .preview-content a {
-    color: var(--accent) !important;
-    text-decoration: underline !important;
-    text-decoration-thickness: 4px !important;
-    text-underline-offset: 3px !important;
-    transition: opacity 0.2s ease;
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    background: linear-gradient(rgba(122, 48, 108, 0.35), rgba(122, 48, 108, 0.35)) no-repeat;
+    background-position: 0 calc(100% - 0.15em);
+    background-size: 100% 0.35em;
+    padding: 0 0.15em;
+    transition: background-size 0.2s ease;
 }
 
 .preview-content a:hover {
-    opacity: 0.8;
+    background-size: 100% 0.45em;
 }
 
 /* Code blocks */
