@@ -1834,3 +1834,139 @@ table.properties {
 .callout.block-color-purple_background li::marker {
     color: #7a306c !important;
 }
+
+/* ============================================
+   iMessage Emulator
+   ============================================ */
+
+.preview-content .imessage-container {
+    max-width: 700px !important;
+    margin: 1.5rem auto !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    overflow: hidden !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
+}
+
+.preview-content .imessage-messages {
+    padding: 24px 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+}
+
+.preview-content .imessage-timestamp {
+    text-align: center !important;
+    font-size: 22px !important;
+    color: #8e8e93 !important;
+    margin: 8px 0 !important;
+    font-weight: 500 !important;
+}
+
+.preview-content .imessage-spacer {
+    height: 10px !important;
+}
+
+.preview-content .imessage-bubble {
+    max-width: 75% !important;
+    padding: 12px 20px !important;
+    border-radius: 24px !important;
+    font-size: 32px !important;
+    line-height: 1.35 !important;
+    word-wrap: break-word !important;
+    position: relative !important;
+    color: inherit !important;
+    letter-spacing: normal !important;
+    z-index: auto !important;
+}
+
+.preview-content .imessage-me {
+    align-self: flex-end !important;
+    background: #007aff !important;
+    color: #fff !important;
+}
+
+.preview-content .imessage-me.imessage-tail {
+    border-bottom-right-radius: 2px !important;
+    margin-right: 10px !important;
+    margin-bottom: 8px !important;
+}
+
+.preview-content .imessage-me.imessage-tail::before {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 0 !important;
+    bottom: 0 !important;
+    right: -7px !important;
+    height: 25px !important;
+    width: 20px !important;
+    background-color: #007aff !important;
+    border-bottom-left-radius: 16px 14px !important;
+}
+
+.preview-content .imessage-me.imessage-tail::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 1 !important;
+    bottom: 0 !important;
+    right: -26px !important;
+    width: 26px !important;
+    height: 25px !important;
+    background-color: #ffffff !important;
+    border-bottom-left-radius: 10px !important;
+}
+
+.preview-content .imessage-them {
+    align-self: flex-start !important;
+    background: #e9e9eb !important;
+    color: #000 !important;
+}
+
+.preview-content .imessage-them.imessage-tail {
+    border-bottom-left-radius: 2px !important;
+    margin-left: 10px !important;
+    margin-bottom: 8px !important;
+}
+
+.preview-content .imessage-them.imessage-tail::before {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 0 !important;
+    bottom: 0 !important;
+    left: -7px !important;
+    height: 25px !important;
+    width: 20px !important;
+    background-color: #e9e9eb !important;
+    border-bottom-right-radius: 16px 14px !important;
+}
+
+.preview-content .imessage-them.imessage-tail::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 1 !important;
+    bottom: 0 !important;
+    left: -26px !important;
+    width: 26px !important;
+    height: 25px !important;
+    background-color: #ffffff !important;
+    border-bottom-right-radius: 10px !important;
+}
+
+.preview-content .imessage-delivered {
+    text-align: right !important;
+    font-size: 18px !important;
+    color: #8e8e93 !important;
+    margin-top: 4px !important;
+    margin-right: 20px !important;
+    font-weight: 700 !important;
+}
+
+/* Override broad span rules inside iMessage */
+.preview-content .imessage-container span {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    z-index: auto !important;
+}
+

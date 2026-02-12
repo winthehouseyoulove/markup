@@ -860,7 +860,10 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
 
     // Clean up any Notion-specific elements that might interfere
     cleanupNotionElements(previewContent);
-    
+
+    // Transform [imessage] code blocks into iMessage UI
+    initializeIMessageBlocks();
+
     // Initialize pixelate effect for strikethrough text
     initializePixelateEffect();
 
@@ -1299,6 +1302,106 @@ function initializeImageScrollEffects() {
             }, true);
         }
     });
+}
+
+// ============================================
+// iMessage Emulator
+// ============================================
+
+function initializeIMessageBlocks() {
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return;
+
+    const preElements = previewContent.querySelectorAll('pre');
+    preElements.forEach(pre => {
+        const text = pre.textContent.trim();
+        if (!text.match(/^\[imessage\]/i)) return;
+
+        const parsed = parseIMessageContent(text);
+        const html = generateIMessageHTML(parsed.contactName, parsed.messages);
+
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        pre.replaceWith(container.firstElementChild);
+    });
+}
+
+function parseIMessageContent(text) {
+    const lines = text.split('\n');
+    let contactName = '';
+    const messages = [];
+    let startIndex = 1; // skip [imessage]
+
+    // Check if next non-empty line is a contact name:
+    // short (≤25 chars), no sentence-ending punctuation, not a timestamp
+    if (lines.length > 1) {
+        const nextLine = lines[1]?.trim();
+        const wordCount = nextLine ? nextLine.split(/\s+/).length : 0;
+        if (nextLine && wordCount <= 3 && nextLine.length <= 25 && !nextLine.match(/^\[.*\]$/)) {
+            contactName = nextLine;
+            startIndex = 2;
+        }
+    }
+
+    for (let i = startIndex; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        if (trimmed === '') {
+            messages.push({ type: 'spacer' });
+            continue;
+        }
+
+        const timestampMatch = trimmed.match(/^\[(.+)\]$/);
+        if (timestampMatch) {
+            messages.push({ type: 'timestamp', text: timestampMatch[1] });
+            continue;
+        }
+
+        const isMe = /^(\s{2,}|\t)/.test(line);
+        messages.push({ type: 'message', text: trimmed, sender: isMe ? 'me' : 'them' });
+    }
+
+    // Mark last-in-group for tails
+    for (let i = 0; i < messages.length; i++) {
+        if (messages[i].type !== 'message') continue;
+        const next = messages[i + 1];
+        messages[i].lastInGroup = !next || next.type !== 'message' || next.sender !== messages[i].sender;
+    }
+
+    return { contactName, messages };
+}
+
+function generateIMessageHTML(contactName, messages) {
+    let html = `<div class="imessage-container">`;
+
+    // Find the last "me" tail index for "Delivered" placement
+    let lastMeTailIndex = -1;
+    for (let i = 0; i < messages.length; i++) {
+        if (messages[i].type === 'message' && messages[i].sender === 'me' && messages[i].lastInGroup) {
+            lastMeTailIndex = i;
+        }
+    }
+
+    html += `<div class="imessage-messages">`;
+    for (let i = 0; i < messages.length; i++) {
+        const msg = messages[i];
+        if (msg.type === 'spacer') {
+            html += `<div class="imessage-spacer"></div>`;
+        } else if (msg.type === 'timestamp') {
+            html += `<div class="imessage-timestamp">${msg.text}</div>`;
+        } else {
+            const tailClass = msg.lastInGroup ? ' imessage-tail' : '';
+            html += `<div class="imessage-bubble imessage-${msg.sender}${tailClass}">${msg.text}</div>`;
+            if (i === lastMeTailIndex) {
+                html += `<div class="imessage-delivered">Delivered</div>`;
+            }
+        }
+    }
+    html += `</div>`;
+
+    html += `</div>`;
+    return html;
 }
 
 // ============================================
