@@ -22,24 +22,7 @@
           "image-name" : "Untitled design.png",
           "name" : "Untitled design",
           "position" : {
-            "scale" : 0.5,
-            "translation-in-points" : [
-              0,
-              0
-            ]
-          }
-        },
-        {
-          "blend-mode" : "normal",
-          "fill" : {
-            "solid" : "extended-gray:1.00000,1.00000"
-          },
-          "glass" : false,
-          "hidden" : false,
-          "image-name" : "Group.png",
-          "name" : "Group",
-          "position" : {
-            "scale" : 2.5,
+            "scale" : 1,
             "translation-in-points" : [
               0,
               0
