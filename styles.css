@@ -36,7 +36,7 @@
     --font-size-body: 2.875rem;
     --line-height-heading-custom: 1.0;
     --line-height-body-custom: 1.2;
-    --letter-spacing-custom: -1px;
+    --letter-spacing-custom: -2px;
     --heading-letter-spacing-custom: -2px;
     --heading-spacing-top: var(--spacing-lg);
     --heading-spacing-bottom: var(--spacing-md);
