@@ -874,6 +874,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Transform [state] code blocks into US state map graphics
     initializeStateMapBlocks();
 
+    // Transform [quote] code blocks into styled testimonial quotes
+    initializeQuoteBlocks();
+
     // Initialize pixelate effect for strikethrough text
     initializePixelateEffect();
 
@@ -1651,6 +1654,71 @@ function generateStateMapHTML(parsed) {
     }
 
     return `<div class="state-map-container"><svg viewBox="0 0 959 593" xmlns="http://www.w3.org/2000/svg">${paths}</svg>${legendHTML}</div>`;
+}
+
+// ============================================
+// Quote Block
+// ============================================
+
+function initializeQuoteBlocks() {
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return;
+
+    const preElements = previewContent.querySelectorAll('pre');
+    preElements.forEach(pre => {
+        const text = pre.textContent.trim();
+        if (!text.match(/^\[quote\]/i)) return;
+
+        const parsed = parseQuoteContent(text);
+        const html = generateQuoteHTML(parsed.imgUrl, parsed.name, parsed.quoteText);
+
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        pre.replaceWith(container.firstElementChild);
+    });
+}
+
+function parseQuoteContent(text) {
+    const lines = text.split('\n');
+    let imgUrl = '';
+    let name = '';
+    const quoteLines = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        const trimmed = lines[i].trim();
+        if (trimmed === '') continue;
+
+        if (trimmed.toLowerCase().startsWith('img:')) {
+            imgUrl = trimmed.substring(4).trim();
+        } else if (trimmed.startsWith('@')) {
+            name = trimmed.substring(1).trim();
+        } else {
+            // Strip surrounding quotes if present
+            const unquoted = trimmed.replace(/^[""\u201C]|[""\u201D]$/g, '');
+            quoteLines.push(unquoted);
+        }
+    }
+
+    return { imgUrl, name, quoteText: quoteLines.join(' ') };
+}
+
+function generateQuoteHTML(imgUrl, name, quoteText) {
+    let html = '<div class="quote-block">';
+
+    if (imgUrl) {
+        html += `<div class="quote-block-photo"><img src="${imgUrl}" alt="${name || 'Quote author'}"></div>`;
+    }
+
+    if (name) {
+        html += `<div class="quote-block-name">${name}</div>`;
+    }
+
+    if (quoteText) {
+        html += `<div class="quote-block-text">\u201C${quoteText}\u201D</div>`;
+    }
+
+    html += '</div>';
+    return html;
 }
 
 // ============================================

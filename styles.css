@@ -2,7 +2,7 @@
    Custom Branding & Typography
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
 :root {
     --ui-blue: #01413e;
@@ -2255,5 +2255,104 @@ table.properties {
     line-height: inherit !important;
     letter-spacing: inherit !important;
     z-index: auto !important;
+}
+
+/* ============================================
+   Quote Block
+   ============================================ */
+
+.preview-content .quote-block {
+    max-width: 700px !important;
+    margin: 2rem auto !important;
+    padding: 2.5rem 2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    background: transparent !important;
+    position: relative !important;
+    z-index: auto !important;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    cursor: none !important;
+}
+
+.preview-content .quote-block:hover {
+    transform: scale(1.05) !important;
+}
+
+.preview-content .quote-block-text::before {
+    content: '\201C' !important;
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-size: 18rem !important;
+    font-weight: 600 !important;
+    font-style: normal !important;
+    color: var(--primary) !important;
+    opacity: 0.07 !important;
+    position: absolute !important;
+    top: -2rem !important;
+    left: -2rem !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+.preview-content .quote-block-photo {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+    flex-shrink: 0 !important;
+}
+
+.preview-content .quote-block-photo img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    position: relative !important;
+    z-index: auto !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+
+.preview-content .quote-block-name {
+    font-family: var(--font-family-custom) !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+    color: var(--primary) !important;
+    letter-spacing: -0.5px !important;
+    line-height: var(--line-height-body-custom) !important;
+    margin-bottom: 0.75rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.preview-content .quote-block-text {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+    font-size: var(--font-size-body) !important;
+    color: var(--primary) !important;
+    letter-spacing: var(--letter-spacing-custom) !important;
+    line-height: var(--line-height-body-custom) !important;
+    text-align: left !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Override broad span rules inside quote block */
+.preview-content .quote-block span {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    z-index: auto !important;
+    position: relative !important;
 }
 
