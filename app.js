@@ -1498,7 +1498,7 @@ function initializeStateMapBlocks() {
     const preElements = previewContent.querySelectorAll('pre');
     preElements.forEach(pre => {
         const text = pre.textContent.trim();
-        if (!text.match(/^\[states?\]/i)) return;
+        if (!text.match(/^\[states?\b/i)) return;
 
         const parsed = parseStateMapContent(text);
         const html = generateStateMapHTML(parsed);
@@ -1515,6 +1515,13 @@ function parseStateMapContent(text) {
     let legendMode = null; // null = auto, true = on, false = off
     const states = {};
 
+    // Parse header line for legend option: [states legend:on] or [states legend:off]
+    const header = lines[0].toLowerCase();
+    const legendMatch = header.match(/legend\s*:\s*(on|off)/);
+    if (legendMatch) {
+        legendMode = legendMatch[1] === 'on';
+    }
+
     for (let i = 1; i < lines.length; i++) {
         const trimmed = lines[i].trim();
         if (trimmed === '') continue;
@@ -1524,6 +1531,7 @@ function parseStateMapContent(text) {
             continue;
         }
 
+        // Still support legacy "legend on/off" on its own line
         if (trimmed.toLowerCase() === 'legend on') {
             legendMode = true;
             continue;
