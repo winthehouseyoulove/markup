@@ -1877,6 +1877,10 @@ table.properties {
     padding: 1.75rem !important;
     box-shadow: none !important;
     border-radius: 20px !important;
+    transition: background 0.1s ease-out;
+}
+.callout.block-color-default:hover {
+    background: #d7dbd4 !important;
 }
 
 .callout.block-color-default h3,
@@ -1895,10 +1899,14 @@ table.properties {
 /* Custom Callout Styles - Green Background */
 .callout.block-color-teal_background {
     background: rgba(68, 114, 71, 0.15) !important;
-    border: none !important;
+    border: 4px solid transparent !important;
     padding: 1.75rem !important;
     box-shadow: none !important;
     border-radius: 20px !important;
+    transition: border-color 0.1s ease-out;
+}
+.callout.block-color-teal_background:hover {
+    border-color: #447247 !important;
 }
 
 .callout.block-color-teal_background h3,
@@ -1917,10 +1925,14 @@ table.properties {
 /* Custom Callout Styles - Red Background */
 .callout.block-color-red_background {
     background: rgba(204, 69, 28, 0.15) !important;
-    border: none !important;
+    border: 4px solid transparent !important;
     padding: 1.75rem !important;
     box-shadow: none !important;
     border-radius: 20px !important;
+    transition: border-color 0.1s ease-out;
+}
+.callout.block-color-red_background:hover {
+    border-color: #cc451c !important;
 }
 
 .callout.block-color-red_background h3,
@@ -1939,10 +1951,14 @@ table.properties {
 /* Custom Callout Styles - Purple Background */
 .callout.block-color-purple_background {
     background: rgba(122, 48, 108, 0.15) !important;
-    border: none !important;
+    border: 4px solid transparent !important;
     padding: 1.75rem !important;
     box-shadow: none !important;
     border-radius: 20px !important;
+    transition: border-color 0.1s ease-out;
+}
+.callout.block-color-purple_background:hover {
+    border-color: #7a306c !important;
 }
 
 .callout.block-color-purple_background h3,
