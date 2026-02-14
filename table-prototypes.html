@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table Design Prototype — Markup</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #01413e;
+    --green: #447247;
+    --red: #cc451c;
+    --purple: #7a306c;
+    --neutral: #f0efed;
+    --border: #D9D1C8;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+    color: var(--blue);
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 { font-size: 1.8rem; color: var(--blue); margin-bottom: 0.5rem; }
+  h1 + p { color: #666; margin-bottom: 2.5rem; }
+
+  /* Scroll wrapper */
+  .scroll-wrapper {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  .scroll-inner {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .scroll-inner::-webkit-scrollbar { display: none; }
+  .scroll-fade {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 100px;
+    background: linear-gradient(to right, transparent 0%, rgba(250,250,250,0.5) 30%, rgba(250,250,250,0.85) 60%, rgba(250,250,250,1) 85%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .scroll-fade.visible { opacity: 1; }
+
+  /* Card container */
+  .card-wrap {
+    background: #fafafa;
+  }
+
+  /* Table */
+  .proto-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+    font-size: 1.3rem;
+    letter-spacing: -1px;
+    user-select: none;
+  }
+  .proto-table th, .proto-table td {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    transition: background 0.15s;
+  }
+
+  /* Header row */
+  .proto-table thead th {
+    background: var(--blue);
+    color: var(--white);
+    font-weight: 600;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Column resize handle */
+  .col-resize-handle {
+    position: absolute;
+    top: 0; right: -3px;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 3;
+  }
+  .col-resize-handle:hover,
+  .col-resize-handle.active {
+    background: var(--green);
+    opacity: 0.6;
+  }
+  .proto-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    box-shadow: 1px 0 0 var(--neutral);
+  }
+
+  /* Row dividers */
+  .proto-table thead tr { border-bottom: 1px solid var(--neutral); }
+  .proto-table tbody tr { border-bottom: 1px solid var(--neutral); }
+  .proto-table th + th,
+  .proto-table td + td { border-left: 1px solid var(--neutral); }
+
+  /* Header column — styled like header row */
+  .proto-table tbody td:first-child {
+    background: var(--blue);
+    color: var(--white);
+    font-weight: 600;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    box-shadow: 1px 0 0 var(--neutral);
+  }
+
+  /* All cells get explicit background so highlights look consistent */
+  .proto-table tbody td { background: #fafafa; }
+
+  /* Cell hover — 30% accent green */
+  .proto-table tbody td:hover { background: rgba(68,114,71,0.3) !important; }
+
+  /* Row highlight added by JS on header-column hover */
+  .row-highlight td { background: rgba(68,114,71,0.3) !important; }
+  .row-highlight td:first-child {
+    background: #1a5c42 !important;
+    color: var(--white);
+  }
+
+  /* Column highlight — 30% accent green */
+  .col-highlight { background: rgba(68,114,71,0.3) !important; }
+
+  /* Header cell hover — accent green (not top-left) */
+  .proto-table thead th:hover {
+    background: var(--green);
+  }
+  .proto-table thead th:first-child:hover {
+    background: var(--blue);
+  }
+  .proto-table tbody td:first-child:hover {
+    background: var(--green) !important;
+    color: var(--white);
+  }
+</style>
+</head>
+<body>
+
+<h1>Table Design Prototype</h1>
+<p>Card container with striped rows, green header-column accent, purple cell hover. Hover headers to highlight columns.</p>
+
+<div class="scroll-wrapper">
+  <div class="scroll-inner card-wrap">
+    <table class="proto-table" data-highlight-cols>
+      <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Location</th><th>Start Date</th><th>Status</th><th>Email</th><th>Phone</th><th>Manager</th><th>Salary Band</th><th>Projects</th><th>Last Review</th></tr></thead>
+      <tbody>
+        <tr><td>Alice Chen</td><td>Lead Engineer</td><td>Engineering</td><td>San Francisco</td><td>2021-03-15</td><td>Active</td><td>alice.chen@co.com</td><td>(415) 555-0142</td><td>David Kim</td><td>L6</td><td>3</td><td>2025-11-01</td></tr>
+        <tr><td>Marcus Johnson</td><td>Product Manager</td><td>Product</td><td>New York</td><td>2020-08-01</td><td>Active</td><td>m.johnson@co.com</td><td>(212) 555-0198</td><td>Lisa Tran</td><td>L5</td><td>2</td><td>2025-10-15</td></tr>
+        <tr><td>Sara Müller</td><td>UX Designer</td><td>Design</td><td>Berlin</td><td>2022-01-10</td><td>Active</td><td>s.muller@co.com</td><td>+49 30 55501234</td><td>Tomoko Abe</td><td>L4</td><td>4</td><td>2025-12-01</td></tr>
+        <tr><td>James Park</td><td>Data Analyst</td><td>Analytics</td><td>Toronto</td><td>2023-06-22</td><td>On Leave</td><td>j.park@co.com</td><td>(416) 555-0177</td><td>David Kim</td><td>L3</td><td>1</td><td>2025-09-20</td></tr>
+        <tr><td>Priya Sharma</td><td>DevOps Engineer</td><td>Engineering</td><td>London</td><td>2021-11-05</td><td>Active</td><td>p.sharma@co.com</td><td>+44 20 5550 1389</td><td>David Kim</td><td>L5</td><td>5</td><td>2025-11-15</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="scroll-fade"></div>
+</div>
+
+<script>
+  // Scroll fade indicator
+  document.querySelectorAll('.scroll-inner').forEach(inner => {
+    const fade = inner.parentElement.querySelector('.scroll-fade');
+    if (!fade) return;
+    const check = () => {
+      const scrollable = inner.scrollWidth > inner.clientWidth;
+      const atEnd = inner.scrollLeft + inner.clientWidth >= inner.scrollWidth - 2;
+      fade.classList.toggle('visible', scrollable && !atEnd);
+    };
+    check();
+    inner.addEventListener('scroll', check);
+    new ResizeObserver(check).observe(inner);
+  });
+
+  // Column highlighting on header-row hover
+  document.querySelectorAll('[data-highlight-cols]').forEach(table => {
+    const ths = table.querySelectorAll('thead th');
+    ths.forEach((th, colIdx) => {
+      if (colIdx === 0) return; // skip top-left cell
+      th.addEventListener('mouseenter', () => {
+        table.querySelectorAll('tbody tr').forEach(row => {
+          const cell = row.children[colIdx];
+          if (cell) cell.classList.add('col-highlight');
+        });
+      });
+      th.addEventListener('mouseleave', () => {
+        table.querySelectorAll('.col-highlight').forEach(c => c.classList.remove('col-highlight'));
+      });
+    });
+
+    // Row highlighting on header-column (first cell) hover
+    table.querySelectorAll('tbody tr').forEach(row => {
+      const firstCell = row.children[0];
+      if (!firstCell) return;
+      firstCell.addEventListener('mouseenter', () => row.classList.add('row-highlight'));
+      firstCell.addEventListener('mouseleave', () => row.classList.remove('row-highlight'));
+    });
+  });
+
+  // Column resizing with localStorage persistence
+  document.querySelectorAll('.proto-table').forEach(table => {
+    const ths = table.querySelectorAll('thead th');
+    const storageKey = 'markup-table-col-widths';
+
+    // Restore saved widths — applied as inline width, no fixed layout until user drags
+    const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+    const resizedCols = new Set(Object.keys(saved).map(Number));
+
+    function saveWidths() {
+      const widths = {};
+      resizedCols.forEach(i => { widths[i] = ths[i].offsetWidth; });
+      localStorage.setItem(storageKey, JSON.stringify(widths));
+    }
+
+    // Add resize handles to each header
+    ths.forEach((th, i) => {
+      const handle = document.createElement('div');
+      handle.className = 'col-resize-handle';
+      th.appendChild(handle);
+
+      let startX, startW;
+
+      handle.addEventListener('dblclick', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Temporarily remove fixed layout to measure natural width
+        const col = i;
+        const cells = [th, ...table.querySelectorAll(`tbody tr td:nth-child(${col + 1})`)];
+        // Measure each cell's content width
+        let maxW = 0;
+        cells.forEach(cell => {
+          cell.style.width = 'auto';
+          cell.style.whiteSpace = 'nowrap';
+          cell.style.overflow = 'visible';
+        });
+        const oldLayout = table.style.tableLayout;
+        table.style.tableLayout = 'auto';
+        cells.forEach(cell => {
+          maxW = Math.max(maxW, cell.scrollWidth);
+        });
+        table.style.tableLayout = 'fixed';
+        cells.forEach(cell => {
+          cell.style.width = '';
+          cell.style.whiteSpace = '';
+          cell.style.overflow = '';
+        });
+        th.style.width = (maxW + 20) + 'px';
+        resizedCols.add(i);
+        saveWidths();
+      });
+
+      handle.addEventListener('mousedown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        startX = e.pageX;
+        startW = th.offsetWidth;
+        handle.classList.add('active');
+
+        // Lock all columns to current widths on first resize
+        if (table.style.tableLayout !== 'fixed') {
+          ths.forEach((t, idx) => {
+            const w = saved[idx] || t.offsetWidth;
+            t.style.width = w + 'px';
+          });
+          table.style.tableLayout = 'fixed';
+        }
+
+        const onMove = e => {
+          const diff = e.pageX - startX;
+          const newW = Math.max(60, startW + diff);
+          th.style.width = newW + 'px';
+        };
+
+        const onUp = () => {
+          handle.classList.remove('active');
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          resizedCols.add(i);
+          saveWidths();
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+  });
+</script>
+</body>
+</html>

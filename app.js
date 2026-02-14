@@ -523,6 +523,9 @@ document.addEventListener('keydown', (e) => {
             laserPointer.style.display = 'block';
             laserPointer.style.left = lastMouseX + 'px';
             laserPointer.style.top = lastMouseY + 'px';
+            // Trigger reflow so transition plays from scale(0)
+            laserPointer.offsetHeight;
+            laserPointer.classList.add('active');
             updateLaserPointerColor();
         }
     }
@@ -533,7 +536,11 @@ document.addEventListener('keyup', (e) => {
     if (e.key === 's' || e.key === 'S') {
         laserActive = false;
         document.body.classList.remove('laser-active');
-        laserPointer.style.display = 'none';
+        laserPointer.classList.remove('active');
+        // Hide after transition completes
+        setTimeout(() => {
+            if (!laserActive) laserPointer.style.display = 'none';
+        }, 80);
     }
 });
 
@@ -873,6 +880,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Initialize image scroll effects
     initializeImageScrollEffects();
     
+    // Initialize table features (scroll wrapper, highlights, resize)
+    initializeTables();
+
     // Convert content to slides
     initializeSlides();
     
@@ -1551,6 +1561,146 @@ function generateStateMapHTML(parsed) {
     }
 
     return `<div class="state-map-container"><svg viewBox="0 0 959 593" xmlns="http://www.w3.org/2000/svg">${paths}</svg></div>`;
+}
+
+// ============================================
+// Table System
+// ============================================
+
+function initializeTables() {
+    // Only target Notion's simple-table, skip properties tables
+    const tables = previewContent.querySelectorAll('table.simple-table');
+    tables.forEach(table => {
+        // Detect if table has a header column (Notion marks with simple-table-header-color on td)
+        const hasHeaderCol = !!table.querySelector('tbody td.simple-table-header-color');
+        if (hasHeaderCol) table.classList.add('has-header-col');
+
+        // Wrap table in scroll wrapper
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-scroll-wrapper';
+        const inner = document.createElement('div');
+        inner.className = 'table-scroll-inner';
+        const fade = document.createElement('div');
+        fade.className = 'table-scroll-fade';
+
+        table.parentNode.insertBefore(wrapper, table);
+        inner.appendChild(table);
+        wrapper.appendChild(inner);
+        wrapper.appendChild(fade);
+
+        // Scroll fade indicator
+        const checkFade = () => {
+            const scrollable = inner.scrollWidth > inner.clientWidth;
+            const atEnd = inner.scrollLeft + inner.clientWidth >= inner.scrollWidth - 2;
+            fade.classList.toggle('visible', scrollable && !atEnd);
+        };
+        checkFade();
+        inner.addEventListener('scroll', checkFade);
+        new ResizeObserver(checkFade).observe(inner);
+
+        // Column highlighting on header hover
+        const ths = table.querySelectorAll('thead th');
+        ths.forEach((th, colIdx) => {
+            // Skip first column if it's a header column (top-left cell)
+            if (hasHeaderCol && colIdx === 0) return;
+            th.addEventListener('mouseenter', () => {
+                table.querySelectorAll('tbody tr').forEach(row => {
+                    const cell = row.children[colIdx];
+                    if (cell) cell.classList.add('col-highlight');
+                });
+            });
+            th.addEventListener('mouseleave', () => {
+                table.querySelectorAll('.col-highlight').forEach(c => c.classList.remove('col-highlight'));
+            });
+        });
+
+        // Row highlighting on header-column hover (only if header column exists)
+        if (hasHeaderCol) {
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const headerCell = row.querySelector('td.simple-table-header-color');
+                if (!headerCell) return;
+                headerCell.addEventListener('mouseenter', () => row.classList.add('row-highlight'));
+                headerCell.addEventListener('mouseleave', () => row.classList.remove('row-highlight'));
+            });
+        }
+
+        // Column resizing with localStorage persistence
+        const storageKey = 'markup-table-col-widths-' + (table.querySelector('thead th')?.textContent || '').trim();
+        const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        const resizedCols = new Set(Object.keys(saved).map(Number));
+
+        function saveWidths() {
+            const widths = {};
+            resizedCols.forEach(i => { widths[i] = ths[i].offsetWidth; });
+            localStorage.setItem(storageKey, JSON.stringify(widths));
+        }
+
+        ths.forEach((th, i) => {
+            const handle = document.createElement('div');
+            handle.className = 'col-resize-handle';
+            th.appendChild(handle);
+
+            let startX, startW;
+
+            handle.addEventListener('dblclick', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const cells = [th, ...table.querySelectorAll(`tbody tr td:nth-child(${i + 1})`)];
+                let maxW = 0;
+                cells.forEach(cell => {
+                    cell.style.width = 'auto';
+                    cell.style.whiteSpace = 'nowrap';
+                    cell.style.overflow = 'visible';
+                });
+                table.style.tableLayout = 'auto';
+                cells.forEach(cell => {
+                    maxW = Math.max(maxW, cell.scrollWidth);
+                });
+                table.style.tableLayout = 'fixed';
+                cells.forEach(cell => {
+                    cell.style.width = '';
+                    cell.style.whiteSpace = '';
+                    cell.style.overflow = '';
+                });
+                th.style.width = (maxW + 20) + 'px';
+                resizedCols.add(i);
+                saveWidths();
+            });
+
+            handle.addEventListener('mousedown', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                startX = e.pageX;
+                startW = th.offsetWidth;
+                handle.classList.add('active');
+
+                if (table.style.tableLayout !== 'fixed') {
+                    ths.forEach((t, idx) => {
+                        const w = saved[idx] || t.offsetWidth;
+                        t.style.width = w + 'px';
+                    });
+                    table.style.tableLayout = 'fixed';
+                }
+
+                const onMove = e => {
+                    const diff = e.pageX - startX;
+                    const newW = Math.max(60, startW + diff);
+                    th.style.width = newW + 'px';
+                };
+
+                const onUp = () => {
+                    handle.classList.remove('active');
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                    resizedCols.add(i);
+                    saveWidths();
+                };
+
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+            });
+        });
+    });
 }
 
 // ============================================
