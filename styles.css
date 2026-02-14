@@ -2306,6 +2306,16 @@ table.properties {
     position: relative !important;
     z-index: 1 !important;
     flex-shrink: 0 !important;
+    cursor: grab !important;
+    user-select: none !important;
+}
+
+.preview-content .quote-block-photo.dragging {
+    cursor: grabbing !important;
+}
+
+.preview-content .quote-block-photo.dragging img {
+    pointer-events: none !important;
 }
 
 .preview-content .quote-block-photo img {
@@ -2313,12 +2323,13 @@ table.properties {
     height: 100% !important;
     max-width: none !important;
     object-fit: cover !important;
-    object-position: center center !important;
+    object-position: center center;
     display: block !important;
     position: relative !important;
     z-index: auto !important;
     border-radius: 0 !important;
     margin: 0 !important;
+    -webkit-user-drag: none !important;
 }
 
 .preview-content .quote-block-name {

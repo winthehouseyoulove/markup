@@ -886,9 +886,13 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Initialize table features (scroll wrapper, highlights, resize)
     initializeTables();
 
-    // Convert content to slides
+    // Convert content to slides (cloneNode loses event listeners, so attach after)
     initializeSlides();
-    
+
+    // Restore saved quote photo positions and attach drag-to-reposition handlers
+    restoreQuotePhotoPositions();
+    initializeQuotePhotoDrag();
+
     // Set the presentation title under the logo
     setPresentationTitle(presentationTitle);
 }
@@ -1676,6 +1680,7 @@ function initializeQuoteBlocks() {
         container.innerHTML = html;
         pre.replaceWith(container.firstElementChild);
     });
+
 }
 
 function parseQuoteContent(text) {
@@ -1719,6 +1724,92 @@ function generateQuoteHTML(imgUrl, name, quoteText) {
 
     html += '</div>';
     return html;
+}
+
+function restoreQuotePhotoPositions() {
+    const stored = localStorage.getItem('markup-quote-img-positions');
+    if (!stored) return;
+    try {
+        const positions = JSON.parse(stored);
+        const photos = document.querySelectorAll('.quote-block-photo img');
+        photos.forEach(img => {
+            const pos = positions[img.src];
+            if (pos) {
+                img.style.setProperty('object-position', pos, 'important');
+                const parts = pos.split(/\s+/);
+                img.dataset.posX = parseFloat(parts[0]) || 50;
+                img.dataset.posY = parseFloat(parts[1]) || 50;
+            }
+        });
+    } catch (e) {
+        // Ignore corrupt data
+    }
+}
+
+function saveQuotePhotoPosition(src, objectPosition) {
+    let positions = {};
+    try {
+        const stored = localStorage.getItem('markup-quote-img-positions');
+        if (stored) positions = JSON.parse(stored);
+    } catch (e) {
+        // Start fresh
+    }
+    positions[src] = objectPosition;
+    localStorage.setItem('markup-quote-img-positions', JSON.stringify(positions));
+}
+
+function initializeQuotePhotoDrag() {
+    const photos = document.querySelectorAll('.quote-block-photo');
+    photos.forEach(container => {
+        const img = container.querySelector('img');
+        if (!img) return;
+
+        // Initialize position tracking from current inline style or default
+        if (!img.dataset.posX) img.dataset.posX = '50';
+        if (!img.dataset.posY) img.dataset.posY = '50';
+
+        // Prevent native image drag-and-drop which steals mousemove events
+        img.draggable = false;
+        img.addEventListener('dragstart', e => e.preventDefault());
+
+        container.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const currentXPct = parseFloat(img.dataset.posX);
+            const currentYPct = parseFloat(img.dataset.posY);
+
+            container.classList.add('dragging');
+
+            function onMouseMove(ev) {
+                const deltaX = ev.clientX - startX;
+                const deltaY = ev.clientY - startY;
+
+                // Each pixel of mouse movement = ~1.5% shift in crop position
+                let newX = currentXPct - (deltaX * 1.5);
+                let newY = currentYPct - (deltaY * 1.5);
+
+                newX = Math.max(0, Math.min(100, newX));
+                newY = Math.max(0, Math.min(100, newY));
+
+                img.dataset.posX = newX.toFixed(1);
+                img.dataset.posY = newY.toFixed(1);
+                img.style.setProperty('object-position', newX.toFixed(1) + '% ' + newY.toFixed(1) + '%', 'important');
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                container.classList.remove('dragging');
+                saveQuotePhotoPosition(img.src, img.dataset.posX + '% ' + img.dataset.posY + '%');
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    });
 }
 
 // ============================================
