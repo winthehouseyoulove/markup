@@ -2107,6 +2107,39 @@ table.properties {
 .preview-content .state-map-container {
     max-width: 900px !important;
     margin: 1.5rem auto !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0 !important;
+}
+
+/* State map — legend */
+.preview-content .state-map-legend {
+    position: absolute !important;
+    left: 85% !important;
+    right: auto !important;
+    bottom: 18% !important;
+    top: auto !important;
+    font-family: var(--font-family-custom) !important;
+    font-size: 0.7rem !important;
+    letter-spacing: -0.5px !important;
+    line-height: 1.6 !important;
+    color: var(--primary) !important;
+    white-space: nowrap;
+    padding: 0 !important;
+}
+.preview-content .state-map-legend-item {
+    font-size: 0.7rem !important;
+    line-height: 1.6 !important;
+    letter-spacing: -0.5px !important;
+    color: var(--primary) !important;
+    background: none !important;
+    position: static !important;
+    z-index: auto !important;
+}
+.preview-content .state-map-legend-excluded {
+    color: var(--neutral-dark) !important;
+    text-decoration: line-through !important;
 }
 
 .preview-content .state-map-container svg {
@@ -2126,11 +2159,6 @@ table.properties {
     stroke-width: 1.5 !important;
 }
 
-.preview-content .state-map-red {
-    fill: #cc451c !important;
-    stroke: #f0efed !important;
-    stroke-width: 1.5 !important;
-}
 
 /* Override broad span rules inside state map */
 .preview-content .state-map-container span {

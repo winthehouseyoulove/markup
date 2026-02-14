@@ -1512,11 +1512,11 @@ function initializeStateMapBlocks() {
 function parseStateMapContent(text) {
     const lines = text.split('\n');
     let allMode = false;
+    let legendMode = null; // null = auto, true = on, false = off
     const states = {};
 
     for (let i = 1; i < lines.length; i++) {
-        const raw = lines[i];
-        const trimmed = raw.trim();
+        const trimmed = lines[i].trim();
         if (trimmed === '') continue;
 
         if (trimmed.toLowerCase() === 'all') {
@@ -1524,43 +1524,105 @@ function parseStateMapContent(text) {
             continue;
         }
 
+        if (trimmed.toLowerCase() === 'legend on') {
+            legendMode = true;
+            continue;
+        }
+        if (trimmed.toLowerCase() === 'legend off') {
+            legendMode = false;
+            continue;
+        }
+
         const isExclude = trimmed.startsWith('-');
-        const isIndented = /^(\s{2,}|\t)/.test(raw);
         const name = (isExclude ? trimmed.slice(1) : trimmed).trim().toLowerCase();
         const abbr = STATE_NAMES[name];
         if (!abbr) continue;
 
         if (isExclude) {
             states[abbr] = 'exclude';
-        } else if (isIndented) {
-            states[abbr] = 'red';
         } else {
             states[abbr] = 'teal';
         }
     }
 
-    return { allMode, states };
+    return { allMode, legendMode, states };
+}
+
+// Reverse lookup: abbreviation -> full state name
+const STATE_ABBR_TO_NAME = {};
+for (const [name, abbr] of Object.entries(STATE_NAMES)) {
+    if (name !== 'dc' && !STATE_ABBR_TO_NAME[abbr]) {
+        STATE_ABBR_TO_NAME[abbr] = name.replace(/\b\w/g, c => c.toUpperCase());
+    }
 }
 
 function generateStateMapHTML(parsed) {
-    const { allMode, states } = parsed;
+    const { allMode, legendMode, states } = parsed;
     let paths = '';
+    const tealStates = [];
+    const excludedStates = [];
+    const defaultStates = [];
+    const totalStates = Object.keys(STATE_PATHS).length;
 
     for (const [abbr, d] of Object.entries(STATE_PATHS)) {
         let cssClass = 'state-map-default';
         if (states[abbr] === 'teal') {
             cssClass = 'state-map-teal';
-        } else if (states[abbr] === 'red') {
-            cssClass = 'state-map-red';
+            tealStates.push(abbr);
         } else if (states[abbr] === 'exclude') {
             cssClass = 'state-map-default';
+            excludedStates.push(abbr);
         } else if (allMode) {
             cssClass = 'state-map-teal';
+            tealStates.push(abbr);
+        } else {
+            defaultStates.push(abbr);
         }
         paths += `<path d="${d}" class="${cssClass}" />`;
     }
 
-    return `<div class="state-map-container"><svg viewBox="0 0 959 593" xmlns="http://www.w3.org/2000/svg">${paths}</svg></div>`;
+    // Build legend (only if legendMode is true)
+    let legendHTML = '';
+    if (legendMode === true) {
+        const legendItems = [];
+        const tealCount = tealStates.length;
+        const nonTealCount = totalStates - tealCount;
+
+        if (tealCount > 0 && nonTealCount > 0 && nonTealCount <= 8) {
+            // Mostly teal — show excluded/default states with strikethrough
+            for (const abbr of excludedStates) {
+                const name = STATE_ABBR_TO_NAME[abbr] || abbr;
+                legendItems.push(`<div class="state-map-legend-item state-map-legend-excluded">${name}</div>`);
+            }
+            for (const abbr of defaultStates) {
+                const name = STATE_ABBR_TO_NAME[abbr] || abbr;
+                legendItems.push(`<div class="state-map-legend-item state-map-legend-excluded">${name}</div>`);
+            }
+        } else if (tealCount > 0 && tealCount <= 15) {
+            // Few teal states — list them
+            for (const abbr of tealStates) {
+                const name = STATE_ABBR_TO_NAME[abbr] || abbr;
+                legendItems.push(`<div class="state-map-legend-item">${name}</div>`);
+            }
+            // Show excluded with strikethrough
+            for (const abbr of excludedStates) {
+                const name = STATE_ABBR_TO_NAME[abbr] || abbr;
+                legendItems.push(`<div class="state-map-legend-item state-map-legend-excluded">${name}</div>`);
+            }
+        } else {
+            // Just show excluded states with strikethrough
+            for (const abbr of excludedStates) {
+                const name = STATE_ABBR_TO_NAME[abbr] || abbr;
+                legendItems.push(`<div class="state-map-legend-item state-map-legend-excluded">${name}</div>`);
+            }
+        }
+
+        if (legendItems.length > 0) {
+            legendHTML = `<div class="state-map-legend">${legendItems.join('')}</div>`;
+        }
+    }
+
+    return `<div class="state-map-container"><svg viewBox="0 0 959 593" xmlns="http://www.w3.org/2000/svg">${paths}</svg>${legendHTML}</div>`;
 }
 
 // ============================================
