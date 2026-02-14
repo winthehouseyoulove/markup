@@ -1987,6 +1987,78 @@ table.properties {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
 }
 
+.preview-content .imessage-contact-bar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 14px 16px !important;
+    background: #f7f7f7 !important;
+    border-bottom: 1px solid #e5e5ea !important;
+}
+
+.preview-content .imessage-contact-bar-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.preview-content .imessage-back-chevron {
+    color: #007aff !important;
+    font-size: 56px !important;
+    font-weight: 300 !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
+    position: relative !important;
+    z-index: auto !important;
+    width: 40px !important;
+}
+
+.preview-content .imessage-facetime {
+    color: #007aff !important;
+    width: 40px !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    position: relative !important;
+    z-index: auto !important;
+}
+
+.preview-content .imessage-facetime svg {
+    width: 48px !important;
+    height: 48px !important;
+}
+
+.preview-content .imessage-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    background: #e9e9eb !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    color: #000000 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    position: relative !important;
+    z-index: auto !important;
+}
+
+.preview-content .imessage-contact-name {
+    margin-top: 6px !important;
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    color: #000000 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
+    line-height: 1.2 !important;
+    letter-spacing: normal !important;
+    position: relative !important;
+    z-index: auto !important;
+}
+
 .preview-content .imessage-messages {
     padding: 24px 20px !important;
     display: flex !important;

@@ -1330,7 +1330,7 @@ function initializeIMessageBlocks() {
     const preElements = previewContent.querySelectorAll('pre');
     preElements.forEach(pre => {
         const text = pre.textContent.trim();
-        if (!text.match(/^\[imessage\]/i)) return;
+        if (!text.match(/^\[imessage\b/i)) return;
 
         const parsed = parseIMessageContent(text);
         const html = generateIMessageHTML(parsed.contactName, parsed.messages);
@@ -1345,11 +1345,17 @@ function parseIMessageContent(text) {
     const lines = text.split('\n');
     let contactName = '';
     const messages = [];
-    let startIndex = 1; // skip [imessage]
+    let startIndex = 1; // skip [imessage...]
 
-    // Check if next non-empty line is a contact name:
+    // Check for @Name in header line: [iMessage @John Smith]
+    const headerMatch = lines[0].match(/@(.+?)(?:\]|$)/);
+    if (headerMatch) {
+        contactName = headerMatch[1].trim();
+    }
+
+    // Legacy fallback: check if next non-empty line is a contact name
     // short (≤25 chars), no sentence-ending punctuation, not a timestamp
-    if (lines.length > 1) {
+    if (!contactName && lines.length > 1) {
         const nextLine = lines[1]?.trim();
         const wordCount = nextLine ? nextLine.split(/\s+/).length : 0;
         if (nextLine && wordCount <= 3 && nextLine.length <= 25 && !nextLine.match(/^\[.*\]$/)) {
@@ -1389,6 +1395,20 @@ function parseIMessageContent(text) {
 
 function generateIMessageHTML(contactName, messages) {
     let html = `<div class="imessage-container">`;
+
+    // Contact bar with avatar and name
+    if (contactName) {
+        const parts = contactName.trim().split(/\s+/);
+        const initials = (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+        html += `<div class="imessage-contact-bar">`;
+        html += `<div class="imessage-back-chevron">&#8249;</div>`;
+        html += `<div class="imessage-contact-bar-center">`;
+        html += `<div class="imessage-avatar">${initials}</div>`;
+        html += `<div class="imessage-contact-name">${contactName}</div>`;
+        html += `</div>`;
+        html += `<div class="imessage-facetime"><svg viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="14" height="14" rx="2"></rect><path d="M15 10l5.5-3.5v11L15 14"></path></svg></div>`;
+        html += `</div>`;
+    }
 
     // Find the last "me" tail index for "Delivered" placement
     let lastMeTailIndex = -1;
