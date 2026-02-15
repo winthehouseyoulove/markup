@@ -2216,3 +2216,36 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================
+// Auto-load from query param (?load=filename.zip)
+// ============================================
+
+(async function autoLoadFromQueryParam() {
+    const params = new URLSearchParams(window.location.search);
+    const loadFile = params.get('load');
+    if (!loadFile) return;
+
+    // Clean URL so refresh doesn't re-trigger
+    history.replaceState(null, '', window.location.pathname);
+
+    hideError();
+    showTransition();
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    try {
+        const response = await fetch(loadFile + '?t=' + Date.now());
+        if (!response.ok) {
+            throw new Error('Could not load file: ' + loadFile);
+        }
+        const blob = await response.blob();
+        const file = new File([blob], loadFile, { type: 'application/zip' });
+        await handleFile(file);
+        hideTransition();
+    } catch (error) {
+        console.error('Error auto-loading:', error);
+        showError('Error auto-loading: ' + error.message);
+        showLoading(false);
+        hideTransition();
+    }
+})();
+
+// ============================================
