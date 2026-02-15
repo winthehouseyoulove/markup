@@ -40,6 +40,10 @@ build/
 *.temp
 .cache/
 
+# Notion export files
+autoload.zip
+*_ExportBlock-*.zip
+
 # OS generated files
 Icon?
 .Spotlight-V100
