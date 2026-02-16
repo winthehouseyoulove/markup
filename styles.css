@@ -2359,6 +2359,63 @@ table.properties {
     z-index: 1 !important;
 }
 
+/* ============================================
+   Slide Navigation Zones (cursor arrows)
+   ============================================ */
+
+.nav-zone {
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    z-index: 250;
+    pointer-events: auto;
+}
+
+.nav-zone-left {
+    left: 0;
+    background: rgba(1, 65, 62, 0.06);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.nav-zone-left:hover {
+    opacity: 1;
+}
+
+.nav-zone-right {
+    right: 0;
+    background: rgba(1, 65, 62, 0.06);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.nav-zone-right:hover {
+    opacity: 1;
+}
+
+body.nav-zone-active .custom-cursor {
+    opacity: 0 !important;
+    transition: opacity 0.15s ease;
+}
+
+.nav-pop {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(1, 65, 62, 0.15);
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    animation: navPop 0.3s ease-out forwards;
+    z-index: 60;
+}
+
+@keyframes navPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
 /* Override broad span rules inside quote block */
 .preview-content .quote-block span {
     color: inherit !important;

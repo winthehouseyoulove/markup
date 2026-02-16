@@ -2030,6 +2030,118 @@ function initializeSlides() {
     
     // Update progress
     updateScrollProgress();
+
+    // Create click navigation zones on edges
+    createNavZones();
+}
+
+// ============================================
+// Slide Navigation Zones (cursor arrow click areas)
+// ============================================
+
+let navCursor = null;
+
+function createNavCursor() {
+    if (navCursor) return;
+    navCursor = document.createElement('div');
+    navCursor.id = 'navCursor';
+    navCursor.style.position = 'fixed';
+    navCursor.style.pointerEvents = 'none';
+    navCursor.style.zIndex = '10000';
+    navCursor.style.display = 'none';
+    navCursor.style.width = '36px';
+    navCursor.style.height = '36px';
+    navCursor.style.borderRadius = '50%';
+    navCursor.style.background = 'rgba(1, 65, 62, 0.12)';
+    navCursor.style.opacity = '0';
+    navCursor.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    navCursor.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+    document.body.appendChild(navCursor);
+}
+
+function showNavCursor(direction, e) {
+    if (!navCursor) createNavCursor();
+    document.body.classList.add('nav-zone-active');
+    if (e) {
+        navCursor.style.left = e.clientX + 'px';
+        navCursor.style.top = e.clientY + 'px';
+    }
+    const chevron = direction === 'left'
+        ? '<path d="M20 7L12 18L20 29" fill="none" stroke="#01413e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
+        : '<path d="M16 7L24 18L16 29" fill="none" stroke="#01413e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+    navCursor.innerHTML = `<svg width="36" height="36" viewBox="0 0 36 36">${chevron}</svg>`;
+    navCursor.style.display = 'block';
+    requestAnimationFrame(() => {
+        navCursor.style.opacity = '1';
+        navCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+}
+
+function hideNavCursor() {
+    if (!navCursor) return;
+    document.body.classList.remove('nav-zone-active');
+    navCursor.style.opacity = '0';
+    navCursor.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    setTimeout(() => {
+        if (navCursor && navCursor.style.opacity === '0') {
+            navCursor.style.display = 'none';
+        }
+    }, 150);
+}
+
+function moveNavCursor(e) {
+    if (navCursor && navCursor.style.display !== 'none') {
+        navCursor.style.left = e.clientX + 'px';
+        navCursor.style.top = e.clientY + 'px';
+    }
+}
+
+function createNavZones() {
+    // Remove existing zones if any
+    presentationContainer.querySelectorAll('.nav-zone').forEach(el => el.remove());
+    createNavCursor();
+
+    const leftZone = document.createElement('div');
+    leftZone.className = 'nav-zone nav-zone-left';
+    leftZone.style.cursor = 'none';
+    leftZone.addEventListener('mouseenter', (e) => showNavCursor('left', e));
+    leftZone.addEventListener('mouseleave', hideNavCursor);
+    leftZone.addEventListener('mousemove', moveNavCursor);
+    leftZone.addEventListener('click', (e) => {
+        spawnNavPop(e.clientX, e.clientY);
+        previousSlide();
+    });
+
+    const rightZone = document.createElement('div');
+    rightZone.className = 'nav-zone nav-zone-right';
+    rightZone.style.cursor = 'none';
+    rightZone.addEventListener('mouseenter', (e) => showNavCursor('right', e));
+    rightZone.addEventListener('mouseleave', hideNavCursor);
+    rightZone.addEventListener('mousemove', moveNavCursor);
+    rightZone.addEventListener('click', (e) => {
+        spawnNavPop(e.clientX, e.clientY);
+        nextSlide();
+    });
+
+    presentationContainer.appendChild(leftZone);
+    presentationContainer.appendChild(rightZone);
+    updateNavZoneVisibility();
+}
+
+function updateNavZoneVisibility() {
+    const left = presentationContainer.querySelector('.nav-zone-left');
+    const right = presentationContainer.querySelector('.nav-zone-right');
+    if (left) left.style.display = currentSlideIndex <= 0 ? 'none' : '';
+    if (right) right.style.display = currentSlideIndex >= totalSlides - 1 ? 'none' : '';
+}
+
+function spawnNavPop(x, y) {
+    const pop = document.createElement('div');
+    pop.className = 'nav-pop';
+    pop.style.left = x + 'px';
+    pop.style.top = y + 'px';
+    document.body.appendChild(pop);
+    pop.addEventListener('animationend', () => pop.remove());
 }
 
 function showSlide(index) {
@@ -2102,6 +2214,7 @@ function showSlide(index) {
             
             // Update progress bar
             updateScrollProgress();
+            updateNavZoneVisibility();
         }, 100);
     } else {
         // First load, no animation
@@ -2109,14 +2222,14 @@ function showSlide(index) {
             slide.style.display = 'none';
             slide.classList.remove('active', 'slide-out');
         });
-        
+
         currentSlideIndex = index;
         nextSlide.style.display = 'block';
         nextSlide.classList.add('active');
-        
+
         updateSlideIndicator();
         updateSlideAlignment();
-        
+
         if (typeof restoreSlideDrawings === 'function') {
             restoreSlideDrawings(index);
         }
@@ -2124,6 +2237,7 @@ function showSlide(index) {
         const shareArea = document.querySelector('.share-area');
         if (shareArea) shareArea.scrollTop = 0;
         updateScrollProgress();
+        updateNavZoneVisibility();
     }
 }
 
