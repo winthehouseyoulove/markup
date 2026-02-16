@@ -923,6 +923,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Transform [quote] code blocks into styled testimonial quotes
     initializeQuoteBlocks();
 
+    // Transform [splash] code blocks into full-color background slides
+    initializeSplashBlocks();
+
     // Initialize pixelate effect for strikethrough text
     initializePixelateEffect();
 
@@ -1902,6 +1905,39 @@ function generateQuoteHTML(imgUrl, name, quoteText) {
 
     html += '</div>';
     return html;
+}
+
+function initializeSplashBlocks() {
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return;
+
+    const colorMap = {
+        teal: '#01413e',
+        green: '#447247',
+        red: '#cc451c',
+        purple: '#7a306c'
+    };
+
+    const preElements = previewContent.querySelectorAll('pre');
+    preElements.forEach(pre => {
+        const text = pre.textContent.trim();
+        if (!text.match(/^\[splash\b/i)) return;
+
+        const lines = text.split('\n');
+        const headerMatch = lines[0].match(/^\[splash\s+(\w+)\]/i);
+        if (!headerMatch) return;
+
+        const colorName = headerMatch[1].toLowerCase();
+        const bgColor = colorMap[colorName] || colorMap.teal;
+        const emoji = lines[1] ? lines[1].trim() : '';
+        const heading = lines.slice(2).map(l => l.trim()).filter(l => l).join(' ');
+
+        const div = document.createElement('div');
+        div.className = `splash-block splash-${colorName}`;
+        div.style.backgroundColor = bgColor;
+        div.innerHTML = `<div class="splash-emoji">${emoji}</div><div class="splash-text">${heading}</div>`;
+        pre.replaceWith(div);
+    });
 }
 
 function restoreQuotePhotoPositions() {

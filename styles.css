@@ -2622,3 +2622,50 @@ body.nav-zone-active .custom-cursor {
     transition: transform 1s ease-out, opacity 1s ease-out;
 }
 
+/* ==================== Splash Blocks ==================== */
+.slide:has(.splash-block) {
+    padding: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+.preview-content:has(.splash-block) {
+    padding: 0 !important;
+}
+
+.preview-content .splash-block {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+    height: calc(100vw * 1080 / 1187) !important;
+    padding: 4rem 5rem !important;
+    border-radius: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+.preview-content .splash-block .splash-emoji {
+    font-size: 5rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.preview-content .splash-block .splash-text {
+    font-size: 3.5rem !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    line-height: 1.3 !important;
+    font-family: var(--font-family-custom) !important;
+    letter-spacing: var(--letter-spacing-custom) !important;
+}
+
+.preview-content .splash-block span {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    position: static !important;
+}
+
