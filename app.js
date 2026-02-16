@@ -871,6 +871,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Transform [imessage] code blocks into iMessage UI
     initializeIMessageBlocks();
 
+    // Transform [email] code blocks into Apple Mail UI
+    initializeEmailBlocks();
+
     // Transform [state] code blocks into US state map graphics
     initializeStateMapBlocks();
 
@@ -888,6 +891,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
 
     // Convert content to slides (cloneNode loses event listeners, so attach after)
     initializeSlides();
+
+    // Attach 3D tilt effect to email blocks (must be after initializeSlides)
+    initializeEmailTilt();
 
     // Restore saved quote photo positions and attach drag-to-reposition handlers
     restoreQuotePhotoPositions();
@@ -1401,7 +1407,7 @@ function parseIMessageContent(text) {
 }
 
 function generateIMessageHTML(contactName, messages) {
-    let html = `<div class="imessage-container">`;
+    let html = `<div class="mock-ui-wrapper"><div class="imessage-container">`;
 
     // Contact bar with avatar and name
     if (contactName) {
@@ -1443,7 +1449,136 @@ function generateIMessageHTML(contactName, messages) {
     html += `</div>`;
 
     html += `</div>`;
+    html += `<div class="mock-disclaimer">Illustration — not a screenshot</div>`;
+    html += `</div>`;
     return html;
+}
+
+// ============================================
+// Email Block
+// ============================================
+
+function initializeEmailBlocks() {
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return;
+
+    const preElements = previewContent.querySelectorAll('pre');
+    preElements.forEach(pre => {
+        const text = pre.textContent.trim();
+        if (!text.match(/^\[email\b/i)) return;
+
+        const parsed = parseEmailContent(text);
+        const html = generateEmailHTML(parsed);
+
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        pre.replaceWith(container.firstElementChild);
+    });
+}
+
+function parseEmailContent(text) {
+    const lines = text.split('\n');
+    let from = '', to = '', subject = '';
+    let bodyStartIndex = -1;
+
+    // Skip [email] header line
+    for (let i = 1; i < lines.length; i++) {
+        const trimmed = lines[i].trim();
+
+        if (trimmed === '---') {
+            bodyStartIndex = i + 1;
+            break;
+        }
+
+        const fromMatch = trimmed.match(/^from:\s*(.+)/i);
+        if (fromMatch) { from = fromMatch[1].trim(); continue; }
+
+        const toMatch = trimmed.match(/^to:\s*(.+)/i);
+        if (toMatch) { to = toMatch[1].trim(); continue; }
+
+        const subjectMatch = trimmed.match(/^subject:\s*(.+)/i);
+        if (subjectMatch) { subject = subjectMatch[1].trim(); continue; }
+    }
+
+    // If no --- separator found, body starts after last header field
+    if (bodyStartIndex === -1) bodyStartIndex = lines.length;
+
+    const body = lines.slice(bodyStartIndex).join('\n').trim();
+
+    // Extract display name from "Name <email>" format
+    const nameMatch = from.match(/^(.+?)\s*<.*>$/);
+    const fromName = nameMatch ? nameMatch[1].trim() : from;
+    const fromEmail = from.match(/<(.+?)>/) ? from.match(/<(.+?)>/)[1] : from;
+
+    return { from, fromName, fromEmail, to, subject, body };
+}
+
+function generateEmailHTML(data) {
+    let html = `<div class="mock-ui-wrapper"><div class="email-container">`;
+
+    // Top bar: Cancel + New Message + Send button
+    html += `<div class="email-top-bar">`;
+    html += `<span class="email-cancel">Cancel</span>`;
+    html += `<div class="email-top-bar-right">`;
+    html += `<svg class="email-send-btn" viewBox="0 0 32 32" width="32" height="32"><circle cx="16" cy="16" r="16" fill="#007aff"/><path d="M16 9l0 14M10 15l6-6 6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+    html += `</div>`;
+    html += `</div>`;
+    html += `<div class="email-title">New Message</div>`;
+
+    // To field with pill chips
+    const toNames = data.to.split(',').map(n => n.trim()).filter(Boolean);
+    const toPills = toNames.map(name => `<span class="email-pill">${name}</span>`).join(' ');
+    html += `<div class="email-field email-field-to">`;
+    html += `<span class="email-field-label">To:</span>`;
+    html += `<span class="email-field-pills">${toPills}</span>`;
+    html += `<svg class="email-add-btn" viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="none" stroke="#007aff" stroke-width="1.5"/><path d="M12 7v10M7 12h10" stroke="#007aff" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+    html += `</div>`;
+
+    // Cc/Bcc, From line
+    html += `<div class="email-field email-field-cc">`;
+    html += `<span class="email-field-grey">Cc/Bcc, From: ${data.fromEmail}</span>`;
+    html += `</div>`;
+
+    // Subject
+    html += `<div class="email-field email-field-subject">`;
+    html += `<span class="email-field-label">Subject:</span> <span class="email-field-value">${data.subject}</span>`;
+    html += `</div>`;
+
+    // Body
+    const bodyHtml = data.body.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+    html += `<div class="email-body"><p>${bodyHtml}</p></div>`;
+
+    html += `</div>`;
+    html += `<div class="mock-disclaimer">Illustration — not a screenshot</div>`;
+    html += `</div>`;
+    return html;
+}
+
+function initializeEmailTilt() {
+    document.querySelectorAll('.email-container').forEach(container => {
+        let animFrame = null;
+        container.addEventListener('mousemove', (e) => {
+            if (animFrame) return;
+            animFrame = requestAnimationFrame(() => {
+                const rect = container.getBoundingClientRect();
+                // Normalize to -1..1 from center
+                const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+                const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+                // Cap rotation at 6deg, use same max for both axes so it feels even
+                const maxTilt = 3;
+                const rotateY = x * maxTilt;
+                const rotateX = -y * maxTilt;
+                container.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.008)`;
+                container.style.boxShadow = `${-rotateY * 1}px ${rotateX * 1}px 24px rgba(0,0,0,0.12)`;
+                animFrame = null;
+            });
+        });
+        container.addEventListener('mouseleave', () => {
+            if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+            container.style.transform = '';
+            container.style.boxShadow = '';
+        });
+    });
 }
 
 // ============================================
