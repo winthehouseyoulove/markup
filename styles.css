@@ -965,12 +965,15 @@ body.laser-active .preview-content img {
     text-decoration-thickness: 4px !important;
     text-underline-offset: 0.15em !important;
     background: none !important;
+    display: inline-block !important;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     padding: 0 !important;
     transition: color 0.2s ease;
 }
 
 .preview-content a:hover {
     color: #5a2050 !important;
+    transform: scale(1.05) !important;
 }
 
 /* Code blocks */
