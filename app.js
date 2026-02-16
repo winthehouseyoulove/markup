@@ -1492,7 +1492,7 @@ function generateIMessageHTML(contactName, messages) {
     html += `</div>`;
 
     html += `</div>`;
-    html += `<div class="mock-disclaimer">Illustration — not a screenshot</div>`;
+    html += `<div class="mock-disclaimer">Illustration</div>`;
     html += `</div>`;
     return html;
 }
@@ -1592,7 +1592,7 @@ function generateEmailHTML(data) {
     html += `<div class="email-body"><p>${bodyHtml}</p></div>`;
 
     html += `</div>`;
-    html += `<div class="mock-disclaimer">Illustration — not a screenshot</div>`;
+    html += `<div class="mock-disclaimer">Illustration</div>`;
     html += `</div>`;
     return html;
 }
