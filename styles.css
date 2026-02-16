@@ -2576,3 +2576,49 @@ body.nav-zone-active .custom-cursor {
     position: relative !important;
 }
 
+/* Questions Overlay */
+.questions-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(1, 65, 62, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 10vh;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.questions-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.questions-heading {
+    color: #fff;
+    font-size: 4rem;
+    font-weight: 700;
+    font-family: var(--font-family-custom, 'Poppins', sans-serif);
+    margin-bottom: 1rem;
+}
+
+.questions-email {
+    color: #fff;
+    font-size: 2rem;
+    font-family: var(--font-family-custom, 'Poppins', sans-serif);
+}
+
+.emoji-burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10001;
+    font-size: 120px;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+}
+

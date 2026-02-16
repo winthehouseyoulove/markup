@@ -31,6 +31,49 @@ const flashlightOverlay = document.createElement('div');
 flashlightOverlay.className = 'flashlight-overlay';
 document.body.appendChild(flashlightOverlay);
 
+// Questions overlay
+const questionsOverlay = document.createElement('div');
+questionsOverlay.className = 'questions-overlay';
+questionsOverlay.innerHTML = '<div class="questions-heading">Questions? Email me</div><div class="questions-email">kyle@winthehouseyoulove.com</div>';
+document.body.appendChild(questionsOverlay);
+
+function toggleQuestionsOverlay() {
+    questionsOverlay.classList.toggle('active');
+    burstEmailEmojis();
+}
+
+function burstEmailEmojis() {
+    const emojis = ['\u2709\uFE0F', '\u{1F4E7}', '\u{1F4E8}', '\u{1F4E9}'];
+    const count = 14;
+
+    for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'emoji-burst';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight;
+        const tx = (Math.random() - 0.5) * 200;
+        const ty = (Math.random() - 0.5) * 200;
+
+        el.style.left = startX + 'px';
+        el.style.top = startY + 'px';
+        el.style.opacity = '1';
+        el.style.transform = 'scale(0)';
+
+        document.body.appendChild(el);
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                el.style.transform = `scale(1) translate(${tx}px, ${ty}px)`;
+                el.style.opacity = '0';
+            });
+        });
+
+        setTimeout(() => el.remove(), 1200);
+    }
+}
+
 let flashlightActive = false;
 let flashlightX = 0;
 let flashlightY = 0;
@@ -2461,6 +2504,9 @@ document.addEventListener('keydown', (e) => {
         } else {
             startTimer();
         }
+    } else if (e.key === 'q' || e.key === 'Q') {
+        e.preventDefault();
+        toggleQuestionsOverlay();
     }
 });
 
