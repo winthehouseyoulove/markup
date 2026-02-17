@@ -1095,7 +1095,13 @@ body.laser-active .preview-content img {
 
 /* Tables — grid lines */
 .preview-content .simple-table thead tr { border-bottom: 1px solid var(--neutral-light); }
+.preview-content .simple-table thead th:first-child { border-top-left-radius: 10px; }
+.preview-content .simple-table thead th:last-child { border-top-right-radius: 10px; }
 .preview-content .simple-table tbody tr { border-bottom: 1px solid var(--neutral-light); }
+.preview-content .simple-table tbody tr:last-child td:last-child,
+.preview-content .simple-table tbody tr:last-child th:last-child { border-bottom-right-radius: 10px; }
+.preview-content .simple-table tbody tr:last-child td:first-child,
+.preview-content .simple-table tbody tr:last-child th:first-child { border-bottom-left-radius: 10px; }
 .preview-content .simple-table th + th,
 .preview-content .simple-table td + td { border-left: 1px solid var(--neutral-light); }
 
