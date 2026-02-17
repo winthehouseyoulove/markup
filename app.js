@@ -2052,10 +2052,13 @@ function initializeTables() {
         wrapper.appendChild(fade);
 
         // Scroll fade indicator
+        let wasScrollable = false;
         const checkFade = () => {
             const scrollable = inner.scrollWidth > inner.clientWidth;
             const atEnd = inner.scrollLeft + inner.clientWidth >= inner.scrollWidth - 2;
-            fade.classList.toggle('visible', scrollable && !atEnd);
+            if (scrollable) wasScrollable = true;
+            // Once we know the table is scrollable, keep the fade unless user scrolled to end
+            fade.classList.toggle('visible', wasScrollable && !atEnd);
         };
         checkFade();
         inner.addEventListener('scroll', checkFade);

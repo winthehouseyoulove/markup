@@ -993,9 +993,6 @@ body.laser-active .preview-content img {
     position: relative;
     border-radius: 10px;
     overflow: hidden;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    will-change: transform;
     margin-bottom: var(--spacing-lg) !important;
 }
 .preview-content .table-scroll-inner {
@@ -1011,6 +1008,7 @@ body.laser-active .preview-content img {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s;
+    z-index: 250;
 }
 .preview-content .table-scroll-fade.visible { opacity: 1; }
 
