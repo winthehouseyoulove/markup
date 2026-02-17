@@ -993,7 +993,7 @@ body.laser-active .preview-content img {
     position: relative;
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: var(--spacing-lg) !important;
+    margin: var(--spacing-xl) 0 !important;
 }
 .preview-content .table-scroll-inner {
     overflow-x: auto;
@@ -1134,7 +1134,7 @@ body.laser-active .preview-content img {
     background-color: rgba(74, 103, 76, 0.1) !important;
     border-left: 4px solid var(--accent) !important;
     padding: var(--spacing-md) var(--spacing-lg) !important;
-    margin: var(--spacing-md) 0 !important;
+    margin: var(--spacing-xl) 0 !important;
     border-radius: 4px !important;
 }
 
