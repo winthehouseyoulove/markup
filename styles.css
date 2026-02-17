@@ -1186,6 +1186,18 @@ body.laser-active .preview-content a:has(img) {
     text-decoration: none !important;
 }
 
+/* Notion column layout */
+.preview-content .column-list {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: var(--spacing-xl) !important;
+}
+
+.preview-content .column {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
 /* General Notion Element Spacing Reduction */
 .preview-content .notion-block {
     padding: var(--spacing-sm) 0 !important;
