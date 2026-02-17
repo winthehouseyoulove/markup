@@ -932,11 +932,11 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Initialize image scroll effects
     initializeImageScrollEffects();
     
-    // Initialize table features (scroll wrapper, highlights, resize)
-    initializeTables();
-
     // Convert content to slides (cloneNode loses event listeners, so attach after)
     initializeSlides();
+
+    // Initialize table features (scroll wrapper, highlights, resize) — must be after initializeSlides
+    initializeTables();
 
     // Attach 3D tilt effect to email blocks (must be after initializeSlides)
     initializeEmailTilt();
@@ -2035,7 +2035,7 @@ function initializeTables() {
     const tables = previewContent.querySelectorAll('table.simple-table');
     tables.forEach(table => {
         // Detect if table has a header column (Notion marks with simple-table-header-color on td)
-        const hasHeaderCol = !!table.querySelector('tbody td.simple-table-header-color');
+        const hasHeaderCol = !!table.querySelector('tbody .simple-table-header-color');
         if (hasHeaderCol) table.classList.add('has-header-col');
 
         // Wrap table in scroll wrapper
@@ -2080,7 +2080,7 @@ function initializeTables() {
         // Row highlighting on header-column hover (only if header column exists)
         if (hasHeaderCol) {
             table.querySelectorAll('tbody tr').forEach(row => {
-                const headerCell = row.querySelector('td.simple-table-header-color');
+                const headerCell = row.querySelector('.simple-table-header-color');
                 if (!headerCell) return;
                 headerCell.addEventListener('mouseenter', () => row.classList.add('row-highlight'));
                 headerCell.addEventListener('mouseleave', () => row.classList.remove('row-highlight'));
@@ -2108,7 +2108,7 @@ function initializeTables() {
             handle.addEventListener('dblclick', e => {
                 e.preventDefault();
                 e.stopPropagation();
-                const cells = [th, ...table.querySelectorAll(`tbody tr td:nth-child(${i + 1})`)];
+                const cells = [th, ...table.querySelectorAll(`tbody tr :nth-child(${i + 1})`)];
                 let maxW = 0;
                 cells.forEach(cell => {
                     cell.style.width = 'auto';

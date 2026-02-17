@@ -1007,7 +1007,7 @@ body.laser-active .preview-content img {
     position: absolute;
     top: 0; right: 0; bottom: 0;
     width: 100px;
-    background: linear-gradient(to right, transparent 0%, rgba(250,250,250,0.5) 30%, rgba(250,250,250,0.85) 60%, rgba(250,250,250,1) 85%);
+    background: linear-gradient(to right, transparent 0%, rgba(240,239,237,0.5) 30%, rgba(240,239,237,0.85) 60%, rgba(240,239,237,1) 85%);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s;
@@ -1027,9 +1027,8 @@ body.laser-active .preview-content img {
     padding: var(--spacing-md) !important;
     text-align: left;
     transition: background 0.15s;
-    font-size: 2.4rem !important;
+    font-size: 1.5rem !important;
     letter-spacing: -1px !important;
-    background-color: var(--white) !important;
     color: var(--primary) !important;
     z-index: auto !important;
     position: static !important;
@@ -1054,15 +1053,15 @@ body.laser-active .preview-content img {
     font-weight: 600 !important;
     white-space: nowrap;
     position: relative !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
 }
 .preview-content .simple-table thead th span {
     color: var(--white) !important;
 }
 
-/* Tables — header column (Notion marks these with .simple-table-header-color in tbody) */
-.preview-content .simple-table tbody td.simple-table-header-color {
+/* Tables — header column (Notion marks these with .simple-table-header-color) */
+.preview-content .simple-table tbody td.simple-table-header-color,
+.preview-content .simple-table tbody th.simple-table-header-color {
     background: var(--primary) !important;
     background-color: var(--primary) !important;
     color: var(--white) !important;
@@ -1072,7 +1071,8 @@ body.laser-active .preview-content img {
     z-index: 1 !important;
     box-shadow: 1px 0 0 var(--neutral-light);
 }
-.preview-content .simple-table tbody td.simple-table-header-color span {
+.preview-content .simple-table tbody td.simple-table-header-color span,
+.preview-content .simple-table tbody th.simple-table-header-color span {
     color: var(--white) !important;
 }
 /* Matching sticky top-left corner for header row when header column exists */
@@ -1086,16 +1086,11 @@ body.laser-active .preview-content img {
 /* Tables — column resize handle */
 .preview-content .col-resize-handle {
     position: absolute;
-    top: 0; right: -3px;
-    width: 6px;
+    top: 0; right: -8px;
+    width: 16px;
     height: 100%;
-    cursor: col-resize;
+    cursor: col-resize !important;
     z-index: 3;
-}
-.preview-content .col-resize-handle:hover,
-.preview-content .col-resize-handle.active {
-    background: #447247;
-    opacity: 0.6;
 }
 
 /* Tables — grid lines */
@@ -1105,14 +1100,15 @@ body.laser-active .preview-content img {
 .preview-content .simple-table td + td { border-left: 1px solid var(--neutral-light); }
 
 /* Tables — cell backgrounds */
-.preview-content .simple-table tbody td { background: var(--white); }
+.preview-content .simple-table tbody td { background: var(--white) !important; }
 
 /* Tables — cell hover */
 .preview-content .simple-table tbody td:hover { background-color: rgba(68,114,71,0.3) !important; }
 
 /* Tables — row highlight (on header-column hover via JS) */
 .preview-content .simple-table .row-highlight td { background-color: rgba(68,114,71,0.3) !important; }
-.preview-content .simple-table .row-highlight td.simple-table-header-color {
+.preview-content .simple-table .row-highlight td.simple-table-header-color,
+.preview-content .simple-table .row-highlight th.simple-table-header-color {
     background-color: #1a5c42 !important;
     color: var(--white) !important;
 }
@@ -1125,7 +1121,8 @@ body.laser-active .preview-content img {
 /* Top-left header cell: no highlight when it's both row+col header */
 .preview-content .simple-table.has-header-col thead th:first-child:hover { background-color: var(--primary) !important; }
 /* Header column cell hover */
-.preview-content .simple-table tbody td.simple-table-header-color:hover { background-color: #447247 !important; color: var(--white) !important; }
+.preview-content .simple-table tbody td.simple-table-header-color:hover,
+.preview-content .simple-table tbody th.simple-table-header-color:hover { background-color: #447247 !important; color: var(--white) !important; }
 
 /* Callouts & Block Elements */
 .preview-content .notion-callout,
