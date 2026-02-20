@@ -1507,12 +1507,21 @@ function generateCostsHTML(rows, totalRow) {
     html += `</div>`;
     html += `<div class="waterfall-chart"><div class="waterfall-zero"></div>`;
     rows.forEach((row, i) => {
-        const isNeg = row.numericValue < 0;
-        const heightPct = maxAbsVal > 0 ? (Math.abs(row.numericValue) / maxAbsVal) * maxBarPct : 20;
         let color;
         if (i === 0) color = WATERFALL_COLORS.first;
-        else if (isNeg) color = WATERFALL_COLORS.negative;
+        else if (row.numericValue < 0) color = WATERFALL_COLORS.negative;
         else color = WATERFALL_COLORS.positive;
+
+        if (row.numericValue === 0) {
+            html += `<div class="waterfall-bar-group" style="--bar-height: 0%;">`;
+            html += `<div class="waterfall-bar-value" style="color: ${color}; bottom: 25%; margin-bottom: 0.5rem;">$0</div>`;
+            html += `<div class="waterfall-bar-label">${row.label}</div>`;
+            html += `</div>`;
+            return;
+        }
+
+        const isNeg = row.numericValue < 0;
+        const heightPct = maxAbsVal > 0 ? (Math.abs(row.numericValue) / maxAbsVal) * maxBarPct : 20;
         const creditClass = isNeg ? ' credit' : '';
         const valueColor = isNeg ? '' : ` style="color: ${color};"`;
         html += `<div class="waterfall-bar-group${isNeg ? ' credit-group' : ''}" style="--bar-height: ${heightPct}%;">`;
