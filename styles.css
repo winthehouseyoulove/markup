@@ -1492,6 +1492,27 @@ table.properties {
     transform: translateY(-0.3em) !important;
 }
 
+/* Restore KaTeX sizing ratios overridden by the broad font-size:inherit rule */
+.preview-content .katex .sizing.reset-size6.size3 {
+    font-size: 0.55em !important;
+}
+
+/* Reset line-height on KaTeX vlist structural spans so positioning stays accurate */
+.preview-content .katex .vlist-t span {
+    line-height: normal !important;
+}
+
+/* Underbrace labels — green pill style */
+.preview-content .katex .mord.munder .sizing.reset-size6.size3.mtight .mord.text.mtight .mord.mtight {
+    background-color: rgba(68, 114, 71, 0.15) !important;
+    color: #447247 !important;
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    padding: 0.2em 0.7em !important;
+    margin: -0.2em -0.7em !important;
+    display: inline-block !important;
+}
+
 /* ============================================
    Bottom Bar Buttons (Settings & Shortcuts)
    ============================================ */

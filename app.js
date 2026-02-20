@@ -932,6 +932,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Initialize image scroll effects
     initializeImageScrollEffects();
     
+    // Align underbrace labels within each equation to the same vertical depth
+    normalizeUnderbraceAlignment();
+
     // Convert content to slides (cloneNode loses event listeners, so attach after)
     initializeSlides();
 
@@ -1319,6 +1322,62 @@ previewContent.addEventListener('click', (e) => {
 
 // ============================================
 // Pixelate Effect for Strike-through Text
+// ============================================
+
+/**
+ * Normalizes underbrace label positions within each display equation so all
+ * labels sit at the same vertical depth below the baseline. KaTeX calculates
+ * independent depths per underbrace, causing misalignment when labels differ.
+ */
+function normalizeUnderbraceAlignment() {
+    document.querySelectorAll('.preview-content .katex-display .katex-html').forEach(katexHtml => {
+        const bases = katexHtml.querySelectorAll(':scope > .base');
+        const underbraces = [];
+
+        bases.forEach(base => {
+            const munder = base.querySelector(':scope > .mord.munder');
+            if (!munder) return;
+
+            const vlist = munder.querySelector(':scope > .vlist-t > .vlist-r > .vlist');
+            if (!vlist) return;
+
+            for (const item of vlist.children) {
+                if (item.querySelector('.sizing.mtight')) {
+                    const strut = base.querySelector(':scope > .strut');
+                    underbraces.push({
+                        labelItem: item,
+                        strut: strut,
+                        labelTop: parseFloat(item.style.top),
+                        strutVA: parseFloat(strut.style.verticalAlign),
+                        strutH: parseFloat(strut.style.height)
+                    });
+                    break;
+                }
+            }
+        });
+
+        if (underbraces.length < 2) return;
+
+        // Find the least negative label top (deepest/lowest label)
+        const deepestTop = Math.max(...underbraces.map(u => u.labelTop));
+        // Find the most negative strut vertical-align (deepest base)
+        const deepestVA = Math.min(...underbraces.map(u => u.strutVA));
+
+        underbraces.forEach(u => {
+            // Align label to the deepest position
+            if (Math.abs(u.labelTop - deepestTop) > 0.001) {
+                u.labelItem.style.top = deepestTop + 'em';
+            }
+            // Extend strut depth to match deepest base
+            if (Math.abs(u.strutVA - deepestVA) > 0.001) {
+                const diff = deepestVA - u.strutVA;
+                u.strut.style.verticalAlign = deepestVA + 'em';
+                u.strut.style.height = (u.strutH - diff) + 'em';
+            }
+        });
+    });
+}
+
 // ============================================
 
 function initializePixelateEffect() {
