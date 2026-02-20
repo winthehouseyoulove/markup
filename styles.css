@@ -2735,3 +2735,247 @@ body.nav-zone-active .custom-cursor {
     position: static !important;
 }
 
+/* ============================================
+   Finance Blocks — Pill Bars (Payment)
+   ============================================ */
+.preview-content .pill-breakdown {
+    width: 100%;
+    padding-bottom: 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+.preview-content .pill-breakdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, rgba(68, 114, 71, 0.25), rgba(68, 114, 71, 0.08));
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+}
+.preview-content .pill-breakdown-title {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    color: #01413e !important;
+}
+.preview-content .pill-breakdown-total {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    color: #01413e !important;
+}
+.preview-content .pill-breakdown-right {
+    text-align: right;
+    padding-top: 0.2rem;
+}
+.preview-content .pill-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+.preview-content .pill-row-label {
+    width: 85px;
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    flex-shrink: 0;
+}
+.preview-content .pill-row-bar {
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: white !important;
+    min-width: 40px;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: default;
+}
+.preview-content .pill-row-bar:hover {
+    transform: scale(1.05);
+}
+.preview-content .pill-row:hover .pill-row-label {
+    font-weight: 700 !important;
+}
+.preview-content .pill-row-value-external {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    margin-left: 0.75rem;
+    white-space: nowrap;
+}
+
+/* Reset broad span overrides inside pill bars */
+.preview-content .pill-row-bar span,
+.preview-content .pill-breakdown-header span {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    position: static !important;
+}
+
+/* ============================================
+   Finance Blocks — Waterfall (Costs)
+   ============================================ */
+.preview-content .waterfall-container {
+    width: 100%;
+    padding-bottom: 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+.preview-content .waterfall-title {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    color: #01413e !important;
+}
+.preview-content .waterfall-chart {
+    display: flex;
+    gap: 1.25rem;
+    height: 350px;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+.preview-content .waterfall-zero {
+    position: absolute;
+    top: 75%;
+    left: 0;
+    right: 0;
+    border-top: 2px dashed rgba(1, 65, 62, 0.15);
+    z-index: 1;
+}
+.preview-content .waterfall-bar-group {
+    flex: 1;
+    position: relative;
+    height: 100%;
+}
+.preview-content .waterfall-bar {
+    position: absolute;
+    bottom: 25%;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    transition: filter 0.15s ease;
+    cursor: default;
+}
+.preview-content .waterfall-bar:hover {
+    filter: brightness(1.1);
+}
+.preview-content .waterfall-bar-group:hover .waterfall-bar-label {
+    font-weight: 700 !important;
+    opacity: 1;
+}
+.preview-content .waterfall-bar-value {
+    position: absolute !important;
+    bottom: calc(25% + var(--bar-height, 0%));
+    margin-bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    white-space: nowrap;
+}
+.preview-content .waterfall-bar-label {
+    position: absolute !important;
+    top: 75%;
+    margin-top: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap;
+    opacity: 0.6;
+}
+/* Credit group: value below bar, label above zero line */
+.preview-content .credit-group .waterfall-bar-value {
+    bottom: auto;
+    top: calc(75% + var(--bar-height, 0%));
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    color: #447247 !important;
+}
+.preview-content .credit-group .waterfall-bar-label {
+    top: auto;
+    bottom: calc(25% + 0.5rem);
+    margin-top: 0;
+}
+/* Credit bar hangs below zero line */
+.preview-content .waterfall-bar.credit {
+    bottom: auto;
+    top: 75%;
+    border-radius: 0 0 10px 10px;
+}
+
+/* Reset broad span overrides inside waterfall */
+.preview-content .waterfall-bar-group span,
+.preview-content .waterfall-container .pill-breakdown-header span {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    position: static !important;
+}
+
+/* ============================================
+   Listing Block
+   ============================================ */
+.preview-content .listing-block {
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+.preview-content .listing-block .listing-photo {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    margin-bottom: 1rem;
+    will-change: transform;
+}
+.preview-content .listing-block .listing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.preview-content .listing-block .listing-price {
+    font-size: 2.2rem !important;
+    font-weight: 700 !important;
+    color: #01413e !important;
+}
+.preview-content .listing-block .listing-disclaimer {
+    font-size: 0.85rem !important;
+    color: rgba(1, 65, 62, 0.4) !important;
+    font-weight: 500 !important;
+}
+.preview-content .listing-block .listing-right {
+    text-align: right;
+}
+.preview-content .listing-block .listing-city {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    opacity: 0.7;
+}
+.preview-content .listing-block .listing-details {
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    opacity: 0.5;
+}
+.preview-content .listing-block .listing-finances {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+.preview-content .listing-block .listing-finances > * {
+    flex: 1;
+}
+
+/* Reset broad span overrides inside listing */
+.preview-content .listing-block span {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    position: static !important;
+}
+

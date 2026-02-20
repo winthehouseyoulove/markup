@@ -926,6 +926,12 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Transform [splash] code blocks into full-color background slides
     initializeSplashBlocks();
 
+    // Transform [listing] blocks first (they contain embedded [payment]/[costs])
+    initializeListingBlocks();
+
+    // Transform [payment] and [costs] code blocks into finance charts
+    initializeFinanceBlocks();
+
     // Initialize pixelate effect for strikethrough text
     initializePixelateEffect();
 
@@ -1434,6 +1440,195 @@ function initializeImageScrollEffects() {
                 return false;
             }, true);
         }
+    });
+}
+
+// ============================================
+// Finance Blocks — [payment] (pill bars) & [costs] (waterfall)
+// ============================================
+
+const PILL_COLORS = ['#01413e', '#2a6b5e', '#447247', '#7a306c', '#cc451c'];
+const WATERFALL_COLORS = { first: '#01413e', positive: '#7a306c', negative: '#447247' };
+
+function parseFinanceRows(lines) {
+    const rows = [];
+    let totalRow = null;
+    for (const line of lines) {
+        const match = line.match(/^(.+?):\s*(.+)$/);
+        if (!match) continue;
+        const label = match[1].trim();
+        const value = match[2].trim();
+        const numericValue = parseFloat(value.replace(/[^0-9.\-]/g, ''));
+        if (/^(total|cash to close)$/i.test(label)) {
+            totalRow = { label, value };
+        } else {
+            rows.push({ label, value, numericValue });
+        }
+    }
+    return { rows, totalRow };
+}
+
+function generatePaymentHTML(rows, totalRow) {
+    const maxVal = Math.max(...rows.map(r => Math.abs(r.numericValue)));
+    let html = `<div class="pill-breakdown">`;
+    html += `<div class="pill-breakdown-header">`;
+    html += `<div class="pill-breakdown-title">Payment</div>`;
+    if (totalRow) {
+        html += `<div class="pill-breakdown-right"><div class="pill-breakdown-total">${totalRow.value}</div></div>`;
+    }
+    html += `</div>`;
+    rows.forEach((row, i) => {
+        const color = PILL_COLORS[i % PILL_COLORS.length];
+        html += `<div class="pill-row">`;
+        html += `<div class="pill-row-label">${row.label}</div>`;
+        if (row.numericValue === 0) {
+            html += `<div class="pill-row-value-external" style="color: ${color};">$0</div>`;
+        } else {
+            const pct = maxVal > 0 ? Math.round((Math.abs(row.numericValue) / maxVal) * 100) : 50;
+            const valueInside = pct >= 25;
+            html += `<div class="pill-row-bar" style="width: ${pct}%; background: ${color};">${valueInside ? row.value : ''}</div>`;
+            if (!valueInside) html += `<div class="pill-row-value-external" style="color: ${color};">${row.value}</div>`;
+        }
+        html += `</div>`;
+    });
+    html += `</div>`;
+    return html;
+}
+
+function generateCostsHTML(rows, totalRow) {
+    const maxAbsVal = Math.max(...rows.map(r => Math.abs(r.numericValue)));
+    const maxBarPct = 65; // tallest bar as % of chart height
+    let html = `<div class="waterfall-container">`;
+    html += `<div class="pill-breakdown-header">`;
+    html += `<div class="waterfall-title">Cash To Close</div>`;
+    if (totalRow) {
+        html += `<div class="pill-breakdown-right"><div class="pill-breakdown-total">${totalRow.value}</div></div>`;
+    }
+    html += `</div>`;
+    html += `<div class="waterfall-chart"><div class="waterfall-zero"></div>`;
+    rows.forEach((row, i) => {
+        const isNeg = row.numericValue < 0;
+        const heightPct = maxAbsVal > 0 ? (Math.abs(row.numericValue) / maxAbsVal) * maxBarPct : 20;
+        let color;
+        if (i === 0) color = WATERFALL_COLORS.first;
+        else if (isNeg) color = WATERFALL_COLORS.negative;
+        else color = WATERFALL_COLORS.positive;
+        const creditClass = isNeg ? ' credit' : '';
+        const valueColor = isNeg ? '' : ` style="color: ${color};"`;
+        html += `<div class="waterfall-bar-group${isNeg ? ' credit-group' : ''}" style="--bar-height: ${heightPct}%;">`;
+        html += `<div class="waterfall-bar${creditClass}" style="height: ${heightPct}%; background: ${color};"></div>`;
+        html += `<div class="waterfall-bar-value"${valueColor}>${row.value}</div>`;
+        html += `<div class="waterfall-bar-label">${row.label}</div>`;
+        html += `</div>`;
+    });
+    html += `</div></div>`;
+    return html;
+}
+
+function initializeFinanceBlocks() {
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return;
+
+    const preElements = previewContent.querySelectorAll('pre');
+    preElements.forEach(pre => {
+        const text = pre.textContent.trim();
+        let html = null;
+
+        if (text.match(/^\[payment\]/i)) {
+            const lines = text.split('\n').slice(1);
+            const { rows, totalRow } = parseFinanceRows(lines);
+            html = generatePaymentHTML(rows, totalRow);
+        } else if (text.match(/^\[costs\]/i)) {
+            const lines = text.split('\n').slice(1);
+            const { rows, totalRow } = parseFinanceRows(lines);
+            html = generateCostsHTML(rows, totalRow);
+        }
+
+        if (html) {
+            const container = document.createElement('div');
+            container.innerHTML = html;
+            pre.replaceWith(container.firstElementChild);
+        }
+    });
+}
+
+// ============================================
+// Listing Block — [listing]
+// ============================================
+
+function parseListingContent(text) {
+    const sections = text.split(/^---$/m);
+    const headerLines = sections[0].split('\n').slice(1); // skip [listing]
+    const header = { img: '', price: '', city: '', details: '' };
+
+    for (const line of headerLines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+        const kv = trimmed.match(/^(img|price|city):\s*(.+)$/i);
+        if (kv) {
+            header[kv[1].toLowerCase()] = kv[2].trim();
+        } else if (!header.details) {
+            header.details = trimmed;
+        }
+    }
+
+    let paymentHTML = '';
+    let costsHTML = '';
+    for (let i = 1; i < sections.length; i++) {
+        const sec = sections[i].trim();
+        if (sec.match(/^\[payment\]/i)) {
+            const lines = sec.split('\n').slice(1);
+            const { rows, totalRow } = parseFinanceRows(lines);
+            paymentHTML = generatePaymentHTML(rows, totalRow);
+        } else if (sec.match(/^\[costs\]/i)) {
+            const lines = sec.split('\n').slice(1);
+            const { rows, totalRow } = parseFinanceRows(lines);
+            costsHTML = generateCostsHTML(rows, totalRow);
+        }
+    }
+
+    return { header, paymentHTML, costsHTML };
+}
+
+function generateListingHTML(header, paymentHTML, costsHTML) {
+    let html = `<div class="listing-block">`;
+    if (header.img) {
+        html += `<img class="listing-photo" src="${header.img}" alt="Listing photo">`;
+    }
+    html += `<div class="listing-header">`;
+    html += `<div>`;
+    if (header.price) html += `<div class="listing-price">${header.price}</div>`;
+    html += `<div class="listing-disclaimer">Educational example</div>`;
+    html += `</div>`;
+    if (header.city || header.details) {
+        html += `<div class="listing-right">`;
+        if (header.city) html += `<div class="listing-city">${header.city}</div>`;
+        if (header.details) html += `<div class="listing-details">${header.details}</div>`;
+        html += `</div>`;
+    }
+    html += `</div>`;
+    if (paymentHTML || costsHTML) {
+        html += `<div class="listing-finances">${paymentHTML}${costsHTML}</div>`;
+    }
+    html += `</div>`;
+    return html;
+}
+
+function initializeListingBlocks() {
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) return;
+
+    const preElements = previewContent.querySelectorAll('pre');
+    preElements.forEach(pre => {
+        const text = pre.textContent.trim();
+        if (!text.match(/^\[listing\]/i)) return;
+
+        const { header, paymentHTML, costsHTML } = parseListingContent(text);
+        const html = generateListingHTML(header, paymentHTML, costsHTML);
+
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        pre.replaceWith(container.firstElementChild);
     });
 }
 
