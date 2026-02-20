@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Charts — Pill Bars & Waterfall</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0efed;
+    color: #01413e;
+    padding: 3rem;
+}
+h1 { font-size: 1.5rem; margin-bottom: 0.3rem; }
+h2 { font-size: 1rem; margin-bottom: 1.5rem; color: #447247; font-weight: 600; }
+.section { margin-bottom: 4rem; }
+hr { border: none; border-top: 2px solid rgba(1,65,62,0.1); margin: 3rem 0; }
+
+/* ============================================
+   Pill Bars — Payment Breakdown
+   ============================================ */
+.pill-breakdown {
+    max-width: 650px;
+}
+.pill-breakdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, rgba(68, 114, 71, 0.15), rgba(68, 114, 71, 0.04));
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+}
+.pill-breakdown-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+.pill-breakdown-total {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.pill-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+.pill-row-label {
+    width: 120px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.pill-row-bar {
+    height: 44px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    min-width: 75px;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: default;
+}
+.pill-row-bar:hover { transform: scale(1.05); }
+.pill-total {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 1.25rem 0;
+    border-top: 2px solid rgba(1, 65, 62, 0.15);
+}
+.pill-total-label {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.6;
+    margin-bottom: 0.25rem;
+}
+.pill-total-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.pill-breakdown-right {
+    text-align: right;
+    padding-top: 0.2rem;
+}
+.disclaimer {
+    font-size: 0.65rem;
+    color: rgba(1, 65, 62, 0.4);
+    font-weight: 500;
+}
+
+/* ============================================
+   Waterfall — Costs Breakdown
+   ============================================ */
+.waterfall-container {
+    max-width: 650px;
+}
+.waterfall-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+.waterfall-chart {
+    display: flex;
+    gap: 1.25rem;
+    height: 350px;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+/* Zero line at 75% from top — positive bars grow up, credits grow down */
+.waterfall-zero {
+    position: absolute;
+    top: 75%;
+    left: 0;
+    right: 0;
+    border-top: 2px dashed rgba(1, 65, 62, 0.15);
+    z-index: 1;
+}
+.waterfall-bar-group {
+    flex: 1;
+    position: relative;
+    height: 100%;
+}
+.waterfall-bar {
+    position: absolute;
+    bottom: 25%;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    transition: box-shadow 0.15s ease, filter 0.15s ease;
+    cursor: default;
+}
+.waterfall-bar:hover { box-shadow: 0 4px 16px rgba(1, 65, 62, 0.25); filter: brightness(1.1); }
+.waterfall-bar-value {
+    position: absolute;
+    top: -2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.1rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.waterfall-bar-label {
+    position: absolute;
+    bottom: -2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0.6;
+}
+/* Credit bar hangs below zero line */
+.waterfall-bar.credit {
+    bottom: auto;
+    top: 75%;
+    border-radius: 0 0 10px 10px;
+}
+.waterfall-bar.credit .waterfall-bar-value {
+    top: auto;
+    bottom: -2.2rem;
+    color: #447247;
+}
+.waterfall-bar.credit .waterfall-bar-label {
+    bottom: auto;
+    top: -2rem;
+}
+
+/* Cash to Close — standalone text */
+.waterfall-result {
+    text-align: center;
+    padding: 1.25rem 0;
+    border-top: 2px solid rgba(1, 65, 62, 0.15);
+}
+.waterfall-result-label {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.6;
+    margin-bottom: 0.25rem;
+}
+.waterfall-result-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+/* ============================================
+   Listing
+   ============================================ */
+.listing {
+    max-width: 900px;
+}
+.listing-photo {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    margin-bottom: 1rem;
+}
+.listing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.listing-price {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+.listing-right {
+    text-align: right;
+}
+.listing-city {
+    font-size: 1.1rem;
+    font-weight: 600;
+    opacity: 0.7;
+}
+.listing-details {
+    font-size: 0.85rem;
+    font-weight: 500;
+    opacity: 0.5;
+}
+.listing-finances {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+.listing-finances > * {
+    flex: 1;
+}
+</style>
+</head>
+<body>
+
+<!-- PILL BARS -->
+<div class="section">
+    <div class="pill-breakdown">
+        <div class="pill-breakdown-header">
+            <div class="pill-breakdown-title">Payment</div>
+            <div class="pill-breakdown-right">
+                <div class="pill-breakdown-total">$2,689/mo</div>
+                <div class="disclaimer">Educational example</div>
+            </div>
+        </div>
+        <div class="pill-row">
+            <div class="pill-row-label">P&I</div>
+            <div class="pill-row-bar" style="width: 100%; background: #01413e;">$1,850</div>
+        </div>
+        <div class="pill-row">
+            <div class="pill-row-label">Taxes</div>
+            <div class="pill-row-bar" style="width: 28%; background: #2a6b5e;">$375</div>
+        </div>
+        <div class="pill-row">
+            <div class="pill-row-label">Insurance</div>
+            <div class="pill-row-bar" style="width: 14%; background: #447247;">$125</div>
+        </div>
+        <div class="pill-row">
+            <div class="pill-row-label">PMI</div>
+            <div class="pill-row-bar" style="width: 12%; background: #7a306c;">$89</div>
+        </div>
+        <div class="pill-row">
+            <div class="pill-row-label">HOA</div>
+            <div class="pill-row-bar" style="width: 20%; background: #cc451c;">$250</div>
+        </div>
+    </div>
+</div>
+
+<!-- WATERFALL -->
+<div class="section">
+    <div class="waterfall-container">
+        <div class="pill-breakdown-header">
+            <div class="waterfall-title">Cash To Close</div>
+            <div class="pill-breakdown-right">
+                <div class="pill-breakdown-total">$47,000</div>
+                <div class="disclaimer">Educational example</div>
+            </div>
+        </div>
+        <div class="waterfall-chart">
+            <div class="waterfall-zero"></div>
+            <div class="waterfall-bar-group">
+                <div class="waterfall-bar" style="height: 65%; background: #01413e;">
+                    <div class="waterfall-bar-value">$40,000</div>
+                    <div class="waterfall-bar-label">Down Payment</div>
+                </div>
+            </div>
+            <div class="waterfall-bar-group">
+                <div class="waterfall-bar" style="height: 19.5%; background: #7a306c;">
+                    <div class="waterfall-bar-value" style="color: #7a306c;">$12,000</div>
+                    <div class="waterfall-bar-label">Closing Costs</div>
+                </div>
+            </div>
+            <div class="waterfall-bar-group">
+                <div class="waterfall-bar credit" style="height: 10%; background: #447247;">
+                    <div class="waterfall-bar-value">-$5,000</div>
+                    <div class="waterfall-bar-label">Seller Credits</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- LISTING -->
+<div class="section">
+    <div class="listing">
+        <img class="listing-photo" src="https://media.istockphoto.com/id/856794670/photo/beautiful-luxury-home-exterior-with-green-grass-and-landscaped-yard.jpg?s=612x612&w=0&k=20&c=Jaun3vYekdy6aBcqq5uDQp_neNp5jmdLZXZAqqhcjk8=" alt="Listing photo">
+        <div class="listing-header">
+            <div>
+                <div class="listing-price">$450,000</div>
+                <div class="disclaimer" style="font-size: 0.85rem;">Educational example</div>
+            </div>
+            <div class="listing-right">
+                <div class="listing-city">Austin, TX</div>
+                <div class="listing-details">3 bed / 2 bath / 1,800 sqft</div>
+            </div>
+        </div>
+        <div class="listing-finances">
+            <!-- Payment pill bars -->
+            <div class="pill-breakdown">
+                <div class="pill-breakdown-header">
+                    <div class="pill-breakdown-title">Payment</div>
+                    <div class="pill-breakdown-right">
+                        <div class="pill-breakdown-total">$2,689/mo</div>
+                    </div>
+                </div>
+                <div class="pill-row">
+                    <div class="pill-row-label">P&I</div>
+                    <div class="pill-row-bar" style="width: 100%; background: #01413e;">$1,850</div>
+                </div>
+                <div class="pill-row">
+                    <div class="pill-row-label">Taxes</div>
+                    <div class="pill-row-bar" style="width: 28%; background: #2a6b5e;">$375</div>
+                </div>
+                <div class="pill-row">
+                    <div class="pill-row-label">Insurance</div>
+                    <div class="pill-row-bar" style="width: 14%; background: #447247;">$125</div>
+                </div>
+                <div class="pill-row">
+                    <div class="pill-row-label">PMI</div>
+                    <div class="pill-row-bar" style="width: 12%; background: #7a306c;">$89</div>
+                </div>
+                <div class="pill-row">
+                    <div class="pill-row-label">HOA</div>
+                    <div class="pill-row-bar" style="width: 20%; background: #cc451c;">$250</div>
+                </div>
+            </div>
+            <!-- Costs waterfall -->
+            <div class="waterfall-container">
+                <div class="pill-breakdown-header">
+                    <div class="waterfall-title">Cash To Close</div>
+                    <div class="pill-breakdown-right">
+                        <div class="pill-breakdown-total">$47,000</div>
+                    </div>
+                </div>
+                <div class="waterfall-chart">
+                    <div class="waterfall-zero"></div>
+                    <div class="waterfall-bar-group">
+                        <div class="waterfall-bar" style="height: 65%; background: #01413e;">
+                            <div class="waterfall-bar-value">$40,000</div>
+                            <div class="waterfall-bar-label">Down Payment</div>
+                        </div>
+                    </div>
+                    <div class="waterfall-bar-group">
+                        <div class="waterfall-bar" style="height: 19.5%; background: #7a306c;">
+                            <div class="waterfall-bar-value" style="color: #7a306c;">$12,000</div>
+                            <div class="waterfall-bar-label">Closing Costs</div>
+                        </div>
+                    </div>
+                    <div class="waterfall-bar-group">
+                        <div class="waterfall-bar credit" style="height: 10%; background: #447247;">
+                            <div class="waterfall-bar-value">-$5,000</div>
+                            <div class="waterfall-bar-label">Seller Credits</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
