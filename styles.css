@@ -1502,9 +1502,44 @@ table.properties {
     line-height: normal !important;
 }
 
+/* Restore absolute positioning for brace SVG containers (overridden by broad span rule) */
+.preview-content .katex .stretchy .brace-left,
+.preview-content .katex .stretchy .brace-center,
+.preview-content .katex .stretchy .brace-right {
+    position: absolute !important;
+}
+
+/* Color underbrace SVGs to match the green pill background */
+.preview-content .katex .mord.munder .stretchy svg path {
+    fill: #d6dcd4 !important;
+}
+
+/* Fix brace seam artifacts */
+.preview-content .katex .mord.munder .stretchy {
+    overflow: hidden !important;
+}
+
+.preview-content .katex .mord.munder .stretchy .brace-left {
+    width: 25.2% !important;
+}
+
+.preview-content .katex .mord.munder .stretchy .brace-center {
+    width: 50.4% !important;
+    left: 24.8% !important;
+}
+
+.preview-content .katex .mord.munder .stretchy .brace-right {
+    width: 25.2% !important;
+}
+
+/* Push underbrace labels down for spacing below the brace */
+.preview-content .katex .mord.munder > .vlist-t > .vlist-r > .vlist > span:first-child .sizing.reset-size6.size3.mtight {
+    transform: translateY(0.3em) !important;
+}
+
 /* Underbrace labels — green pill style */
 .preview-content .katex .mord.munder .sizing.reset-size6.size3.mtight .mord.text.mtight .mord.mtight {
-    background-color: rgba(68, 114, 71, 0.15) !important;
+    background-color: #d6dcd4 !important;
     color: #447247 !important;
     border-radius: 999px !important;
     font-weight: 600 !important;
