@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Card — Style C Refined</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0efed;
+    color: #01413e;
+    padding: 3rem;
+}
+h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+h2 { font-size: 1rem; margin-bottom: 1.5rem; color: #447247; font-weight: 600; }
+.section { margin-bottom: 3rem; }
+
+/* ============================================
+   Finance Card — Style C Refined
+   ============================================ */
+.pair {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+.pair > * { flex: 1; }
+
+.card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.card-title {
+    background: #01413e;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.card-body {
+    padding: 0.5rem 0;
+}
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1.5rem;
+    font-size: 1.05rem;
+    transition: background-color 0.15s ease;
+}
+.row:hover {
+    background-color: rgba(68, 114, 71, 0.1);
+}
+.row .label { font-weight: 600; }
+.row .value { font-weight: 600; }
+.row.credit .value { color: #447247; }
+.total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(90deg, rgba(68, 114, 71, 0.12), rgba(68, 114, 71, 0.04));
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* ============================================
+   Listing
+   ============================================ */
+.listing {
+    max-width: 750px;
+}
+.listing-photo-placeholder {
+    width: 100%;
+    height: 240px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #c9d4c3, #a8b8a0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 3rem;
+}
+.listing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+.listing-price {
+    font-size: 2rem;
+    font-weight: 700;
+}
+.listing-right {
+    text-align: right;
+}
+.listing-city {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.7;
+}
+.listing-details {
+    font-size: 0.85rem;
+    font-weight: 500;
+    opacity: 0.5;
+}
+.listing-finances {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+.listing-finances > * { flex: 1; }
+
+.disclaimer {
+    font-size: 0.8rem;
+    color: rgba(1, 65, 62, 0.5);
+    font-weight: 500;
+    text-align: center;
+    margin-top: 0.75rem;
+}
+</style>
+</head>
+<body>
+
+<div class="section">
+    <h1>Payment & Costs — Side by Side</h1>
+    <h2>Cards fit their content height independently</h2>
+    <div class="pair">
+        <div class="card">
+            <div class="card-title">Monthly Payment</div>
+            <div class="card-body">
+                <div class="row"><span class="label">P&I</span><span class="value">$1,850</span></div>
+                <div class="row"><span class="label">Taxes</span><span class="value">$375</span></div>
+                <div class="row"><span class="label">Insurance</span><span class="value">$125</span></div>
+                <div class="row"><span class="label">PMI</span><span class="value">$89</span></div>
+                <div class="row"><span class="label">HOA</span><span class="value">$250</span></div>
+            </div>
+            <div class="total"><span>Total</span><span>$2,689/mo</span></div>
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-title">Costs</div>
+                <div class="card-body">
+                    <div class="row"><span class="label">Down Payment</span><span class="value">$40,000</span></div>
+                    <div class="row"><span class="label">Closing Costs</span><span class="value">$12,000</span></div>
+                    <div class="row credit"><span class="label">Seller Credits</span><span class="value">-$5,000</span></div>
+                </div>
+                <div class="total"><span>Cash to Close</span><span>$47,000</span></div>
+            </div>
+            <div class="disclaimer">Educational example, not an offer to lend</div>
+        </div>
+    </div>
+</div>
+
+<hr style="border: none; border-top: 2px solid rgba(1,65,62,0.1); margin: 2rem 0;">
+
+<div class="section">
+    <h1>Listing Example</h1>
+    <h2>Photo + price/location, then payment & costs below</h2>
+    <div class="listing">
+        <div class="listing-photo-placeholder">🏠</div>
+        <div class="listing-header">
+            <div class="listing-price">$450,000</div>
+            <div class="listing-right">
+                <div class="listing-city">Austin, TX</div>
+                <div class="listing-details">3 bed / 2 bath / 1,800 sqft</div>
+            </div>
+        </div>
+        <div class="listing-finances">
+            <div class="card">
+                <div class="card-title">Monthly Payment</div>
+                <div class="card-body">
+                    <div class="row"><span class="label">P&I</span><span class="value">$1,850</span></div>
+                    <div class="row"><span class="label">Taxes</span><span class="value">$375</span></div>
+                    <div class="row"><span class="label">Insurance</span><span class="value">$125</span></div>
+                    <div class="row"><span class="label">PMI</span><span class="value">$89</span></div>
+                    <div class="row"><span class="label">HOA</span><span class="value">$250</span></div>
+                </div>
+                <div class="total"><span>Total</span><span>$2,689/mo</span></div>
+            </div>
+            <div>
+                <div class="card">
+                    <div class="card-title">Costs</div>
+                    <div class="card-body">
+                        <div class="row"><span class="label">Down Payment</span><span class="value">$40,000</span></div>
+                        <div class="row"><span class="label">Closing Costs</span><span class="value">$12,000</span></div>
+                        <div class="row credit"><span class="label">Seller Credits</span><span class="value">-$5,000</span></div>
+                    </div>
+                    <div class="total"><span>Cash to Close</span><span>$47,000</span></div>
+                </div>
+                <div class="disclaimer">Educational example, not an offer to lend</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
