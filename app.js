@@ -34,7 +34,28 @@ document.body.appendChild(flashlightOverlay);
 // Questions overlay
 const questionsOverlay = document.createElement('div');
 questionsOverlay.className = 'questions-overlay';
-questionsOverlay.innerHTML = '<div class="questions-heading">Questions? Email me</div><div class="questions-email">kyle@winthehouseyoulove.com</div>';
+questionsOverlay.innerHTML = `
+  <div class="questions-inner">
+    <div class="questions-heading">Got a question?</div>
+    <div class="questions-subheading">Here's how to reach me.</div>
+    <div class="questions-cards">
+      <div class="questions-card">
+        <div class="questions-card-emoji">💬</div>
+        <div class="questions-card-body">
+          <div class="questions-card-main">Comment on this video</div>
+          <div class="questions-card-sub">I answer every one.</div>
+        </div>
+      </div>
+      <div class="questions-card">
+        <div class="questions-card-emoji">✉️</div>
+        <div class="questions-card-body">
+          <div class="questions-card-main">Email me</div>
+          <div class="questions-card-sub">kyle@winthehouseyoulove.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
 document.body.appendChild(questionsOverlay);
 
 function toggleQuestionsOverlay() {
@@ -43,7 +64,7 @@ function toggleQuestionsOverlay() {
 }
 
 function burstEmailEmojis() {
-    const emojis = ['\u2709\uFE0F', '\u{1F4E7}', '\u{1F4E8}', '\u{1F4E9}'];
+    const emojis = ['\u2709\uFE0F', '\u{1F4E7}', '\u{1F4E8}', '\u{1F4E9}', '\u2753', '\u{1F4AC}'];
     const count = 14;
 
     for (let i = 0; i < count; i++) {
