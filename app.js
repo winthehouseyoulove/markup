@@ -2600,24 +2600,32 @@ function showSlide(index) {
 // updateSlideAlignment removed — scroll-snap handles layout
 
 // ============================================
-// Background Notation: [bg:dark|mid|cream|rust|gold]
+// Background Colors: bare color name in <p><code>name</code></p>
 // ============================================
 
 function initializeBackgroundBlocks() {
-    const allSlides = previewContent.querySelectorAll('.slide');
-    const validBgs = ['dark', 'mid', 'cream', 'rust', 'gold'];
+    const colorMap = {
+        'pine': 'bg-pine',
+        'fern': 'bg-fern',
+        'ochre': 'bg-ochre',
+        'plum': 'bg-plum',
+        'parchment': 'bg-parchment'
+    };
 
+    const allSlides = previewContent.querySelectorAll('.slide');
     allSlides.forEach(slide => {
-        // Look for a <pre> or <code> containing [bg:xxx]
-        const pres = slide.querySelectorAll('pre');
-        pres.forEach(pre => {
-            const text = pre.textContent.trim();
-            const match = text.match(/^\[bg:(\w+)\]$/);
-            if (match && validBgs.includes(match[1])) {
-                slide.classList.add('bg-' + match[1]);
-                pre.remove();
+        const paragraphs = slide.querySelectorAll('p');
+        for (const p of paragraphs) {
+            const code = p.querySelector('code');
+            if (code && p.textContent.trim() === code.textContent.trim()) {
+                const name = code.textContent.trim().toLowerCase();
+                if (colorMap[name]) {
+                    slide.classList.add(colorMap[name]);
+                    p.remove();
+                    break; // one color per slide
+                }
             }
-        });
+        }
     });
 }
 
