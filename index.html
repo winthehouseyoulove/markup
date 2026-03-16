@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markup</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Inter:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -32,10 +32,12 @@
     </div>
 
     <div class="presentation-container" id="presentationContainer" style="display: none;">
-        <div class="share-area">
+        <div class="share-area" id="shareArea">
             <div class="preview-content" id="previewContent"></div>
         </div>
 
+        <div id="navDots"></div>
+        <div class="bottom-bar-trigger" id="bottomBarTrigger"></div>
         <div class="bottom-bar" id="bottomBar">
             <div class="bottom-bar-next" id="bottomBarNext" style="display: none;">
                 <span id="nextSlideTitle"></span>
@@ -94,10 +96,6 @@
 
             <div class="bottom-bar-progress">
                 <div class="timer-goal" id="timerGoal" style="display: none;"></div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar scroll-progress" id="scrollProgress"></div>
-                    <div class="progress-bar time-progress" id="timeProgress"></div>
-                </div>
             </div>
         </div>
 
@@ -134,11 +132,11 @@
                         <span>Laser Pointer</span>
                     </div>
                     <div class="shortcut-item">
-                        <kbd>X</kbd>
+                        <kbd>X / ← / ↑</kbd>
                         <span>Previous Slide</span>
                     </div>
                     <div class="shortcut-item">
-                        <kbd>C</kbd>
+                        <kbd>C / → / ↓</kbd>
                         <span>Next Slide</span>
                     </div>
                     <div class="shortcut-item">
