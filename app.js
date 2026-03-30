@@ -888,21 +888,52 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
 
     // Rewrite relative paths for images and other assets
     const htmlDir = htmlFileName.substring(0, htmlFileName.lastIndexOf('/') + 1);
-    
+
+    // Build a decoded filename → zip path lookup for fuzzy matching
+    const extractedFileKeys = Object.keys(extractedFiles);
+    const decodedKeyMap = {};
+    for (const key of extractedFileKeys) {
+        try { decodedKeyMap[decodeURIComponent(key)] = key; } catch(e) { decodedKeyMap[key] = key; }
+    }
+
+    function findExtractedFile(src) {
+        // Try exact match first
+        const resolved = resolveRelativePath(htmlDir, src);
+        if (extractedFiles[resolved]) return extractedFiles[resolved];
+
+        // Try URL-decoded match
+        let decodedSrc;
+        try { decodedSrc = decodeURIComponent(src); } catch(e) { decodedSrc = src; }
+        const resolvedDecoded = resolveRelativePath(htmlDir, decodedSrc);
+        if (extractedFiles[resolvedDecoded]) return extractedFiles[resolvedDecoded];
+
+        // Try decoded key map
+        if (decodedKeyMap[resolved]) return extractedFiles[decodedKeyMap[resolved]];
+        if (decodedKeyMap[resolvedDecoded]) return extractedFiles[decodedKeyMap[resolvedDecoded]];
+
+        // Fallback: match by filename only
+        const baseName = decodedSrc.split('/').pop();
+        for (const key of extractedFileKeys) {
+            if (key.split('/').pop() === baseName) return extractedFiles[key];
+        }
+        return null;
+    }
+
+    // Await all blob URL assignments BEFORE copying innerHTML
+    const imgPromises = [];
     bodyContent.querySelectorAll('img').forEach(img => {
         const src = img.getAttribute('src');
         if (src && !src.startsWith('http') && !src.startsWith('data:')) {
-            // Resolve relative path
-            const resolvedPath = resolveRelativePath(htmlDir, src);
-            if (extractedFiles[resolvedPath]) {
-                // Create blob URL for the image
-                extractedFiles[resolvedPath].async('blob').then(blob => {
-                    const blobUrl = URL.createObjectURL(blob);
-                    img.src = blobUrl;
+            const fileObj = findExtractedFile(src);
+            if (fileObj) {
+                const promise = fileObj.async('blob').then(blob => {
+                    img.src = URL.createObjectURL(blob);
                 });
+                imgPromises.push(promise);
             }
         }
     });
+    await Promise.all(imgPromises);
 
     // Reset drawing canvas before clearing content
     if (typeof drawingSVG !== 'undefined') {
