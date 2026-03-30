@@ -993,6 +993,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Align underbrace labels within each equation to the same vertical depth
     normalizeUnderbraceAlignment();
 
+    // Transform [button text] into next-slide buttons
+    initializeNextSlideButtons();
+
     // Convert content to slides (cloneNode loses event listeners, so attach after)
     initializeSlides();
 
@@ -1005,6 +1008,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Restore saved quote photo positions and attach drag-to-reposition handlers
     restoreQuotePhotoPositions();
     initializeQuotePhotoDrag();
+
+    // Auto-shrink next-slide buttons that overflow their container
+    fitNextSlideButtons();
 
     // Set the presentation title under the logo
     setPresentationTitle(presentationTitle);
@@ -1355,6 +1361,97 @@ function createConfetti(x, y) {
         setTimeout(() => confetti.remove(), 1200);
     }
 }
+
+// ============================================
+// Next-Slide Buttons — [button text] syntax
+// ============================================
+
+function initializeNextSlideButtons() {
+    // Walk all text nodes inside previewContent and replace [text] with a button
+    const walker = document.createTreeWalker(previewContent, NodeFilter.SHOW_TEXT, null);
+    const matches = [];
+
+    while (walker.nextNode()) {
+        const node = walker.currentNode;
+        // Skip nodes inside code/pre blocks
+        if (node.parentElement && node.parentElement.closest('pre, code')) continue;
+        if (/\[([^\[\]]+)\]/.test(node.textContent)) {
+            matches.push(node);
+        }
+    }
+
+    matches.forEach(textNode => {
+        const frag = document.createDocumentFragment();
+        const text = textNode.textContent;
+        const regex = /\[([^\[\]]+)\]/g;
+        let lastIndex = 0;
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+            // Add preceding text
+            if (match.index > lastIndex) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+            }
+
+            // Create button
+            const btn = document.createElement('button');
+            btn.className = 'next-slide-btn';
+            const label = document.createElement('span');
+            label.className = 'next-slide-label';
+            label.textContent = match[1];
+            btn.appendChild(label);
+
+            // Append arrow SVG
+            const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            arrow.setAttribute('class', 'next-slide-arrow');
+            arrow.setAttribute('viewBox', '0 0 24 24');
+            arrow.setAttribute('fill', 'none');
+            arrow.setAttribute('stroke', 'currentColor');
+            arrow.setAttribute('stroke-width', '2.5');
+            arrow.setAttribute('stroke-linecap', 'round');
+            arrow.setAttribute('stroke-linejoin', 'round');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M5 12h14M13 5l7 7-7 7');
+            arrow.appendChild(path);
+            btn.appendChild(arrow);
+
+            frag.appendChild(btn);
+            lastIndex = regex.lastIndex;
+        }
+
+        // Add trailing text
+        if (lastIndex < text.length) {
+            frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+        }
+
+        textNode.parentNode.replaceChild(frag, textNode);
+    });
+}
+
+// Auto-shrink next-slide buttons that are wider than their container
+function fitNextSlideButtons() {
+    document.querySelectorAll('.next-slide-btn').forEach(btn => {
+        const container = btn.closest('.slide') || btn.parentElement;
+        if (!container) return;
+        const maxWidth = container.clientWidth;
+        // Progressively shrink font-size until it fits (min 50% of original)
+        let scale = 1;
+        while (btn.scrollWidth > maxWidth && scale > 0.5) {
+            scale -= 0.05;
+            btn.style.fontSize = `calc(var(--font-size-body) * ${(0.7 * scale).toFixed(2)})`;
+        }
+    });
+}
+
+// Click handler for next-slide buttons (event delegation)
+previewContent.addEventListener('click', (e) => {
+    const btn = e.target.closest('.next-slide-btn');
+    if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        nextSlide();
+    }
+});
 
 // Add click handlers to all checkboxes using event delegation
 previewContent.addEventListener('click', (e) => {

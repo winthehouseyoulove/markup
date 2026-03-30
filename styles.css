@@ -3036,3 +3036,86 @@ body.nav-zone-active .custom-cursor {
     position: static !important;
 }
 
+/* ============================================
+   Next-Slide Buttons — [button text] syntax
+   ============================================ */
+.preview-content .next-slide-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    margin-top: 1.2em;
+    padding: 0.3em 1em;
+    border: none;
+    border-radius: 100px;
+    background: #01413e !important;
+    color: #fff !important;
+    font-family: var(--font-family-custom) !important;
+    font-size: calc(var(--font-size-body) * 0.7) !important;
+    font-weight: 600 !important;
+    letter-spacing: var(--letter-spacing-custom) !important;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    vertical-align: middle;
+    line-height: 1.4 !important;
+    position: relative !important;
+    z-index: 15 !important;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.preview-content .next-slide-btn:hover {
+    opacity: 0.85;
+    transform: scale(1.03);
+}
+
+/* Override broad span rules inside the button */
+.preview-content .next-slide-btn .next-slide-label {
+    color: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    position: static !important;
+    z-index: auto !important;
+    background-color: transparent !important;
+}
+
+.preview-content .next-slide-btn .next-slide-arrow {
+    width: 0.75em;
+    height: 0.75em;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.preview-content .next-slide-btn:hover .next-slide-arrow {
+    transform: translateX(3px);
+}
+
+/* --- Context-aware button colors on colored callout backgrounds --- */
+
+/* Teal callout → accent green button */
+.callout.block-color-teal_background .next-slide-btn {
+    background: #447247 !important;
+    color: #fff !important;
+}
+
+/* Red callout → brand red button */
+.callout.block-color-red_background .next-slide-btn {
+    background: #cc451c !important;
+    color: #fff !important;
+}
+
+/* Purple callout → brand purple button */
+.callout.block-color-purple_background .next-slide-btn {
+    background: #7a306c !important;
+    color: #fff !important;
+}
+
+/* Splash blocks → white button with dark text */
+.splash-block .next-slide-btn {
+    background: #fff !important;
+    color: #01413e !important;
+}
+.splash-block .next-slide-btn .next-slide-arrow {
+    color: #01413e !important;
+}
+
