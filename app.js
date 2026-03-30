@@ -2834,9 +2834,11 @@ function showSlide(index) {
                 }
             }, 120);
             
-            // Reset scroll position
+            // Reset scroll position on all scrollable containers
             const shareArea = document.querySelector('.share-area');
             if (shareArea) shareArea.scrollTop = 0;
+            if (previewContent) previewContent.scrollTop = 0;
+            window.scrollTo(0, 0);
             
             // Update progress bar
             updateScrollProgress();
