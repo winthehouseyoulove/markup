@@ -3054,7 +3054,7 @@ body.nav-zone-active .custom-cursor {
     font-weight: 600 !important;
     letter-spacing: var(--letter-spacing-custom) !important;
     cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.15s ease;
+    transition: transform 0.15s ease;
     vertical-align: middle;
     line-height: 1.4 !important;
     position: relative !important;
@@ -3064,7 +3064,6 @@ body.nav-zone-active .custom-cursor {
 }
 
 .preview-content .next-slide-btn:hover {
-    opacity: 0.85;
     transform: scale(1.03);
 }
 
