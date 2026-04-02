@@ -946,6 +946,23 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Set the preview content directly
     previewContent.innerHTML = bodyContent.innerHTML;
 
+    // Unwrap <article> and display:contents divs so slide children are individual elements
+    const article = previewContent.querySelector('article');
+    if (article) {
+        while (article.firstChild) {
+            article.parentNode.insertBefore(article.firstChild, article);
+        }
+        article.remove();
+    }
+
+    // Unwrap Notion's <div style="display:contents"> wrappers
+    previewContent.querySelectorAll('div[style*="display:contents"]').forEach(wrapper => {
+        while (wrapper.firstChild) {
+            wrapper.parentNode.insertBefore(wrapper.firstChild, wrapper);
+        }
+        wrapper.remove();
+    });
+
     // Extract and remove the title from content
     const titleElement = previewContent.querySelector('h1.page-title');
     let presentationTitle = '';
@@ -998,6 +1015,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
 
     // Convert content to slides (cloneNode loses event listeners, so attach after)
     initializeSlides();
+
+    // Apply [bg:xxx] background notation to slides (must be after initializeSlides)
+    initializeBackgroundBlocks();
 
     // Initialize table features (scroll wrapper, highlights, resize) — must be after initializeSlides
     initializeTables();
@@ -1061,6 +1081,29 @@ function cleanupNotionElements(container) {
             el.remove();
         }
     });
+
+    // Hide toggle blocks whose summary matches "Notes", "Kyle's Notes", or "Research"
+    const hiddenToggleLabels = /^(notes|kyle[''\u2019]?s\s+notes|research)$/i;
+    container.querySelectorAll('details').forEach(details => {
+        const summary = details.querySelector('summary');
+        if (summary && hiddenToggleLabels.test(summary.textContent.trim())) {
+            details.remove();
+        }
+    });
+
+    // Strip everything before the first <h2> so the presentation starts there
+    const firstH2 = container.querySelector('h2');
+    if (firstH2) {
+        // Find the top-level ancestor of the h2 that is a direct child of container
+        let h2Ancestor = firstH2;
+        while (h2Ancestor.parentNode !== container && h2Ancestor.parentNode) {
+            h2Ancestor = h2Ancestor.parentNode;
+        }
+        // Remove all siblings before that ancestor
+        while (container.firstChild && container.firstChild !== h2Ancestor) {
+            container.firstChild.remove();
+        }
+    }
 }
 
 // ============================================
@@ -1110,8 +1153,8 @@ const playIcon = document.getElementById('playIcon');
 const pauseIcon = document.getElementById('pauseIcon');
 const timerTime = document.getElementById('timerTime');
 const timerGoal = document.getElementById('timerGoal');
-const scrollProgress = document.getElementById('scrollProgress');
-const timeProgress = document.getElementById('timeProgress');
+const scrollProgress = document.getElementById('scrollProgress'); // removed from DOM
+const timeProgress = document.getElementById('timeProgress'); // removed from DOM
 
 let timerInterval = null;
 let startTime = null;
@@ -1131,42 +1174,11 @@ function updateButtonStates() {
 
 // Update scroll progress
 function updateScrollProgress() {
-    if (presentationContainer.style.display === 'none') return;
-
-    if (totalSlides <= 0) {
-        scrollProgress.style.width = '0%';
-        return;
-    }
-
-    // Base percentage for current slide position
-    const basePercentage = ((currentSlideIndex + 1) / totalSlides) * 100;
-
-    // Add a small offset past the dot so the fill visually "wraps" around it
-    // On the last slide (100%), don't add offset — fill the whole bar
-    const dotOffset = basePercentage >= 100 ? 0 : 1.0;
-    const percentage = Math.min(basePercentage + dotOffset, 100);
-
-    scrollProgress.style.width = percentage + '%';
+    // Progress bar removed — nav dots handle visual progress now
 }
 
-// Create visual dot markers for each slide boundary in the progress bar
-function createSlideSegments() {
-    const container = document.querySelector('.progress-bar-container');
-    if (!container) return;
-
-    // Remove existing dots
-    container.querySelectorAll('.slide-dot').forEach(dot => dot.remove());
-
-    if (totalSlides <= 1) return;
-
-    // Create dots between slides
-    for (let i = 1; i < totalSlides; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'slide-dot';
-        dot.style.left = `${(i / totalSlides) * 100}%`;
-        container.appendChild(dot);
-    }
-}
+// Slide segments removed — using nav dots instead
+function createSlideSegments() {}
 
 // Update timer display and time progress
 function updateTimer() {
@@ -1188,7 +1200,7 @@ function updateTimer() {
     }
     
     // Update time progress line position
-    timeProgress.style.left = percentage + '%';
+    if (timeProgress) timeProgress.style.left = percentage + '%';
 }
 
 // Start the timer
@@ -1248,7 +1260,7 @@ function resetTimer() {
     pausedTime = 0;
     durationMs = 0;
     
-    timeProgress.style.left = '0%';
+    if (timeProgress) timeProgress.style.left = '0%';
     timerTime.textContent = '00:00';
     timerTime.style.color = '';
     timerTime.contentEditable = 'true';
@@ -2585,15 +2597,15 @@ function initializeTables() {
 function initializeSlides() {
     // Split content by <hr> elements
     const content = previewContent.innerHTML;
-    
+
     // Split the HTML by HR tags
     const hrRegex = /<hr[^>]*>/gi;
     const contentParts = content.split(hrRegex);
-    
+
     console.log('Content parts after split:', contentParts.length);
-    
+
     slides = [];
-    
+
     contentParts.forEach((part, index) => {
         // Skip empty parts
         const trimmedPart = part.trim();
@@ -2601,7 +2613,7 @@ function initializeSlides() {
             // Create a temporary div to parse this part
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = trimmedPart;
-            
+
             // Only add if there's actual content (not just whitespace)
             if (tempDiv.textContent.trim().length > 0 || tempDiv.querySelector('img')) {
                 slides.push(tempDiv.childNodes);
@@ -2609,274 +2621,141 @@ function initializeSlides() {
             }
         }
     });
-    
+
     // If no slides were created, treat all content as one slide
     if (slides.length === 0) {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = content;
         slides.push(tempDiv.childNodes);
     }
-    
+
     totalSlides = slides.length;
-    
+
     console.log('Total slides created:', totalSlides);
-    
+
     // Clear preview content and create slide containers
     previewContent.innerHTML = '';
-    
+
     slides.forEach((slideNodes, index) => {
         const slideDiv = document.createElement('div');
         slideDiv.className = 'slide';
         slideDiv.dataset.slideIndex = index;
-        
-        console.log(`Slide ${index} has ${slideNodes.length} nodes`);
-        
-        // Add all nodes to this slide
+
+        // Add all nodes to this slide (all slides visible for scroll-snap)
         slideNodes.forEach(node => {
             if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) {
                 const clonedNode = node.cloneNode(true);
                 slideDiv.appendChild(clonedNode);
             }
         });
-        
+
         previewContent.appendChild(slideDiv);
     });
-    
-    // Show first slide
-    showSlide(0);
-    
-    // Add slide indicator
-    createSlideIndicator();
-    
-    // Update slide alignment
-    updateSlideAlignment();
-    
-    // Create slide segments in progress bar
-    createSlideSegments();
-    
-    // Update progress
-    updateScrollProgress();
 
-    // Create click navigation zones on edges
-    createNavZones();
+    // Setup navigation and show first slide
+    createSlideIndicator();
+    createNavDots();
+    showSlide(0);
 }
 
 // ============================================
 // Slide Navigation Zones (cursor arrow click areas)
 // ============================================
 
-let navCursor = null;
+// ---- Scroll-based slide system ----
 
-function createNavCursor() {
-    if (navCursor) return;
-    navCursor = document.createElement('div');
-    navCursor.id = 'navCursor';
-    navCursor.style.position = 'fixed';
-    navCursor.style.pointerEvents = 'none';
-    navCursor.style.zIndex = '10000';
-    navCursor.style.display = 'none';
-    navCursor.style.width = '36px';
-    navCursor.style.height = '36px';
-    navCursor.style.borderRadius = '50%';
-    navCursor.style.background = 'rgba(1, 65, 62, 0.12)';
-    navCursor.style.opacity = '0';
-    navCursor.style.transform = 'translate(-50%, -50%) scale(0.5)';
-    navCursor.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
-    document.body.appendChild(navCursor);
-}
+function createNavDots() {
+    const container = document.getElementById('navDots');
+    if (!container) return;
+    container.innerHTML = '';
 
-function showNavCursor(direction, e) {
-    if (!navCursor) createNavCursor();
-    document.body.classList.add('nav-zone-active');
-    if (e) {
-        navCursor.style.left = e.clientX + 'px';
-        navCursor.style.top = e.clientY + 'px';
-    }
-    const chevron = direction === 'left'
-        ? '<path d="M20 7L12 18L20 29" fill="none" stroke="#01413e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
-        : '<path d="M16 7L24 18L16 29" fill="none" stroke="#01413e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
-    navCursor.innerHTML = `<svg width="36" height="36" viewBox="0 0 36 36">${chevron}</svg>`;
-    navCursor.style.display = 'block';
-    requestAnimationFrame(() => {
-        navCursor.style.opacity = '1';
-        navCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-    });
-}
-
-function hideNavCursor() {
-    if (!navCursor) return;
-    document.body.classList.remove('nav-zone-active');
-    navCursor.style.opacity = '0';
-    navCursor.style.transform = 'translate(-50%, -50%) scale(0.5)';
-    setTimeout(() => {
-        if (navCursor && navCursor.style.opacity === '0') {
-            navCursor.style.display = 'none';
-        }
-    }, 150);
-}
-
-function moveNavCursor(e) {
-    if (navCursor && navCursor.style.display !== 'none') {
-        navCursor.style.left = e.clientX + 'px';
-        navCursor.style.top = e.clientY + 'px';
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => showSlide(i));
+        container.appendChild(dot);
     }
 }
 
-function createNavZones() {
-    // Remove existing zones if any
-    presentationContainer.querySelectorAll('.nav-zone').forEach(el => el.remove());
-    createNavCursor();
-
-    const leftZone = document.createElement('div');
-    leftZone.className = 'nav-zone nav-zone-left';
-    leftZone.style.cursor = 'none';
-    leftZone.addEventListener('mouseenter', (e) => showNavCursor('left', e));
-    leftZone.addEventListener('mouseleave', hideNavCursor);
-    leftZone.addEventListener('mousemove', moveNavCursor);
-    leftZone.addEventListener('click', (e) => {
-        spawnNavPop(e.clientX, e.clientY);
-        previousSlide();
+function updateNavDots() {
+    const dots = document.querySelectorAll('.nav-dot');
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlideIndex);
     });
-
-    const rightZone = document.createElement('div');
-    rightZone.className = 'nav-zone nav-zone-right';
-    rightZone.style.cursor = 'none';
-    rightZone.addEventListener('mouseenter', (e) => showNavCursor('right', e));
-    rightZone.addEventListener('mouseleave', hideNavCursor);
-    rightZone.addEventListener('mousemove', moveNavCursor);
-    rightZone.addEventListener('click', (e) => {
-        spawnNavPop(e.clientX, e.clientY);
-        nextSlide();
-    });
-
-    presentationContainer.appendChild(leftZone);
-    presentationContainer.appendChild(rightZone);
-    updateNavZoneVisibility();
 }
 
-function updateNavZoneVisibility() {
-    const left = presentationContainer.querySelector('.nav-zone-left');
-    const right = presentationContainer.querySelector('.nav-zone-right');
-    if (left) left.style.display = currentSlideIndex <= 0 ? 'none' : '';
-    if (right) right.style.display = currentSlideIndex >= totalSlides - 1 ? 'none' : '';
-}
-
-function spawnNavPop(x, y) {
-    const pop = document.createElement('div');
-    pop.className = 'nav-pop';
-    pop.style.left = x + 'px';
-    pop.style.top = y + 'px';
-    document.body.appendChild(pop);
-    pop.addEventListener('animationend', () => pop.remove());
-}
+// No IntersectionObserver needed — showSlide handles active class directly
 
 function showSlide(index) {
     if (index < 0 || index >= totalSlides) return;
-    
-    // Save current slide's drawings
-    if (typeof saveCurrentSlideDrawings === 'function') {
-        saveCurrentSlideDrawings();
-    }
-    
-    // Get all slides
+    const hasActiveSlide = previewContent.querySelector('.slide.active');
+    if (index === currentSlideIndex && hasActiveSlide) return;
+
     const allSlides = previewContent.querySelectorAll('.slide');
-    const currentSlide = allSlides[currentSlideIndex];
-    const nextSlide = allSlides[index];
-    
-    // Add slide-out animation to current slide
-    if (currentSlide && currentSlideIndex !== index) {
-        currentSlide.classList.add('slide-out');
-        
-        // Hide drawings during transition
-        if (drawingSVG) {
-            drawingSVG.style.opacity = '0';
-            drawingSVG.style.display = 'none';
+    const goingForward = index > currentSlideIndex;
+    const oldSlide = allSlides[currentSlideIndex];
+    const newSlide = allSlides[index];
+    if (!newSlide) return;
+
+    // Position all non-involved slides
+    allSlides.forEach((s, i) => {
+        if (i === index) return;
+        s.classList.remove('active', 'exit-up', 'exit-down');
+        if (i < index) {
+            s.classList.add('above');
+        } else {
+            s.classList.remove('above');
         }
-        if (whiteoutSVG) {
-            whiteoutSVG.style.opacity = '0';
-            whiteoutSVG.style.display = 'none';
-        }
-        
-        // Wait for animation to complete before hiding
-        setTimeout(() => {
-            allSlides.forEach(slide => {
-                slide.style.display = 'none';
-                slide.classList.remove('active', 'slide-out');
-            });
-            
-            // Show and animate in the new slide
-            currentSlideIndex = index;
-            nextSlide.style.display = 'block';
-            nextSlide.classList.add('active');
-            
-            // Update UI
-            updateSlideIndicator();
-            updateSlideAlignment();
-            
-            // Restore drawings for this slide
-            if (typeof restoreSlideDrawings === 'function') {
-                restoreSlideDrawings(index);
-            }
-            
-            // Show and fade in drawings after slide animation completes (balanced delay)
-            setTimeout(() => {
-                // Show drawing SVG if it has paths OR if a drawing tool is active
-                if (drawingSVG && (drawingSVG.querySelector('path') || (typeof currentTool !== 'undefined' && (currentTool === 'pen' || currentTool === 'highlighter' || currentTool === 'eraser')))) {
-                    drawingSVG.style.display = 'block';
-                    drawingSVG.style.opacity = '0';
-                    setTimeout(() => { drawingSVG.style.opacity = '1'; }, 10);
-                }
-                // Show whiteout SVG if it has paths OR if whiteout tool is active
-                if (whiteoutSVG && (whiteoutSVG.querySelector('path') || (typeof currentTool !== 'undefined' && (currentTool === 'whiteout' || currentTool === 'eraser')))) {
-                    whiteoutSVG.style.display = 'block';
-                    whiteoutSVG.style.opacity = '0';
-                    setTimeout(() => { whiteoutSVG.style.opacity = '1'; }, 10);
-                }
-            }, 120);
-            
-            // Reset scroll position on all scrollable containers
-            const shareArea = document.querySelector('.share-area');
-            if (shareArea) shareArea.scrollTop = 0;
-            if (previewContent) previewContent.scrollTop = 0;
-            window.scrollTo(0, 0);
-            
-            // Update progress bar
-            updateScrollProgress();
-            updateNavZoneVisibility();
-        }, 100);
-    } else {
-        // First load, no animation
-        allSlides.forEach(slide => {
-            slide.style.display = 'none';
-            slide.classList.remove('active', 'slide-out');
-        });
+    });
 
-        currentSlideIndex = index;
-        nextSlide.style.display = 'block';
-        nextSlide.classList.add('active');
 
-        updateSlideIndicator();
-        updateSlideAlignment();
-
-        if (typeof restoreSlideDrawings === 'function') {
-            restoreSlideDrawings(index);
-        }
-
-        const shareArea = document.querySelector('.share-area');
-        if (shareArea) shareArea.scrollTop = 0;
-        updateScrollProgress();
-        updateNavZoneVisibility();
+    // Animate old slide out
+    if (oldSlide && oldSlide !== newSlide) {
+        oldSlide.classList.remove('active', 'above');
+        oldSlide.classList.add(goingForward ? 'exit-up' : 'exit-down');
     }
+
+    // Reset scroll, remove active to reset stagger, then re-add
+    newSlide.scrollTop = 0;
+    newSlide.classList.remove('active', 'above', 'exit-up', 'exit-down');
+    void newSlide.offsetHeight;
+    newSlide.classList.add('active');
+
+    currentSlideIndex = index;
+    updateSlideIndicator();
+    updateNavDots();
 }
 
-function updateSlideAlignment() {
-    const currentSlide = previewContent.querySelector(`.slide[data-slide-index="${currentSlideIndex}"]`);
-    if (!currentSlide) return;
-    
-    // Always top align for now
-    currentSlide.style.display = 'block';
-    currentSlide.style.justifyContent = '';
-    currentSlide.style.minHeight = '';
+// updateSlideAlignment removed — scroll-snap handles layout
+
+// ============================================
+// Background Colors: bare color name in <p><code>name</code></p>
+// ============================================
+
+function initializeBackgroundBlocks() {
+    const colorMap = {
+        'pine': 'bg-pine',
+        'fern': 'bg-fern',
+        'ochre': 'bg-ochre',
+        'plum': 'bg-plum',
+        'parchment': 'bg-parchment'
+    };
+
+    const allSlides = previewContent.querySelectorAll('.slide');
+    allSlides.forEach(slide => {
+        const paragraphs = slide.querySelectorAll('p');
+        for (const p of paragraphs) {
+            const code = p.querySelector('code');
+            if (code && p.textContent.trim() === code.textContent.trim()) {
+                const name = code.textContent.trim().toLowerCase();
+                if (colorMap[name]) {
+                    slide.classList.add(colorMap[name]);
+                    p.remove();
+                    break; // one color per slide
+                }
+            }
+        }
+    });
 }
 
 function createSlideIndicator() {
@@ -2941,10 +2820,10 @@ document.addEventListener('keydown', (e) => {
     if (presentationContainer.style.display === 'none') return;
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
     
-    if (e.key === 'ArrowRight' || e.key === 'c' || e.key === 'C') {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'c' || e.key === 'C') {
         e.preventDefault();
         nextSlide();
-    } else if (e.key === 'ArrowLeft' || e.key === 'x' || e.key === 'X') {
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'x' || e.key === 'X') {
         e.preventDefault();
         previousSlide();
     } else if (e.key === 't' || e.key === 'T') {

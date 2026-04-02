@@ -2,7 +2,7 @@
    Custom Branding & Typography
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
     --ui-blue: #01413e;
@@ -14,6 +14,17 @@
     --text-dark: #2A2A2A;
     --text-light: #5A5A5A;
     --white: #FFFFFF;
+
+    /* Scroll-design palette */
+    --forest: #0b2b26;
+    --forest-card: #14332e;
+    --cream: #f0efed;
+    --gold: #c8a94e;
+    --orange: #c45e2c;
+    --green-ok: #447247;
+    --red-no: #cc451c;
+    --on-dark: #e8e3db;
+    --muted: rgba(232, 227, 219, 0.55);
     
     /* Spacing (reduced from Notion defaults) */
     --spacing-xs: 4px;
@@ -613,27 +624,25 @@ body.laser-active .preview-content img {
     overflow: hidden;
 }
 
-/* Share Area - Aspect Ratio Constrained Presentation Viewport */
+/* Grain texture overlay */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+}
+
+/* Share Area - Locked viewport */
 .share-area {
     position: relative;
     width: 100vw;
-    aspect-ratio: 1187 / 1080; /* Maintains ratio automatically */
-    overflow-y: auto;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
     background-color: #f0efed;
-}
-
-/* Presentation boundary marker - shows where presentation area ends */
-.share-area::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    border-bottom: 3px dashed var(--accent);
-    pointer-events: none;
-    z-index: 1000;
 }
 
 /* ============================================
@@ -641,16 +650,11 @@ body.laser-active .preview-content img {
    ============================================ */
 
 .bottom-bar {
-    position: relative;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #f0efed;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    padding: 4px 24px 6px;
-    font-family: 'Poppins', sans-serif;
+    display: none;
+}
+
+.bottom-bar-trigger {
+    display: none;
 }
 
 .bottom-bar-next {
@@ -803,65 +807,18 @@ body.laser-active .preview-content img {
     align-self: flex-end;
 }
 
-.progress-bar-container {
-    position: relative;
-    width: 100%;
-    height: 12px;
-    background-color: rgba(1, 65, 62, 0.3);
-    border-radius: 6px;
-    margin-bottom: 0;
-    border: none;
-    line-height: 12px;
-}
-
-.slide-dot {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: white;
-    z-index: 5;
-    pointer-events: none;
-}
-
-.scroll-progress {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background: #01413e;
-    border-radius: 7px;
-    z-index: 1;
-    transition: width 0.2s ease;
-    overflow: hidden;
-}
-
-.time-progress {
-    position: absolute;
-    top: -10px;
-    left: 0;
-    width: 5px !important;
-    height: calc(100% + 20px);
-    background: #ea2a10;
-    box-shadow: 0 0 6px rgba(234, 42, 16, 0.6);
-    z-index: 6;
-    border-radius: 3px;
-    transition: left 0.15s linear;
-}
+/* Progress bar removed — using nav dots instead */
 
 
 
 .preview-content {
-    background-color: #f0efed;
-    padding: var(--spacing-lg);
+    background-color: transparent;
     box-sizing: border-box;
     max-width: 100%;
     width: 100%;
     height: 100%;
-    overflow-y: auto;
     position: relative;
+    overflow: hidden;
 }
 
 /* Notion HTML Styling Overrides */
@@ -874,7 +831,7 @@ body.laser-active .preview-content img {
 .preview-content h6,
 .preview-content .notion-heading {
     font-family: var(--font-family-custom) !important;
-    color: var(--primary) !important;
+    color: var(--slide-heading, var(--primary)) !important;
     font-weight: 700 !important;
     line-height: var(--line-height-heading-custom) !important;
     margin-top: var(--heading-spacing-top) !important;
@@ -916,7 +873,7 @@ body.laser-active .preview-content img {
 .preview-content .notion-block {
     font-family: var(--font-family-custom) !important;
     font-weight: 500 !important;
-    color: #01413e !important;
+    color: var(--slide-text, #01413e) !important;
     line-height: var(--line-height-body-custom) !important;
     font-size: var(--font-size-body) !important;
     letter-spacing: var(--letter-spacing-custom) !important;
@@ -928,13 +885,13 @@ body.laser-active .preview-content img {
 /* Notion highlight colors - remove backgrounds and apply text colors */
 .preview-content .highlight-teal,
 .preview-content [class*="highlight-teal"] {
-    color: #447247 !important;
+    color: var(--slide-highlight-teal, #447247) !important;
     background-color: transparent !important;
 }
 
 .preview-content .highlight-red,
 .preview-content [class*="highlight-red"] {
-    color: #cc451c !important;
+    color: var(--slide-highlight-red, #cc451c) !important;
     background-color: transparent !important;
 }
 
@@ -1027,7 +984,7 @@ body.laser-active .preview-content img {
     transition: background 0.15s;
     font-size: 1.5rem !important;
     letter-spacing: -1px !important;
-    color: var(--primary) !important;
+    color: var(--slide-text, var(--primary)) !important;
     z-index: auto !important;
     position: static !important;
 }
@@ -1044,8 +1001,8 @@ body.laser-active .preview-content img {
 
 /* Tables — header row */
 .preview-content .simple-table thead th {
-    background: var(--primary) !important;
-    background-color: var(--primary) !important;
+    background: var(--slide-heading, var(--primary)) !important;
+    background-color: var(--slide-heading, var(--primary)) !important;
     color: var(--white) !important;
     font-family: var(--font-family-custom);
     font-weight: 600 !important;
@@ -1060,8 +1017,8 @@ body.laser-active .preview-content img {
 /* Tables — header column (Notion marks these with .simple-table-header-color) */
 .preview-content .simple-table tbody td.simple-table-header-color,
 .preview-content .simple-table tbody th.simple-table-header-color {
-    background: var(--primary) !important;
-    background-color: var(--primary) !important;
+    background: var(--slide-heading, var(--primary)) !important;
+    background-color: var(--slide-heading, var(--primary)) !important;
     color: var(--white) !important;
     font-weight: 600 !important;
     position: sticky !important;
@@ -1413,7 +1370,7 @@ table.properties {
     text-align: center !important;
     padding: 1.5rem 2rem !important;
     margin: 1rem 0 !important;
-    color: #01413e;
+    color: var(--slide-text, #01413e);
 }
 
 .equation-container {
@@ -1488,7 +1445,7 @@ table.properties {
 /* Thicker sum line in equations, nudged up to center between rows */
 .preview-content .katex .hline {
     border-bottom-width: 0.08em !important;
-    border-bottom-color: #01413e !important;
+    border-bottom-color: var(--slide-text, #01413e) !important;
     transform: translateY(-0.3em) !important;
 }
 
@@ -1843,48 +1800,129 @@ table.properties {
    Slide System
    ============================================ */
 
+/* ---- Locked slides with vertical transition ---- */
 .slide {
-    display: none;
-    padding: 32px;
-    max-width: 1100px;
-    margin: 0 auto;
+    position: absolute;
+    top: 0; left: 0;
     width: 100%;
-    position: relative;
-    background-color: transparent;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 80px 100px;
+    box-sizing: border-box;
+    transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transform: translateY(100%);
+    pointer-events: none;
+
+    /* Slide color system — overridden by .bg-pine, .bg-fern, etc. */
+    --slide-bg: #f0efed;
+    --slide-text: #01413e;
+    --slide-heading: #01413e;
+    --slide-accent: #447247;
+    --slide-highlight-teal: #447247;
+    --slide-highlight-red: #cc451c;
+    --slide-callout-border: #01413e;
+    background-color: var(--slide-bg);
 }
 
 .slide.active {
     display: block;
-    animation: slideIn 0.15s ease-out;
+    transform: translateY(0);
+    pointer-events: auto;
+    z-index: 2;
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.slide.exit-up { transform: translateY(-100%); z-index: 1; }
+.slide.exit-down { transform: translateY(100%); z-index: 1; }
+.slide.above { transform: translateY(-100%); }
+
+/* Stagger-in keyframe */
+@keyframes staggerIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
 }
 
-.slide.slide-out {
-    animation: slideOut 0.1s ease-out;
+/* Children hidden by default */
+.slide > *:not(.slide-drawing-svg):not(.slide-whiteout-svg) {
+    opacity: 0;
 }
 
-@keyframes slideOut {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
+/* Drawing SVGs should always be visible */
+.slide > .slide-drawing-svg,
+.slide > .slide-whiteout-svg {
+    opacity: 1 !important;
+    transform: none !important;
 }
 
-/* slide-indicator is now styled in the bottom bar section above */
+/* When slide is active, stagger children in via animation */
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg) {
+    animation: staggerIn .5s ease both;
+}
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(1)  { animation-delay: .00s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(2)  { animation-delay: .09s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(3)  { animation-delay: .18s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(4)  { animation-delay: .27s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(5)  { animation-delay: .36s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(6)  { animation-delay: .45s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(7)  { animation-delay: .54s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(8)  { animation-delay: .63s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(9)  { animation-delay: .72s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(10) { animation-delay: .81s; }
+.slide.active > *:not(.slide-drawing-svg):not(.slide-whiteout-svg):nth-child(n+11) { animation-delay: .90s; }
+
+/* ---- Background variant classes ---- */
+.slide.bg-pine      { --slide-bg: #01413e; --slide-text: #e8e3db; --slide-heading: #f0efed; --slide-accent: #c8a94e; --slide-highlight-teal: #c8a94e; --slide-highlight-red: #f0efed; --slide-callout-border: rgba(232,227,219,0.3); }
+.slide.bg-fern      { --slide-bg: #447247; --slide-text: #e8e3db; --slide-heading: #f0efed; --slide-accent: #f0efed; --slide-highlight-teal: #f0efed; --slide-highlight-red: #f0efed; --slide-callout-border: rgba(232,227,219,0.3); }
+.slide.bg-ochre     { --slide-bg: #cc451c; --slide-text: #e8e3db; --slide-heading: #f0efed; --slide-accent: #f0efed; --slide-highlight-teal: #f0efed; --slide-highlight-red: #f0efed; --slide-callout-border: rgba(232,227,219,0.3); }
+.slide.bg-plum      { --slide-bg: #7a306c; --slide-text: #e8e3db; --slide-heading: #f0efed; --slide-accent: #f0efed; --slide-highlight-teal: #f0efed; --slide-highlight-red: #f0efed; --slide-callout-border: rgba(232,227,219,0.3); }
+.slide.bg-parchment { /* same as defaults */ }
+
+/* Per-slide drawing SVGs */
+.slide .slide-drawing-svg,
+.slide .slide-whiteout-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+}
+.slide .slide-drawing-svg { z-index: 5; }
+.slide .slide-whiteout-svg { z-index: 200; }
+
+/* ---- Nav Dots ---- */
+#navDots {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 500;
+}
+
+.nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(1, 65, 62, 0.3);
+    cursor: none;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-dot.active {
+    background: var(--gold);
+    transform: scale(1.7);
+}
+
+/* Nav dots on dark slides should be visible */
+.nav-dot.on-dark {
+    background: rgba(232, 227, 219, 0.3);
+}
+.nav-dot.on-dark.active {
+    background: var(--gold);
+}
 
 /* ============================================
    Settings Modal Section Headers
@@ -1942,7 +1980,7 @@ table.properties {
 /* Custom Callout Styles - Border Only (Default) */
 .callout.block-color-default {
     background: none !important;
-    border: 4px solid #01413e !important;
+    border: 4px solid var(--slide-callout-border, #01413e) !important;
     padding: 1.75rem !important;
     box-shadow: none !important;
     border-radius: 20px !important;
@@ -1957,12 +1995,12 @@ table.properties {
 .callout.block-color-default li,
 .callout.block-color-default mark,
 .callout.block-color-default [class*="highlight"] {
-    color: #01413e !important;
+    color: var(--slide-text, #01413e) !important;
     background-color: transparent !important;
 }
 
 .callout.block-color-default li::marker {
-    color: #01413e !important;
+    color: var(--slide-text, #01413e) !important;
 }
 
 /* Custom Callout Styles - Green Background */
@@ -2579,58 +2617,7 @@ table.properties {
    Slide Navigation Zones (cursor arrows)
    ============================================ */
 
-.nav-zone {
-    position: absolute;
-    top: 0;
-    width: 40px;
-    height: 100%;
-    z-index: 250;
-    pointer-events: auto;
-}
-
-.nav-zone-left {
-    left: 0;
-    background: rgba(1, 65, 62, 0.06);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
-.nav-zone-left:hover {
-    opacity: 1;
-}
-
-.nav-zone-right {
-    right: 0;
-    background: rgba(1, 65, 62, 0.06);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
-.nav-zone-right:hover {
-    opacity: 1;
-}
-
-body.nav-zone-active .custom-cursor {
-    opacity: 0 !important;
-    transition: opacity 0.15s ease;
-}
-
-.nav-pop {
-    position: fixed;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(1, 65, 62, 0.15);
-    pointer-events: none;
-    transform: translate(-50%, -50%) scale(0);
-    animation: navPop 0.3s ease-out forwards;
-    z-index: 60;
-}
-
-@keyframes navPop {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
-}
+/* Nav zones removed — navigation via scroll, dots, and keyboard */
 
 /* Override broad span rules inside quote block */
 .preview-content .quote-block span {
