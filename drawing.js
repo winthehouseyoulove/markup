@@ -101,8 +101,8 @@ function getSVGCoordinates(e) {
 
     const rect = slide.getBoundingClientRect();
     return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
+        x: e.clientX - rect.left + slide.scrollLeft,
+        y: e.clientY - rect.top + slide.scrollTop
     };
 }
 

@@ -639,7 +639,7 @@ function applyTypographySettings() {
     const letterSpacing = window.markupSettings.get('letterSpacing', -1);
     const headingLetterSpacing = window.markupSettings.get('headingLetterSpacing', -2);
     const headingSpacing = window.markupSettings.get('headingSpacing', 16);
-    const paragraphSpacing = window.markupSettings.get('paragraphSpacing', 12);
+    const paragraphSpacing = window.markupSettings.get('paragraphSpacing', 24);
 
     // Update CSS variables
     root.style.setProperty('--font-family-custom', fontStacks[fontFamily] || fontStacks['Poppins']);
