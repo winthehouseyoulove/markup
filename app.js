@@ -597,6 +597,45 @@ function applyBottomBarHeight() {
 // Apply on load
 setTimeout(applyBottomBarHeight, 200);
 
+// Draggable bottom bar border
+(function initBottomBarDrag() {
+    const handle = document.getElementById('bottomBarDragHandle');
+    const bar = document.getElementById('bottomBar');
+    if (!handle || !bar) return;
+
+    let isDragging = false;
+    let startY = 0;
+    let startHeight = 0;
+
+    handle.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        isDragging = true;
+        startY = e.clientY;
+        startHeight = parseInt(getComputedStyle(bar).height, 10);
+        bar.classList.add('dragging');
+        document.body.style.cursor = 'ns-resize';
+        document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const delta = startY - e.clientY;
+        const newHeight = Math.max(20, Math.min(300, startHeight + delta));
+        document.documentElement.style.setProperty('--bottom-bar-height', newHeight + 'px');
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        bar.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        // Persist the height
+        const finalHeight = parseInt(getComputedStyle(bar).height, 10);
+        window.markupSettings.set('bottomBarHeight', finalHeight);
+    });
+})();
+
 // Track mouse position for laser pointer
 document.addEventListener('mousemove', (e) => {
     lastMouseX = e.clientX;
