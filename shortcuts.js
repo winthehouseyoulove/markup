@@ -29,6 +29,4 @@ if (shortcutsButton && shortcutsModal) {
     });
 
     console.log('Keyboard shortcuts loaded');
-} else {
-    console.error('Shortcuts button or modal not found');
 }

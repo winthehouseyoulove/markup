@@ -173,6 +173,16 @@ const settingsConfig = {
         min: 4,
         max: 32,
         step: 1
+    },
+    'bottomBarHeight': {
+        type: 'range',
+        label: 'Bottom Bar Height',
+        description: 'Adjust the height of the bottom bar (moves the dashed line up/down)',
+        defaultValue: 80,
+        min: 40,
+        max: 200,
+        step: 5,
+        showPreview: true
     }
 };
 
@@ -234,7 +244,8 @@ function renderSettings() {
     const sections = {
         'Drawing Tools': ['laserPointerSize', 'penColor', 'penThickness', 'highlighterColor', 'highlighterThickness', 'whiteoutThickness'],
         'Typography': ['fontFamily', 'h1Size', 'h2Size', 'h3Size', 'h4h6Size', 'bodySize'],
-        'Text Spacing': ['headingLineHeight', 'bodyLineHeight', 'letterSpacing', 'headingLetterSpacing', 'headingSpacing', 'paragraphSpacing']
+        'Text Spacing': ['headingLineHeight', 'bodyLineHeight', 'letterSpacing', 'headingLetterSpacing', 'headingSpacing', 'paragraphSpacing'],
+        'Layout': ['bottomBarHeight']
     };
 
     // Render each section with header
@@ -461,6 +472,16 @@ function renderSettingItem(key, config, currentSettings) {
                 window.dispatchEvent(new CustomEvent('typographyPreview', {
                     detail: { key: key, value: value }
                 }));
+            }
+        });
+    }
+
+    // Add live preview for bottom bar height
+    if (input && key === 'bottomBarHeight') {
+        input.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            if (!isNaN(value)) {
+                document.documentElement.style.setProperty('--bottom-bar-height', value + 'px');
             }
         });
     }

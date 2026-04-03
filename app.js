@@ -18,6 +18,27 @@ const dragOverlay = document.getElementById('dragOverlay');
 const laserPointer = document.getElementById('laserPointer');
 const shuffleButton = document.getElementById('shuffleButton');
 
+// State name lookup (needed early by initializeStateMapBlocks)
+const STATE_NAMES = {
+    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+    'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+    'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+    'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+    'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+    'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+    'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+    'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY',
+    'district of columbia': 'DC', 'dc': 'DC'
+};
+const STATE_ABBR_TO_NAME = {};
+for (const [name, abbr] of Object.entries(STATE_NAMES)) {
+    if (name !== 'dc' && !STATE_ABBR_TO_NAME[abbr]) {
+        STATE_ABBR_TO_NAME[abbr] = name.replace(/\b\w/g, c => c.toUpperCase());
+    }
+}
+
 // Custom cursor
 const customCursor = document.createElement('div');
 customCursor.className = 'custom-cursor';
@@ -565,7 +586,16 @@ window.addEventListener('settingsChanged', (e) => {
     console.log('Settings changed event received:', e.detail);
     updateLaserPointerColor();
     applyTypographySettings();
+    applyBottomBarHeight();
 });
+
+function applyBottomBarHeight() {
+    const height = window.markupSettings.get('bottomBarHeight', 80);
+    document.documentElement.style.setProperty('--bottom-bar-height', height + 'px');
+}
+
+// Apply on load
+setTimeout(applyBottomBarHeight, 200);
 
 // Track mouse position for laser pointer
 document.addEventListener('mousemove', (e) => {
@@ -987,7 +1017,7 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     initializeEmailBlocks();
 
     // Transform [state] code blocks into US state map graphics
-    initializeStateMapBlocks();
+    setTimeout(initializeStateMapBlocks, 0);
 
     // Transform [quote] code blocks into styled testimonial quotes
     initializeQuoteBlocks();
@@ -1164,9 +1194,10 @@ let isTimerRunning = false;
 
 // Update button states based on timer
 function updateButtonStates() {
+    if (!timerTime || !startTimerBtn || !resetTimerBtn) return;
     const hasValue = timerTime.textContent.trim() !== '' && timerTime.textContent !== '00:00';
     const canReset = isTimerRunning || pausedTime > 0 || durationMs > 0;
-    
+
     // Start button: enabled when running (to pause) or when has value (to start)
     startTimerBtn.disabled = !isTimerRunning && !hasValue;
     resetTimerBtn.disabled = !canReset;
@@ -1182,29 +1213,31 @@ function createSlideSegments() {}
 
 // Update timer display and time progress
 function updateTimer() {
+    if (!timerTime) return;
     const elapsed = pausedTime + (Date.now() - startTime);
     const percentage = durationMs > 0 ? Math.min((elapsed / durationMs) * 100, 100) : 0;
-    
+
     // Update timer display
     const minutes = Math.floor(elapsed / 60000);
     const seconds = Math.floor((elapsed % 60000) / 1000);
     const timeText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    
+
     timerTime.textContent = timeText;
-    
+
     // Change color to red if over duration
     if (elapsed >= durationMs) {
         timerTime.style.color = '#cc451c';
     } else {
         timerTime.style.color = '';
     }
-    
+
     // Update time progress line position
     if (timeProgress) timeProgress.style.left = percentage + '%';
 }
 
 // Start the timer
 function startTimer() {
+    if (!timerTime) return;
     // Only read duration on first start (when durationMs is 0)
     if (durationMs === 0) {
         const duration = parseFloat(timerTime.textContent);
@@ -1212,24 +1245,26 @@ function startTimer() {
             return;
         }
         durationMs = duration * 60000;
-        
+
         // Show goal duration (only on first start)
-        timerGoal.textContent = `${duration} minute${duration !== 1 ? 's' : ''}`;
-        timerGoal.style.display = 'block';
+        if (timerGoal) {
+            timerGoal.textContent = `${duration} minute${duration !== 1 ? 's' : ''}`;
+            timerGoal.style.display = 'block';
+        }
     }
-    
+
     startTime = Date.now();
     isTimerRunning = true;
-    
-    playIcon.style.display = 'none';
-    pauseIcon.style.display = 'block';
+
+    if (playIcon) playIcon.style.display = 'none';
+    if (pauseIcon) pauseIcon.style.display = 'block';
     timerTime.contentEditable = 'false';
-    
+
     // Only set to "Start" on first start
     if (pausedTime === 0) {
         timerTime.textContent = 'Start';
     }
-    
+
     timerInterval = setInterval(updateTimer, 100);
     updateTimer();
     updateButtonStates();
@@ -1239,17 +1274,17 @@ function startTimer() {
 function stopTimer() {
     isTimerRunning = false;
     clearInterval(timerInterval);
-    
+
     // Store elapsed time when pausing
     if (startTime) {
         pausedTime += Date.now() - startTime;
     }
-    
-    playIcon.style.display = 'block';
-    pauseIcon.style.display = 'none';
-    timerTime.contentEditable = 'false';
+
+    if (playIcon) playIcon.style.display = 'block';
+    if (pauseIcon) pauseIcon.style.display = 'none';
+    if (timerTime) timerTime.contentEditable = 'false';
     updateButtonStates();
-    
+
     // Keep goal visible when paused
 }
 
@@ -1259,76 +1294,84 @@ function resetTimer() {
     startTime = null;
     pausedTime = 0;
     durationMs = 0;
-    
+
     if (timeProgress) timeProgress.style.left = '0%';
-    timerTime.textContent = '00:00';
-    timerTime.style.color = '';
-    timerTime.contentEditable = 'true';
-    timerGoal.style.display = 'none';
+    if (timerTime) {
+        timerTime.textContent = '00:00';
+        timerTime.style.color = '';
+        timerTime.contentEditable = 'true';
+    }
+    if (timerGoal) timerGoal.style.display = 'none';
     updateButtonStates();
 }
 
-// Event listeners
-startTimerBtn.addEventListener('click', () => {
-    if (isTimerRunning) {
-        stopTimer();
-    } else {
-        startTimer();
-    }
-});
+// Event listeners (guarded — timer elements may not exist in DOM)
+if (startTimerBtn) {
+    startTimerBtn.addEventListener('click', () => {
+        if (isTimerRunning) {
+            stopTimer();
+        } else {
+            startTimer();
+        }
+    });
+}
 
-resetTimerBtn.addEventListener('click', resetTimer);
+if (resetTimerBtn) {
+    resetTimerBtn.addEventListener('click', resetTimer);
+}
 
-// Cmd+Click on timer to pause and reset
-timerTime.addEventListener('click', (e) => {
-    if (e.metaKey && (isTimerRunning || pausedTime > 0 || durationMs > 0)) {
-        e.preventDefault();
-        e.stopPropagation();
-        resetTimer();
-    }
-});
+if (timerTime) {
+    // Cmd+Click on timer to pause and reset
+    timerTime.addEventListener('click', (e) => {
+        if (e.metaKey && (isTimerRunning || pausedTime > 0 || durationMs > 0)) {
+            e.preventDefault();
+            e.stopPropagation();
+            resetTimer();
+        }
+    });
+
+    // Timer click/focus - clear to show blinking cursor
+    timerTime.addEventListener('focus', () => {
+        if (!isTimerRunning && timerTime.textContent === '00:00') {
+            timerTime.textContent = '';
+        }
+    });
+
+    // Timer blur - restore 00:00 if empty
+    timerTime.addEventListener('blur', () => {
+        if (!isTimerRunning && timerTime.textContent.trim() === '') {
+            timerTime.textContent = '00:00';
+        }
+        updateButtonStates();
+    });
+
+    // Timer input - update button states
+    timerTime.addEventListener('input', () => {
+        updateButtonStates();
+    });
+
+    // Enter key to start timer
+    timerTime.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!isTimerRunning) {
+                startTimer();
+            }
+        }
+        // Only allow numbers and decimal point when editable
+        if (timerTime.contentEditable === 'true') {
+            if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Enter') {
+                e.preventDefault();
+            }
+        }
+    });
+}
 
 // Listen to scroll events on share area instead of presentation container
 const shareArea = document.querySelector('.share-area');
 if (shareArea) {
     shareArea.addEventListener('scroll', updateScrollProgress);
 }
-
-// Timer click/focus - clear to show blinking cursor
-timerTime.addEventListener('focus', () => {
-    if (!isTimerRunning && timerTime.textContent === '00:00') {
-        timerTime.textContent = '';
-    }
-});
-
-// Timer blur - restore 00:00 if empty
-timerTime.addEventListener('blur', () => {
-    if (!isTimerRunning && timerTime.textContent.trim() === '') {
-        timerTime.textContent = '00:00';
-    }
-    updateButtonStates();
-});
-
-// Timer input - update button states
-timerTime.addEventListener('input', () => {
-    updateButtonStates();
-});
-
-// Enter key to start timer
-timerTime.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        if (!isTimerRunning) {
-            startTimer();
-        }
-    }
-    // Only allow numbers and decimal point when editable
-    if (timerTime.contentEditable === 'true') {
-        if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Enter') {
-            e.preventDefault();
-        }
-    }
-});
 
 // Initialize on load
 updateScrollProgress();
@@ -2109,20 +2152,6 @@ const STATE_PATHS = {
     'WY': 'm 355.3,143.7 -51,-5.3 -57.3,-7.9 -2,10.7 -8.5,54.8 -3.3,21.9 32.1,4.8 44.9,5.7 37.5,3.4 3.7,-44.2 z',
 };
 
-const STATE_NAMES = {
-    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
-    'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
-    'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
-    'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
-    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
-    'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
-    'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
-    'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
-    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
-    'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY',
-    'district of columbia': 'DC', 'dc': 'DC'
-};
-
 function initializeStateMapBlocks() {
     const previewContent = document.getElementById('previewContent');
     if (!previewContent) return;
@@ -2186,14 +2215,6 @@ function parseStateMapContent(text) {
     }
 
     return { allMode, legendMode, states };
-}
-
-// Reverse lookup: abbreviation -> full state name
-const STATE_ABBR_TO_NAME = {};
-for (const [name, abbr] of Object.entries(STATE_NAMES)) {
-    if (name !== 'dc' && !STATE_ABBR_TO_NAME[abbr]) {
-        STATE_ABBR_TO_NAME[abbr] = name.replace(/\b\w/g, c => c.toUpperCase());
-    }
 }
 
 function generateStateMapHTML(parsed) {
