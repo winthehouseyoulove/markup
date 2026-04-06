@@ -2799,6 +2799,56 @@ function showSlide(index) {
 // updateSlideAlignment removed — scroll-snap handles layout
 
 // ============================================
+// Smooth scrolling within slides
+// ============================================
+(function() {
+    let targetScroll = 0;
+    let currentScroll = 0;
+    let animating = false;
+    let activeSlide = null;
+    const ease = 0.12;
+
+    document.addEventListener('wheel', (e) => {
+        const slide = previewContent.querySelector('.slide.active');
+        if (!slide || slide.scrollHeight <= slide.clientHeight) return;
+
+        e.preventDefault();
+
+        if (slide !== activeSlide) {
+            activeSlide = slide;
+            currentScroll = slide.scrollTop;
+            targetScroll = currentScroll;
+        }
+
+        targetScroll += e.deltaY;
+        const maxScroll = slide.scrollHeight - slide.clientHeight;
+        targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
+
+        if (!animating) {
+            animating = true;
+            smoothStep();
+        }
+    }, { passive: false });
+
+    function smoothStep() {
+        if (!activeSlide) { animating = false; return; }
+
+        currentScroll += (targetScroll - currentScroll) * ease;
+
+        // Stop when close enough
+        if (Math.abs(targetScroll - currentScroll) < 0.5) {
+            currentScroll = targetScroll;
+            activeSlide.scrollTop = currentScroll;
+            animating = false;
+            return;
+        }
+
+        activeSlide.scrollTop = currentScroll;
+        requestAnimationFrame(smoothStep);
+    }
+})();
+
+// ============================================
 // Background Colors: bare color name in <p><code>name</code></p>
 // ============================================
 
