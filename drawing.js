@@ -145,15 +145,22 @@ function updateCursor(tool) {
 }
 
 // Update eraser cursor position and track mouse for drawing
+let drawingRafPending = false;
 document.addEventListener('mousemove', (e) => {
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
 
     if (currentTool === 'eraser') {
-        const eraserCursor = document.getElementById('eraserCursor');
-        if (eraserCursor) {
-            eraserCursor.style.left = (e.clientX - 10) + 'px';
-            eraserCursor.style.top = (e.clientY - 10) + 'px';
+        if (!drawingRafPending) {
+            drawingRafPending = true;
+            requestAnimationFrame(() => {
+                const eraserCursor = document.getElementById('eraserCursor');
+                if (eraserCursor) {
+                    eraserCursor.style.left = (lastMouseX - 10) + 'px';
+                    eraserCursor.style.top = (lastMouseY - 10) + 'px';
+                }
+                drawingRafPending = false;
+            });
         }
         erasePath(e);
     } else if (isDrawing) {

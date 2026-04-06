@@ -120,16 +120,21 @@ let flashlightActive = false;
 let flashlightX = 0;
 let flashlightY = 0;
 
+let cursorRafPending = false;
 document.addEventListener('mousemove', (e) => {
-    customCursor.style.left = e.clientX + 'px';
-    customCursor.style.top = e.clientY + 'px';
-
-    // Update flashlight position
     flashlightX = e.clientX;
     flashlightY = e.clientY;
 
-    if (flashlightActive) {
-        updateFlashlight();
+    if (!cursorRafPending) {
+        cursorRafPending = true;
+        requestAnimationFrame(() => {
+            customCursor.style.left = flashlightX + 'px';
+            customCursor.style.top = flashlightY + 'px';
+            if (flashlightActive) {
+                updateFlashlight();
+            }
+            cursorRafPending = false;
+        });
     }
 });
 
@@ -637,13 +642,18 @@ setTimeout(applyBottomBarHeight, 200);
 })();
 
 // Track mouse position for laser pointer
+let laserRafPending = false;
 document.addEventListener('mousemove', (e) => {
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
-    
-    if (laserActive) {
-        laserPointer.style.left = e.clientX + 'px';
-        laserPointer.style.top = e.clientY + 'px';
+
+    if (laserActive && !laserRafPending) {
+        laserRafPending = true;
+        requestAnimationFrame(() => {
+            laserPointer.style.left = lastMouseX + 'px';
+            laserPointer.style.top = lastMouseY + 'px';
+            laserRafPending = false;
+        });
     }
 });
 
