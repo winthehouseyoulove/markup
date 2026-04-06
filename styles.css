@@ -1408,13 +1408,15 @@ table.properties {
 /* Equation container styling */
 .equation {
     text-align: center !important;
-    padding: 1.5rem 2rem !important;
-    margin: 1rem 0 !important;
+    padding: 1.5rem 0 !important;
+    margin: 1rem -60px !important;
     color: var(--slide-text, #01413e);
+    overflow: hidden !important;
 }
 
 .equation-container {
     display: inline-block !important;
+    max-width: 100% !important;
 }
 
 /* Scale equations up for presentation readability */

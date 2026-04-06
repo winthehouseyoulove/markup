@@ -1108,6 +1108,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     restoreQuotePhotoPositions();
     initializeQuotePhotoDrag();
 
+    // Auto-scale equations that overflow their container
+    fitEquations();
+
     // Auto-shrink next-slide buttons that overflow their container
     fitNextSlideButtons();
 
@@ -1545,6 +1548,51 @@ function fitNextSlideButtons() {
             btn.style.fontSize = `calc(var(--font-size-body) * ${(0.7 * scale).toFixed(2)})`;
         }
     });
+}
+
+// Auto-scale KaTeX equations that overflow their slide container
+// Called per-slide from showSlide() once the slide is visible
+function fitEquationsInSlide(slideEl) {
+    if (!slideEl || slideEl.dataset.equationsFit) return;
+    const equations = slideEl.querySelectorAll('.equation');
+    if (!equations.length) return;
+
+    equations.forEach(eq => {
+        const katexEl = eq.querySelector('.katex');
+        if (!katexEl) return;
+
+        const availableWidth = eq.clientWidth;
+        const katexWidth = katexEl.scrollWidth;
+
+        if (katexWidth > availableWidth && availableWidth > 0) {
+            const scale = Math.max(0.5, availableWidth / katexWidth);
+            // Measure natural height before applying transform
+            const naturalHeight = katexEl.offsetHeight;
+
+            // Use left-origin scale + translateX to center visually
+            const scaledWidth = katexWidth * scale;
+            const offset = Math.max(0, (availableWidth - scaledWidth) / 2);
+            katexEl.style.transform = `translateX(${offset}px) scale(${scale})`;
+            katexEl.style.transformOrigin = 'left top';
+            katexEl.style.display = 'inline-block';
+
+            // Wrap in a container that reserves the scaled height,
+            // since CSS transform doesn't affect layout flow
+            const wrapper = document.createElement('div');
+            wrapper.style.width = '100%';
+            wrapper.style.height = (naturalHeight * scale) + 'px';
+            katexEl.parentNode.insertBefore(wrapper, katexEl);
+            wrapper.appendChild(katexEl);
+        }
+    });
+
+    slideEl.dataset.equationsFit = '1';
+}
+
+// Legacy wrapper for init — fits equations on the first (active) slide
+function fitEquations() {
+    const active = previewContent.querySelector('.slide.active');
+    if (active) fitEquationsInSlide(active);
 }
 
 // Click handler for next-slide buttons (event delegation)
@@ -2794,6 +2842,9 @@ function showSlide(index) {
     currentSlideIndex = index;
     updateSlideIndicator();
     updateNavDots();
+
+    // Fit equations now that the slide is visible and measurable
+    fitEquationsInSlide(newSlide);
 }
 
 // updateSlideAlignment removed — scroll-snap handles layout
