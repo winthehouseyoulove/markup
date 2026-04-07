@@ -1059,6 +1059,9 @@ async function processAndDisplayHTML(htmlContent, extractedFiles, htmlFileName) 
     // Clean up any Notion-specific elements that might interfere
     cleanupNotionElements(previewContent);
 
+    // Transform Notion YouTube embeds into playable iframes
+    initializeYouTubeEmbeds();
+
     // Transform [imessage] code blocks into iMessage UI
     initializeIMessageBlocks();
 
@@ -1939,6 +1942,38 @@ function initializeListingBlocks() {
         const container = document.createElement('div');
         container.innerHTML = html;
         pre.replaceWith(container.firstElementChild);
+    });
+}
+
+// ============================================
+// YouTube Embeds
+// ============================================
+
+function extractYouTubeId(url) {
+    // Handle youtu.be/ID, youtube.com/watch?v=ID, youtube.com/embed/ID
+    let match = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (match) return match[1];
+    match = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+    if (match) return match[1];
+    match = url.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+    if (match) return match[1];
+    return null;
+}
+
+function initializeYouTubeEmbeds() {
+    // Notion exports YouTube embeds as: <figure><div class="source"><a href="https://youtu.be/...">...</a></div></figure>
+    previewContent.querySelectorAll('figure > div.source > a').forEach(link => {
+        const href = link.getAttribute('href') || '';
+        const videoId = extractYouTubeId(href);
+        if (!videoId) return;
+
+        const figure = link.closest('figure');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'youtube-embed';
+        wrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+
+        figure.replaceWith(wrapper);
     });
 }
 
