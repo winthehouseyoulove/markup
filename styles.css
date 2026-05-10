@@ -3095,7 +3095,7 @@ table.properties {
 }
 
 .preview-content .next-slide-btn:hover {
-    transform: scale(1.03);
+    outline: 3px solid #8e8dbe;
 }
 
 /* Override broad span rules inside the button */
