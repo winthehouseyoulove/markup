@@ -803,7 +803,7 @@ async function loadDemo() {
 
     try {
         // Add cache-busting parameter to ensure fresh content
-        const response = await fetch('demo.html?t=' + Date.now());
+        const response = await fetch('styled-presentations/va-loan-2026.html?t=' + Date.now());
         if (!response.ok) {
             throw new Error('Demo file not found. Please add a demo.html file to the folder.');
         }
