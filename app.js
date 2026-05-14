@@ -1437,7 +1437,7 @@ updateButtonStates();
 // ============================================
 
 function createConfetti(x, y) {
-    const colors = ['#4a674c', '#01413e', '#D9D1C8', '#8B8680'];
+    const colors = ['#447247', '#01413e', '#D9D1C8', '#8B8680'];
     const confettiCount = 20;
     
     for (let i = 0; i < confettiCount; i++) {

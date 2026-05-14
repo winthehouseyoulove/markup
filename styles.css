@@ -7,7 +7,7 @@
 :root {
     --ui-blue: #01413e;
     --primary: #01413e;
-    --accent: #4a674c;
+    --accent: #447247;
     --neutral-light: #f0efed;
     --neutral-medium: #D9D1C8;
     --neutral-dark: #8B8680;
@@ -3088,13 +3088,13 @@ table.properties {
     border: none;
     border-radius: 100px;
     background: #01413e !important;
-    color: #fff !important;
+    color: var(--neutral-light) !important;
     font-family: var(--font-family-custom) !important;
     font-size: calc(var(--font-size-body) * 0.7) !important;
     font-weight: 600 !important;
     letter-spacing: var(--letter-spacing-custom) !important;
     cursor: pointer;
-    transition: transform 0.15s ease;
+    transition: background-color 0.15s ease;
     vertical-align: middle;
     line-height: 1.4 !important;
     position: relative !important;
@@ -3104,7 +3104,8 @@ table.properties {
 }
 
 .preview-content .next-slide-btn:hover {
-    outline: 3px solid #8e8dbe;
+    background: var(--accent) !important;
+    color: var(--neutral-light) !important;
 }
 
 /* Override broad span rules inside the button */
@@ -3122,12 +3123,8 @@ table.properties {
     width: 0.75em;
     height: 0.75em;
     flex-shrink: 0;
-    transition: transform 0.2s ease;
 }
 
-.preview-content .next-slide-btn:hover .next-slide-arrow {
-    transform: translateX(3px);
-}
 
 /* --- Context-aware button colors on colored callout backgrounds --- */
 
