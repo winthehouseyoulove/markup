@@ -2,334 +2,267 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>2026 VA Loan Requirements — Redesign Preview</title>
-</head>
-<body>
-<article class="page">
-
-<!-- ===== SLIDE 1 — HERO (with deck CSS embedded so it survives Markup's pre-h2 cleanup) ===== -->
-<div class="va-hero">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"/>
 <style>
-/* Custom Callout Styles — preserved by Markup */
-/* Uses Poppins (loaded by Markup host); inherits color tokens but overrides layout. */
-
-.preview-content {
-    --ink: #01413e;
-    --ink-deep: #0b2b26;
-    --moss: #447247;
-    --cream: #f0efed;
-    --paper: #f6f3ec;
-    --rust: #cc451c;
-    --plum: #7a306c;
-    --rule: rgba(1, 65, 62, 0.12);
+:root {
+  --ink: #01413e;
+  --ink-deep: #0b2b26;
+  --moss: #447247;
+  --cream: #f0efed;
+  --paper: #f6f3ec;
+  --rust: #cc451c;
+  --rule: rgba(1, 65, 62, 0.12);
 }
-.preview-content .va-hero,
-.preview-content .va-stat,
-.preview-content .va-divider,
-.preview-content .va-compare,
-.preview-content .va-process,
-.preview-content .va-cta {
-    font-family: 'Poppins', sans-serif !important;
-}
-.preview-content .va-hero *,
-.preview-content .va-stat *,
-.preview-content .va-divider *,
-.preview-content .va-compare *,
-.preview-content .va-process *,
-.preview-content .va-cta * { letter-spacing: normal; }
 
-.preview-content .va-deck .overline {
-    font-size: 28px !important;
-    font-weight: 600 !important;
-    letter-spacing: 4px !important;
-    text-transform: uppercase;
-    color: var(--moss) !important;
-    line-height: 1 !important;
-    margin: 0 0 28px !important;
-    display: block;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  font-family: 'Poppins', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: #000;
+  overflow: hidden;
+}
+
+.deck {
+  position: fixed; inset: 0;
+}
+.slide {
+  position: absolute; inset: 0;
+  font-family: 'Poppins', sans-serif;
+}
+.slide:not(.active) { display: none !important; }
+
+.counter {
+  position: fixed; bottom: 20px; right: 24px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px; letter-spacing: 2px;
+  color: rgba(255,255,255,0.4);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 100;
+}
+.hint {
+  position: fixed; bottom: 20px; left: 24px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 100;
 }
 
 /* ============================================================
-   1. HERO / COVER
+   1. HERO
    ============================================================ */
-.preview-content .va-hero {
-    position: absolute !important; inset: 0 !important; opacity: 1 !important;
-    background: var(--ink-deep);
-    color: var(--cream);
-    padding: 96px 80px !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.va-hero {
+  background: var(--ink-deep); color: var(--cream);
+  padding: 7vmin 6vmin; display: flex; flex-direction: column; justify-content: space-between;
 }
-.preview-content .va-hero .overline { color: var(--cream) !important; opacity: 0.6; }
-.preview-content .va-hero h2 {
-    font-size: clamp(56px, 12vmin, 140px) !important;
-    line-height: 0.95 !important;
-    letter-spacing: -0.04em !important;
-    font-weight: 700 !important;
-    color: var(--cream) !important;
-    margin: 0 !important;
-    max-width: 90%;
+.va-hero .overline {
+  font-size: clamp(14px, 1.8vmin, 22px); font-weight: 600;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--cream); opacity: 0.55; margin-bottom: 3vmin;
+  display: block;
 }
-.preview-content .va-hero h2 em { color: var(--moss) !important; font-style: normal; }
-.preview-content .va-hero .meta {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    font-size: 24px !important; color: var(--cream) !important; opacity: 0.7;
-    letter-spacing: 0.5px !important;
-    line-height: 1.4 !important;
+.va-hero h2 {
+  font-size: clamp(48px, 11vmin, 140px);
+  line-height: 0.95; letter-spacing: -0.04em; font-weight: 700;
+  color: var(--cream); max-width: 95%;
 }
-.preview-content .va-hero .meta strong { color: var(--cream) !important; opacity: 1; font-weight: 600 !important; }
+.va-hero h2 em { color: var(--moss); font-style: normal; }
+.va-hero .meta {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  font-size: clamp(13px, 1.6vmin, 20px); line-height: 1.4;
+  color: var(--cream); opacity: 0.7;
+}
+.va-hero .meta strong { font-weight: 600; opacity: 1; }
 
 /* ============================================================
    2. BIG-STAT
    ============================================================ */
-.preview-content .va-stat {
-    position: absolute !important; inset: 0 !important; opacity: 1 !important;
-    background: var(--paper);
-    padding: 80px !important;
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 80px;
-    align-items: center;
+.va-stat {
+  background: var(--paper); padding: 7vmin 6vmin;
+  display: grid; grid-template-columns: 1.1fr 1fr;
+  gap: 6vmin; align-items: center;
 }
-.preview-content .va-stat .numeral {
-    font-size: clamp(180px, 42vmin, 440px) !important;
-    line-height: 0.85 !important;
-    letter-spacing: -0.05em !important;
-    font-weight: 700 !important;
-    color: var(--ink) !important;
-    margin: 0 !important;
+.va-stat .numeral {
+  font-size: clamp(160px, 38vmin, 420px);
+  line-height: 0.85; letter-spacing: -0.05em; font-weight: 700;
+  color: var(--ink); text-align: center;
 }
-.preview-content .va-stat .numeral .pct { color: var(--moss) !important; }
-.preview-content .va-stat .body h2 {
-    font-size: 68px !important;
-    line-height: 1.05 !important;
-    letter-spacing: -2px !important;
-    font-weight: 700 !important;
-    color: var(--ink) !important;
-    margin: 0 0 32px !important;
+.va-stat .numeral .pct { color: var(--moss); font-size: 0.6em; }
+.va-stat .body h2 {
+  font-size: clamp(36px, 6vmin, 72px);
+  line-height: 1.05; letter-spacing: -0.025em; font-weight: 700;
+  color: var(--ink); margin-bottom: 3vmin;
 }
-.preview-content .va-stat .body p {
-    font-size: 28px !important;
-    line-height: 1.5 !important;
-    color: var(--ink) !important;
-    opacity: 0.8;
-    margin: 0 !important;
-    font-weight: 500 !important;
+.va-stat .body p {
+  font-size: clamp(18px, 2.5vmin, 30px);
+  line-height: 1.5; color: var(--ink); opacity: 0.8;
+  font-weight: 500;
 }
-.preview-content .va-stat .footnote {
-    margin-top: 40px !important;
-    font-size: 20px !important; letter-spacing: 2px !important; text-transform: uppercase;
-    color: var(--moss) !important; font-weight: 600 !important;
+.va-stat .footnote {
+  margin-top: 4vmin;
+  font-size: clamp(12px, 1.5vmin, 18px); letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--moss); font-weight: 600;
 }
 
 /* ============================================================
    3. SECTION DIVIDER
    ============================================================ */
-.preview-content .va-divider {
-    position: absolute !important; inset: 0 !important; opacity: 1 !important;
-    background: var(--ink);
-    color: var(--cream);
-    padding: 80px !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.va-divider {
+  background: var(--ink); color: var(--cream);
+  padding: 7vmin 6vmin; display: flex; flex-direction: column; justify-content: center;
 }
-.preview-content .va-divider .chapter {
-    font-size: 32px !important; letter-spacing: 8px !important; text-transform: uppercase;
-    color: var(--moss) !important; font-weight: 600 !important; margin: 0 0 32px !important;
-    line-height: 1 !important;
+.va-divider .chapter {
+  font-size: clamp(16px, 2.2vmin, 28px); letter-spacing: 0.5em;
+  text-transform: uppercase; color: var(--moss); font-weight: 600;
+  margin-bottom: 4vmin;
 }
-.preview-content .va-divider h2 {
-    font-size: clamp(48px, 10.5vmin, 120px) !important;
-    line-height: 1 !important;
-    letter-spacing: -0.035em !important;
-    font-weight: 700 !important;
-    color: var(--cream) !important;
-    margin: 0 0 48px !important;
-    max-width: 90%;
+.va-divider h2 {
+  font-size: clamp(44px, 9.5vmin, 120px);
+  line-height: 1; letter-spacing: -0.035em; font-weight: 700;
+  color: var(--cream); margin-bottom: 5vmin; max-width: 90%;
 }
-.preview-content .va-divider .lede {
-    font-size: 32px !important;
-    line-height: 1.45 !important;
-    color: var(--cream) !important;
-    opacity: 0.7;
-    max-width: 70%;
-    font-weight: 400 !important;
+.va-divider h2 em { color: var(--moss); font-style: normal; }
+.va-divider .lede {
+  font-size: clamp(18px, 2.8vmin, 32px); line-height: 1.45;
+  color: var(--cream); opacity: 0.7; max-width: 70%; font-weight: 400;
 }
 
 /* ============================================================
-   4. SIDE-BY-SIDE CARDS (Myth vs Reality)
+   4. COMPARE CARDS
    ============================================================ */
-.preview-content .va-compare {
-    position: absolute !important; inset: 0 !important; opacity: 1 !important;
-    background: var(--paper);
-    padding: 72px 64px !important;
-    display: flex;
-    flex-direction: column;
+.va-compare {
+  background: var(--paper); padding: 6vmin 5vmin;
+  display: flex; flex-direction: column;
 }
-.preview-content .va-compare h2 {
-    font-size: 64px !important;
-    line-height: 1.05 !important;
-    letter-spacing: -2px !important;
-    font-weight: 700 !important;
-    color: var(--ink) !important;
-    margin: 0 0 48px !important;
+.va-compare h2 {
+  font-size: clamp(36px, 6vmin, 72px);
+  line-height: 1.05; letter-spacing: -0.025em; font-weight: 700;
+  color: var(--ink); margin-bottom: 5vmin;
 }
-.preview-content .va-compare h2 em { color: var(--moss) !important; font-style: normal; }
-.preview-content .va-compare .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    flex: 1;
+.va-compare h2 em { color: var(--moss); font-style: normal; font-weight: 700; }
+.va-compare .grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; flex: 1;
 }
-.preview-content .va-compare .col {
-    background: var(--cream);
-    border-radius: 24px;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.va-compare .col {
+  border-radius: 24px; padding: 3.5vmin;
+  display: flex; flex-direction: column; gap: 2vmin;
 }
-.preview-content .va-compare .col.myth { background: rgba(204, 69, 28, 0.06); border: 2px solid rgba(204, 69, 28, 0.2); }
-.preview-content .va-compare .col.real { background: rgba(68, 114, 71, 0.08); border: 2px solid rgba(68, 114, 71, 0.25); }
-.preview-content .va-compare .col h3 {
-    font-size: 22px !important; letter-spacing: 3px !important; text-transform: uppercase;
-    font-weight: 600 !important; margin: 0 0 8px !important; line-height: 1 !important;
+.va-compare .col.myth { background: rgba(204, 69, 28, 0.06); border: 2px solid rgba(204, 69, 28, 0.2); }
+.va-compare .col.real { background: rgba(68, 114, 71, 0.08); border: 2px solid rgba(68, 114, 71, 0.25); }
+.va-compare .col h3 {
+  font-size: clamp(13px, 1.6vmin, 20px); letter-spacing: 0.25em;
+  text-transform: uppercase; font-weight: 600; line-height: 1;
 }
-.preview-content .va-compare .col.myth h3 { color: var(--rust) !important; }
-.preview-content .va-compare .col.real h3 { color: var(--moss) !important; }
-.preview-content .va-compare .col p {
-    font-size: 28px !important;
-    line-height: 1.4 !important;
-    color: var(--ink) !important;
-    margin: 0 !important;
-    font-weight: 500 !important;
+.va-compare .col.myth h3 { color: var(--rust); }
+.va-compare .col.real h3 { color: var(--moss); }
+.va-compare .col p {
+  font-size: clamp(15px, 2vmin, 26px); line-height: 1.4;
+  color: var(--ink); font-weight: 500;
 }
-.preview-content .va-compare .col p strong { font-weight: 600 !important; color: var(--ink) !important; }
-.preview-content .va-compare .col .row {
-    display: flex; gap: 16px; align-items: flex-start;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--rule);
+.va-compare .col p strong { font-weight: 600; }
+.va-compare .col .row {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding-bottom: 1.5vmin; border-bottom: 1px solid var(--rule);
 }
-.preview-content .va-compare .col .row:last-child { border: none; padding-bottom: 0; }
-.preview-content .va-compare .col .row .mark { flex-shrink: 0; font-size: 28px !important; line-height: 1.4 !important; }
+.va-compare .col .row:last-child { border: none; padding-bottom: 0; }
+.va-compare .col .mark { flex-shrink: 0; font-size: clamp(15px, 2vmin, 26px); line-height: 1.4; }
 
 /* ============================================================
    5. NUMBERED PROCESS
    ============================================================ */
-.preview-content .va-process {
-    position: absolute !important; inset: 0 !important; opacity: 1 !important;
-    background: var(--paper);
-    padding: 72px 64px !important;
-    display: flex; flex-direction: column;
+.va-process {
+  background: var(--paper); padding: 6vmin 5vmin;
+  display: flex; flex-direction: column;
 }
-.preview-content .va-process h2 {
-    font-size: 64px !important;
-    line-height: 1.05 !important;
-    letter-spacing: -2px !important;
-    font-weight: 700 !important;
-    color: var(--ink) !important;
-    margin: 0 0 16px !important;
+.va-process h2 {
+  font-size: clamp(36px, 6vmin, 72px);
+  line-height: 1.05; letter-spacing: -0.025em; font-weight: 700;
+  color: var(--ink); margin-bottom: 1.5vmin;
 }
-.preview-content .va-process h2 em { color: var(--moss) !important; font-style: normal; }
-.preview-content .va-process .sub {
-    font-size: 26px !important; line-height: 1.4 !important; color: var(--ink) !important;
-    opacity: 0.7; margin: 0 0 56px !important; font-weight: 500 !important;
-    max-width: 70%;
+.va-process h2 em { color: var(--moss); font-style: normal; }
+.va-process .sub {
+  font-size: clamp(16px, 2.2vmin, 28px); line-height: 1.4;
+  color: var(--ink); opacity: 0.7; margin-bottom: 5vmin;
+  font-weight: 500; max-width: 70%;
 }
-.preview-content .va-process .steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    flex: 1;
+.va-process .steps {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5vmin; flex: 1;
 }
-.preview-content .va-process .step {
-    background: var(--cream);
-    border-radius: 20px;
-    padding: 32px 28px;
-    display: flex; flex-direction: column;
-    border-top: 6px solid var(--moss);
+.va-process .step {
+  background: var(--cream); border-radius: 20px; padding: 3vmin 2.5vmin;
+  display: flex; flex-direction: column;
+  border-top: 6px solid var(--moss);
 }
-.preview-content .va-process .step .n {
-    font-size: clamp(48px, 8vmin, 88px) !important;
-    line-height: 0.9 !important;
-    letter-spacing: -0.04em !important;
-    font-weight: 700 !important;
-    color: var(--moss) !important;
-    margin: 0 0 16px !important;
+.va-process .step .n {
+  font-size: clamp(48px, 7.5vmin, 88px);
+  line-height: 0.9; letter-spacing: -0.04em; font-weight: 700;
+  color: var(--moss); margin-bottom: 2vmin;
 }
-.preview-content .va-process .step h3 {
-    font-size: 26px !important;
-    line-height: 1.15 !important;
-    font-weight: 700 !important;
-    color: var(--ink) !important;
-    margin: 0 0 12px !important;
-    letter-spacing: -0.5px !important;
+.va-process .step h3 {
+  font-size: clamp(16px, 2.2vmin, 28px); line-height: 1.15;
+  font-weight: 700; color: var(--ink); margin-bottom: 1.2vmin;
+  letter-spacing: -0.01em;
 }
-.preview-content .va-process .step p {
-    font-size: 20px !important;
-    line-height: 1.4 !important;
-    color: var(--ink) !important;
-    opacity: 0.75;
-    margin: 0 !important;
-    font-weight: 500 !important;
+.va-process .step p {
+  font-size: clamp(13px, 1.8vmin, 22px); line-height: 1.4;
+  color: var(--ink); opacity: 0.75; font-weight: 500;
 }
 
 /* ============================================================
    6. CTA FULL-BLEED
    ============================================================ */
-.preview-content .va-cta {
-    position: absolute !important; inset: 0 !important; opacity: 1 !important;
-    background: var(--moss);
-    color: var(--cream);
-    padding: 96px 80px !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.va-cta {
+  background: var(--moss); color: var(--cream);
+  padding: 7vmin 6vmin; display: flex; flex-direction: column; justify-content: space-between;
 }
-.preview-content .va-cta .overline { color: var(--cream) !important; opacity: 0.7; }
-.preview-content .va-cta h2 {
-    font-size: clamp(52px, 11.5vmin, 132px) !important;
-    line-height: 0.95 !important;
-    letter-spacing: -0.04em !important;
-    font-weight: 700 !important;
-    color: var(--cream) !important;
-    margin: 0 !important;
-    max-width: 95%;
+.va-cta .overline {
+  font-size: clamp(14px, 1.8vmin, 22px); font-weight: 600;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--cream); opacity: 0.75; margin-bottom: 3vmin;
+  display: block;
 }
-.preview-content .va-cta .perks {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
-    margin: 56px 0 0 !important;
+.va-cta h2 {
+  font-size: clamp(48px, 10vmin, 132px);
+  line-height: 0.95; letter-spacing: -0.04em; font-weight: 700;
+  color: var(--cream); max-width: 95%;
 }
-.preview-content .va-cta .perk h4 {
-    font-size: 20px !important; letter-spacing: 2px !important; text-transform: uppercase;
-    color: var(--cream) !important; opacity: 0.7; margin: 0 0 8px !important;
-    font-weight: 600 !important; line-height: 1 !important;
+.va-cta .perks {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 3vmin;
+  margin-top: 5vmin;
 }
-.preview-content .va-cta .perk p {
-    font-size: 26px !important; line-height: 1.3 !important;
-    color: var(--cream) !important; margin: 0 !important;
-    font-weight: 500 !important;
+.va-cta .perk h4 {
+  font-size: clamp(12px, 1.5vmin, 20px); letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--cream); opacity: 0.75;
+  font-weight: 600; margin-bottom: 0.8vmin; line-height: 1;
 }
-.preview-content .va-cta .footer {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    color: var(--cream) !important; font-size: 22px !important; opacity: 0.7;
-    font-weight: 500 !important;
+.va-cta .perk p {
+  font-size: clamp(16px, 2.2vmin, 28px); line-height: 1.3;
+  color: var(--cream); font-weight: 500;
 }
-.preview-content .va-cta .footer .url {
-    font-size: 40px !important; opacity: 1; font-weight: 600 !important;
-    letter-spacing: -1px !important; color: var(--cream) !important;
+.va-cta .footer {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  color: var(--cream); font-size: clamp(13px, 1.6vmin, 22px); opacity: 0.75;
+  font-weight: 500;
 }
-
-/* Hide Markup chrome that doesn't fit the redesigned slides */
-.preview-content .va-hero > *,
-.preview-content .va-stat > *,
-.preview-content .va-divider > *,
-.preview-content .va-compare > *,
-.preview-content .va-process > *,
-.preview-content .va-cta > * { z-index: 5; }
+.va-cta .footer .url {
+  font-size: clamp(20px, 3vmin, 40px); opacity: 1; font-weight: 600;
+  letter-spacing: -0.02em;
+}
 </style>
+</head>
+<body>
+
+<div class="deck">
+
+<!-- SLIDE 1 — HERO -->
+<section class="slide va-hero active">
   <div>
     <span class="overline">Win The House You Love · 2026 Edition</span>
     <h2>The VA Loan,<br/><em>Completely</em><br/>Broken Down.</h2>
@@ -344,33 +277,27 @@
       NMLS 1701021 · NFM Lending 2893
     </div>
   </div>
-</div>
+</section>
 
-<hr/>
-
-<!-- ===== SLIDE 2 — BIG-STAT ===== -->
-<div class="va-stat">
+<!-- SLIDE 2 — BIG-STAT -->
+<section class="slide va-stat">
   <div class="numeral">0<span class="pct">%</span></div>
   <div class="body">
     <h2>Down payment with full entitlement.</h2>
     <p>The VA promises to back your loan. With your entitlement intact, you can buy a home — even a multi-million-dollar one — without putting a dollar down.</p>
     <div class="footnote">Entitlement · Benefit #1</div>
   </div>
-</div>
+</section>
 
-<hr/>
-
-<!-- ===== SLIDE 3 — SECTION DIVIDER ===== -->
-<div class="va-divider">
+<!-- SLIDE 3 — DIVIDER -->
+<section class="slide va-divider">
   <div class="chapter">Chapter 02</div>
-  <h2>What you've <em style="color: #447247; font-style: normal;">heard</em><br/>vs. what's actually true.</h2>
+  <h2>What you've <em>heard</em><br/>vs. what's actually true.</h2>
   <p class="lede">Five myths that cost veterans real offers, real homes, and real money — and what the 2026 rulebook actually says.</p>
-</div>
+</section>
 
-<hr/>
-
-<!-- ===== SLIDE 4 — SIDE-BY-SIDE CARDS ===== -->
-<div class="va-compare">
+<!-- SLIDE 4 — COMPARE -->
+<section class="slide va-compare">
   <h2>Myth <em>vs.</em> Reality</h2>
   <div class="grid">
     <div class="col myth">
@@ -390,42 +317,22 @@
       <div class="row"><div class="mark">✓</div><p>Use it <strong>as many times</strong> as you qualify.</p></div>
     </div>
   </div>
-</div>
+</section>
 
-<hr/>
-
-<!-- ===== SLIDE 5 — NUMBERED PROCESS ===== -->
-<div class="va-process">
+<!-- SLIDE 5 — PROCESS -->
+<section class="slide va-process">
   <h2>The <em>Tidewater</em> Process</h2>
   <p class="sub">If the appraiser thinks the home will come in under contract, you get a heads-up — and a chance to defend the price.</p>
   <div class="steps">
-    <div class="step">
-      <div class="n">1</div>
-      <h3>Lender orders</h3>
-      <p>Appraisal ordered through the VA portal once contract is in.</p>
-    </div>
-    <div class="step">
-      <div class="n">2</div>
-      <h3>Tidewater notice</h3>
-      <p>Appraiser flags potential low value before completing the report.</p>
-    </div>
-    <div class="step">
-      <div class="n">3</div>
-      <h3>Comps submitted</h3>
-      <p>Agent has 48 hours to send supporting comps and rebut the value.</p>
-    </div>
-    <div class="step">
-      <div class="n">4</div>
-      <h3>Final value</h3>
-      <p>Appraiser issues the Notice of Value — buyer decides next move.</p>
-    </div>
+    <div class="step"><div class="n">1</div><h3>Lender orders</h3><p>Appraisal ordered through the VA portal once contract is in.</p></div>
+    <div class="step"><div class="n">2</div><h3>Tidewater notice</h3><p>Appraiser flags potential low value before completing the report.</p></div>
+    <div class="step"><div class="n">3</div><h3>Comps submitted</h3><p>Agent has 48 hours to send supporting comps and rebut the value.</p></div>
+    <div class="step"><div class="n">4</div><h3>Final value</h3><p>Appraiser issues the Notice of Value — buyer decides next move.</p></div>
   </div>
-</div>
+</section>
 
-<hr/>
-
-<!-- ===== SLIDE 6 — CTA FULL-BLEED ===== -->
-<div class="va-cta">
+<!-- SLIDE 6 — CTA -->
+<section class="slide va-cta">
   <div>
     <span class="overline">Ready when you are</span>
     <h2>Get pre-approved<br/>without the hit.</h2>
@@ -439,10 +346,37 @@
     <div>NFM Lending NMLS 2893 · Kyle Seagraves NMLS 1701021<br/>Veterans in 49 states — everywhere except New York.</div>
     <div class="url">winthehouseyoulove.com →</div>
   </div>
+</section>
+
 </div>
 
-<hr/>
+<div class="hint">← → to navigate</div>
+<div class="counter"><span id="cur">1</span> / <span id="tot">6</span></div>
 
-</article>
+<script>
+(function () {
+  var slides = document.querySelectorAll('.slide');
+  var i = 0;
+  var cur = document.getElementById('cur');
+  var tot = document.getElementById('tot');
+  tot.textContent = slides.length;
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, idx) { s.classList.toggle('active', idx === i); });
+    cur.textContent = i + 1;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(slides.length - 1); }
+  });
+  document.addEventListener('click', function (e) {
+    var x = e.clientX;
+    if (x < window.innerWidth / 3) show(i - 1);
+    else show(i + 1);
+  });
+})();
+</script>
 </body>
 </html>
