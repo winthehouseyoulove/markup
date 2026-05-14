@@ -45,12 +45,12 @@
     --font-size-h3: 3.125rem;
     --font-size-h4h6: 1.25rem;
     --font-size-body: 2.875rem;
-    --line-height-heading-custom: 1.0;
-    --line-height-body-custom: 1.2;
+    --line-height-heading-custom: 1.1;
+    --line-height-body-custom: 1.35;
     --letter-spacing-custom: -2px;
     --heading-letter-spacing-custom: -2px;
-    --heading-spacing-top: var(--spacing-lg);
-    --heading-spacing-bottom: var(--spacing-md);
+    --heading-spacing-top: 40px;
+    --heading-spacing-bottom: 28px;
     --paragraph-spacing: var(--spacing-xl);
 
     /* Presentation aspect ratio */
@@ -903,6 +903,15 @@ body::after {
 
 .preview-content h6 {
     font-size: var(--font-size-h4h6) !important;
+}
+
+.preview-content p strong,
+.preview-content li strong,
+.preview-content td strong,
+.preview-content p b,
+.preview-content li b,
+.preview-content td b {
+    font-weight: 600 !important;
 }
 
 .preview-content p,

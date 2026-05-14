@@ -713,11 +713,11 @@ function applyTypographySettings() {
     const h3Size = window.markupSettings.get('h3Size', 50);
     const h4h6Size = window.markupSettings.get('h4h6Size', 20);
     const bodySize = window.markupSettings.get('bodySize', 46);
-    const headingLineHeight = window.markupSettings.get('headingLineHeight', 1.0);
-    const bodyLineHeight = window.markupSettings.get('bodyLineHeight', 1.2);
+    const headingLineHeight = window.markupSettings.get('headingLineHeight', 1.1);
+    const bodyLineHeight = window.markupSettings.get('bodyLineHeight', 1.35);
     const letterSpacing = window.markupSettings.get('letterSpacing', -1);
     const headingLetterSpacing = window.markupSettings.get('headingLetterSpacing', -2);
-    const headingSpacing = window.markupSettings.get('headingSpacing', 16);
+    const headingSpacing = window.markupSettings.get('headingSpacing', 32);
     const paragraphSpacing = window.markupSettings.get('paragraphSpacing', 24);
 
     // Update CSS variables

@@ -124,19 +124,19 @@ const settingsConfig = {
         type: 'number',
         label: 'Heading Line Height',
         description: 'Space between lines in headings',
-        defaultValue: 1.0,
+        defaultValue: 1.1,
         min: 1.0,
         max: 2.0,
-        step: 0.1
+        step: 0.05
     },
     'bodyLineHeight': {
         type: 'number',
         label: 'Body Line Height',
         description: 'Space between lines in body text',
-        defaultValue: 1.2,
-        min: 1.2,
+        defaultValue: 1.35,
+        min: 1.0,
         max: 2.5,
-        step: 0.1
+        step: 0.05
     },
     'letterSpacing': {
         type: 'number',
@@ -160,9 +160,9 @@ const settingsConfig = {
         type: 'number',
         label: 'Heading Spacing',
         description: 'Top and bottom margins for headings (px)',
-        defaultValue: 16,
+        defaultValue: 32,
         min: 8,
-        max: 48,
+        max: 64,
         step: 1
     },
     'paragraphSpacing': {
