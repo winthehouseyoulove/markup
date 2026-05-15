@@ -471,6 +471,102 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
   max-width: 64ch;
 }
 .note strong { color: var(--plum); }
+
+/* ============================================================
+   ANIMATIONS — reveals, hovers, nav state
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.in-view { opacity: 1; transform: none; }
+
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-stagger.in-view > * { opacity: 1; transform: none; }
+  .reveal-stagger.in-view > *:nth-child(1) { transition-delay: 0.00s; }
+  .reveal-stagger.in-view > *:nth-child(2) { transition-delay: 0.08s; }
+  .reveal-stagger.in-view > *:nth-child(3) { transition-delay: 0.16s; }
+  .reveal-stagger.in-view > *:nth-child(4) { transition-delay: 0.24s; }
+  .reveal-stagger.in-view > *:nth-child(5) { transition-delay: 0.32s; }
+  .reveal-stagger.in-view > *:nth-child(6) { transition-delay: 0.40s; }
+
+  /* Hero entrance — runs once on load */
+  .hero .overline,
+  .hero h1,
+  .hero .lede,
+  .hero .actions,
+  .hero .meta {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  body.loaded .hero .overline { opacity: 0.6; transform: none; transition-delay: 0.10s; }
+  body.loaded .hero h1 { opacity: 1; transform: none; transition-delay: 0.20s; }
+  body.loaded .hero .lede { opacity: 0.82; transform: none; transition-delay: 0.35s; }
+  body.loaded .hero .actions { opacity: 1; transform: none; transition-delay: 0.50s; }
+  body.loaded .hero .meta { opacity: 0.78; transform: none; transition-delay: 0.65s; }
+
+  /* Stat numeral — slow gentle scale on reveal */
+  .stat-block .num {
+    transition: opacity 1s cubic-bezier(0.2, 0.7, 0.2, 1), transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform-origin: center center;
+  }
+  .stat-block.reveal:not(.in-view) .num { opacity: 0; transform: scale(0.92); }
+  .stat-block.in-view .num { opacity: 1; transform: scale(1); }
+}
+
+/* Card / step / row hovers — always on (cheap, no motion-pref impact) */
+.card, .step {
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+              border-color 0.25s ease;
+}
+.card:hover, .step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px -16px rgba(1, 65, 62, 0.18);
+}
+section.dark .card:hover { box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.45); }
+
+tbody tr { transition: background-color 0.2s ease; }
+tbody tr:hover { background: var(--fern-soft); }
+
+.btn, .cta-btn, .btn-big { transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
+.btn.primary:hover, .cta-btn:hover { transform: translateY(-2px); }
+
+/* Sticky nav — subtle shadow when scrolled past top */
+.nav { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+.nav.scrolled {
+  box-shadow: 0 4px 20px -10px rgba(1, 65, 62, 0.12);
+  border-bottom-color: transparent;
+}
+
+/* Nav links — underline grow */
+.nav ul a {
+  position: relative;
+  padding-bottom: 4px;
+}
+.nav ul a::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 2px; background: var(--fern); transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.nav ul a:hover::after { transform: scaleX(1); }
+
+/* Anchor scroll offset for sticky nav */
+section[id], div[id] { scroll-margin-top: 96px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 </style>
 </head>
 <body>
@@ -529,7 +625,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <h2 class="section-title">What you've <em>heard</em> vs. what's actually true.</h2>
     <p class="section-lede">Five myths still cost veterans real offers, real homes, and real money. Here's what the 2026 rulebook actually says.</p>
 
-    <div class="compare">
+    <div class="compare reveal-stagger">
       <div class="col myth">
         <h3>What you've heard</h3>
         <div class="row"><div class="mark">✕</div><p>"VA loans take forever to close."</p></div>
@@ -553,7 +649,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
 <!-- =================== ZERO DOWN STAT =================== -->
 <section class="alt">
   <div class="wrap">
-    <div class="stat-block">
+    <div class="stat-block reveal">
       <div class="num">0<span class="pct">%</span></div>
       <div>
         <div class="eyebrow">Benefit #1</div>
@@ -573,7 +669,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <h2 class="section-title">Service requirements, plainly.</h2>
     <p class="section-lede">You qualify if you meet one of these minimums. The Certificate of Eligibility (COE) is the official document — your lender can usually pull it same-day.</p>
 
-    <div class="cards">
+    <div class="cards reveal-stagger">
       <div class="card"><div class="icon">★</div><h4>Active Duty</h4><p>90 continuous days of active service during wartime, or 181 days during peacetime.</p></div>
       <div class="card"><div class="icon">⚐</div><h4>National Guard / Reserves</h4><p>6 years of service, or 90 days of active-duty service.</p></div>
       <div class="card"><div class="icon">✚</div><h4>Veterans</h4><p>Honorable discharge after meeting the active-duty or guard/reserves minimums.</p></div>
@@ -590,7 +686,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <p class="section-lede">It's how the VA keeps the program self-sustaining — and it's usually rolled into your loan, so you never write a check.</p>
 
     <div class="subhead">2026 Funding Fee — Purchase</div>
-    <div class="table-wrap">
+    <div class="table-wrap reveal">
       <table>
         <thead><tr><th>Down Payment</th><th>First Use</th><th>Subsequent Use</th></tr></thead>
         <tbody>
@@ -602,7 +698,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     </div>
 
     <div class="subhead">You pay $0 funding fee if any of these apply</div>
-    <ul class="feature-list">
+    <ul class="feature-list reveal-stagger">
       <li><div class="check">✓</div><div><h4>VA disability compensation</h4><p>You're receiving compensation for a service-connected disability.</p></div></li>
       <li><div class="check">✓</div><div><h4>Eligible but receiving retired/active-duty pay</h4><p>You qualify for disability comp but take retirement or active-duty pay instead.</p></div></li>
       <li><div class="check">✓</div><div><h4>Surviving spouse with DIC</h4><p>Receiving Dependency &amp; Indemnity Compensation.</p></div></li>
@@ -618,13 +714,13 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <h2 class="section-title">The VA sets no minimum. Lenders do.</h2>
     <p class="section-lede">Most lenders set their own overlay around 580–620. But the VA itself cares more about residual income, your overall pattern, and how recent any setbacks were.</p>
 
-    <div class="pull">
+    <div class="pull reveal">
       <p>The VA doesn't have a minimum credit score. Anyone who tells you "you need a 620" is quoting their lender's rule — not the program's.</p>
       <cite>VA Lender's Handbook, Ch. 4</cite>
     </div>
 
     <div class="subhead">Credit setbacks &amp; waiting periods</div>
-    <div class="table-wrap">
+    <div class="table-wrap reveal">
       <table>
         <thead><tr><th>Event</th><th>VA Waiting Period</th></tr></thead>
         <tbody>
@@ -647,7 +743,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <h2 class="section-title">The VA does something no other loan does.</h2>
     <p class="section-lede">It pairs DTI with <em>residual income</em> — the cash left over each month after taxes, housing, debts, and basic living costs. A 50%+ DTI can still pass with strong residual income.</p>
 
-    <div class="cards">
+    <div class="cards reveal-stagger">
       <div class="card"><div class="icon">%</div><h4>DTI Benchmark</h4><p>41% is the VA's guideline — not a hard cap. Higher is fine if residual income is solid.</p></div>
       <div class="card"><div class="icon">$</div><h4>Residual Income</h4><p>Gross income minus federal/state/SS taxes minus housing/debts/living. Must clear regional minimums.</p></div>
       <div class="card"><div class="icon">⌂</div><h4>Family Size Matters</h4><p>Required residual income scales with household size and region (NE, MW, S, W).</p></div>
@@ -663,7 +759,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <h2 class="section-title">No minimum income. Stability beats salary.</h2>
     <p class="section-lede">The VA cares about whether your income is consistent or rising — not what number it lands on.</p>
 
-    <div class="table-wrap">
+    <div class="table-wrap reveal">
       <table>
         <thead><tr><th>Income Source</th><th>How It Counts</th></tr></thead>
         <tbody>
@@ -686,7 +782,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <h2 class="section-title">The VA appraisal &amp; the <em>Tidewater</em> process.</h2>
     <p class="section-lede">If the appraiser thinks the home will come in under contract, you get a heads-up — and a chance to defend the price.</p>
 
-    <div class="steps">
+    <div class="steps reveal-stagger">
       <div class="step"><div class="n">1</div><h4>Lender orders</h4><p>Appraisal ordered through the VA portal once contract is in.</p></div>
       <div class="step"><div class="n">2</div><h4>Tidewater notice</h4><p>Appraiser flags potential low value before completing the report.</p></div>
       <div class="step"><div class="n">3</div><h4>Comps submitted</h4><p>Listing agent has 48 hours to send supporting comps.</p></div>
@@ -702,7 +798,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <h2 class="section-title">VA vs. FHA vs. Conventional.</h2>
     <p class="section-lede">Same buyer, three programs. Where the VA wins, where it ties, and where it loses.</p>
 
-    <div class="table-wrap">
+    <div class="table-wrap reveal">
       <table>
         <thead><tr><th></th><th>VA</th><th>FHA</th><th>Conventional</th></tr></thead>
         <tbody>
@@ -728,7 +824,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
     <div class="two-col">
       <div>
         <div class="subhead" style="color:#cf937a;">The stigma (mostly outdated)</div>
-        <ul class="feature-list">
+        <ul class="feature-list reveal-stagger">
           <li><div class="x">✕</div><div><h4>Strict appraisals</h4><p>Sellers worry the VA appraiser will kill the deal.</p></div></li>
           <li><div class="x">✕</div><div><h4>Slow timelines</h4><p>Some agents assume VA closes slower than conventional.</p></div></li>
           <li><div class="x">✕</div><div><h4>Multi-offer drag</h4><p>In hot markets, agents default to "easier" loan types.</p></div></li>
@@ -736,7 +832,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
       </div>
       <div>
         <div class="subhead">The 2026 reality</div>
-        <ul class="feature-list">
+        <ul class="feature-list reveal-stagger">
           <li><div class="check">✓</div><div><h4>Same timeline</h4><p>VA closes on the same timeline as conventional with a lender who knows the program.</p></div></li>
           <li><div class="check">✓</div><div><h4>MPRs catch real issues</h4><p>VA appraisals flag problems every buyer should want flagged.</p></div></li>
           <li><div class="check">✓</div><div><h4>Veterans close every day</h4><p>In every market, with clean offers and prepared lenders.</p></div></li>
@@ -776,5 +872,69 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
   </div>
 </footer>
 
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Auto-mark headline elements inside sections as reveal targets
+  document.querySelectorAll('section .eyebrow, section .section-title, section .section-lede, section .subhead').forEach(function (el) {
+    el.classList.add('reveal');
+  });
+
+  // Hero load animation
+  window.addEventListener('load', function () {
+    document.body.classList.add('loaded');
+  });
+  // Fallback if 'load' already fired
+  if (document.readyState === 'complete') document.body.classList.add('loaded');
+
+  // Sticky nav shadow on scroll
+  var nav = document.querySelector('.nav');
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if (reduced) {
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(function (el) { el.classList.add('in-view'); });
+    return;
+  }
+
+  // Scroll-triggered reveals — IO is preferred, scroll fallback for environments
+  // where IO doesn't fire reliably.
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal, .reveal-stagger'));
+
+  function check() {
+    var vh = window.innerHeight;
+    for (var i = revealEls.length - 1; i >= 0; i--) {
+      var el = revealEls[i];
+      var r = el.getBoundingClientRect();
+      if (r.top < vh * 0.9 && r.bottom > 0) {
+        el.classList.add('in-view');
+        revealEls.splice(i, 1);
+      }
+    }
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        io.unobserve(e.target);
+        var idx = revealEls.indexOf(e.target);
+        if (idx !== -1) revealEls.splice(idx, 1);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+
+  revealEls.forEach(function (el) { io.observe(el); });
+
+  // Run check on scroll/resize/load as a safety net
+  window.addEventListener('scroll', check, { passive: true });
+  window.addEventListener('resize', check);
+  check();
+  setTimeout(check, 100);
+  setTimeout(check, 500);
+})();
+</script>
 </body>
 </html>
