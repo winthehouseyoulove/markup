@@ -96,10 +96,29 @@ em { font-style: normal; color: var(--fern); font-weight: 700; }
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 .nav .brand {
-  font-size: 20px; font-weight: 700; letter-spacing: -0.01em;
+  font-size: 22px; font-weight: 700; letter-spacing: -0.015em;
   color: var(--pine); white-space: nowrap;
+  position: relative; min-width: 200px; height: 28px;
+  display: inline-flex; align-items: center;
 }
 .nav .brand .accent { color: var(--fern); }
+.nav .brand .brand-static,
+.nav .brand .brand-section {
+  position: absolute; left: 0; top: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  white-space: nowrap;
+  display: inline-flex; align-items: center; height: 28px;
+}
+.nav .brand .brand-section {
+  opacity: 0; transform: translateY(6px);
+  color: var(--pine);
+}
+.nav .brand .brand-section::before {
+  content: ''; display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--fern); margin-right: 12px;
+}
+.nav .brand.in-section .brand-static { opacity: 0; transform: translateY(-6px); }
+.nav .brand.in-section .brand-section { opacity: 1; transform: translateY(0); }
 .nav ul {
   list-style: none; display: flex; gap: 22px; flex-wrap: wrap;
   font-size: 15px; font-weight: 500; color: var(--muted);
@@ -885,19 +904,10 @@ section[id], div[id] { scroll-margin-top: 96px; }
 <!-- =================== NAV =================== -->
 <nav class="nav">
   <div class="inner">
-    <div class="brand">VA Loan <span class="accent">Masterclass</span></div>
-    <ul>
-      <li><a href="#highlights">Highlights</a></li>
-      <li><a href="#eligibility">Eligibility</a></li>
-      <li><a href="#entitlement">Entitlement</a></li>
-      <li><a href="#funding">Funding Fee</a></li>
-      <li><a href="#credit">Credit</a></li>
-      <li><a href="#dti">DTI</a></li>
-      <li><a href="#closing">Closing</a></li>
-      <li><a href="#vs">Compare</a></li>
-      <li><a href="#glossary">Glossary</a></li>
-    </ul>
-    <a href="#cta" class="cta-btn">Get pre-approved →</a>
+    <div class="brand">
+      <span class="brand-static">VA Loan <span class="accent">2026</span></span>
+      <span class="brand-section" id="brand-section"></span>
+    </div>
   </div>
 </nav>
 
@@ -907,10 +917,6 @@ section[id], div[id] { scroll-margin-top: 96px; }
     <div class="overline"><span class="dot"></span>Win The House You Love · 2026 Edition</div>
     <h1>The VA Loan, <em>completely</em> broken down.</h1>
     <p class="lede">A teaching walkthrough of every rule in the 2026 VA Lender's Handbook — eligibility, entitlement, the funding fee, credit, DTI, residual income, closing costs, the appraisal, and how to actually win the offer. Built for veterans, agents, and loan officers.</p>
-    <div class="actions">
-      <a href="#cta" class="btn primary">Get pre-approved →</a>
-      <a href="#highlights" class="btn ghost">Start the walkthrough</a>
-    </div>
     <div class="meta">
       <div><strong>Instructor</strong>Kyle Seagraves<br/>NMLS 1701021 · NFM Lending 2893</div>
       <div><strong>Coverage</strong>Licensed in 49 states<br/>(everywhere except New York)</div>
@@ -932,7 +938,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </div>
 
 <!-- =================== MYTHS =================== -->
-<section>
+<section data-section="Myth vs. Reality">
   <div class="wrap">
     <div class="eyebrow">Reset Expectations</div>
     <h2 class="section-title">What you've <em>heard</em> vs. what's actually true.</h2>
@@ -960,7 +966,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== ZERO DOWN STAT =================== -->
-<section class="alt">
+<section class="alt" data-section="$0 Down">
   <div class="wrap">
     <div class="stat-block reveal">
       <div class="num">0<span class="pct">%</span></div>
@@ -976,7 +982,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== ELIGIBILITY =================== -->
-<section id="eligibility">
+<section id="eligibility" data-section="Eligibility">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">1</span>Eligibility</div>
     <h2 class="section-title">Service requirements, plainly.</h2>
@@ -994,7 +1000,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== ENTITLEMENT (NEW) =================== -->
-<section class="alt" id="entitlement">
+<section class="alt" id="entitlement" data-section="Entitlement">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">2</span>Entitlement</div>
     <h2 class="section-title">What entitlement actually means.</h2>
@@ -1050,7 +1056,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== FUNDING FEE =================== -->
-<section id="funding">
+<section id="funding" data-section="Funding Fee">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">3</span>Funding Fee</div>
     <h2 class="section-title">A one-time fee, in place of monthly mortgage insurance.</h2>
@@ -1096,7 +1102,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== CREDIT =================== -->
-<section class="alt" id="credit">
+<section class="alt" id="credit" data-section="Credit">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">4</span>Credit</div>
     <h2 class="section-title">The VA sets no minimum. Lenders do.</h2>
@@ -1142,7 +1148,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== DTI =================== -->
-<section id="dti">
+<section id="dti" data-section="DTI & Residual Income">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">5</span>DTI &amp; Residual Income</div>
     <h2 class="section-title">The VA does something <em>no other loan</em> does.</h2>
@@ -1202,7 +1208,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== INCOME =================== -->
-<section class="alt">
+<section class="alt" data-section="Income">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">6</span>Income</div>
     <h2 class="section-title">No minimum income. Stability beats salary.</h2>
@@ -1227,7 +1233,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== PROPERTY / MPR (NEW) =================== -->
-<section id="property">
+<section id="property" data-section="Property Requirements">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">7</span>Property Requirements</div>
     <h2 class="section-title">What you can buy — and what the VA will reject.</h2>
@@ -1270,7 +1276,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== APPRAISAL / TIDEWATER =================== -->
-<section class="alt" id="appraisal">
+<section class="alt" id="appraisal" data-section="Appraisal & Tidewater">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">8</span>Appraisal &amp; Tidewater</div>
     <h2 class="section-title">The VA appraisal, and the <em>Tidewater</em> process.</h2>
@@ -1296,7 +1302,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== CLOSING COSTS (NEW) =================== -->
-<section id="closing">
+<section id="closing" data-section="Closing Costs">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">9</span>Closing Costs &amp; Seller Concessions</div>
     <h2 class="section-title">How veterans close with <em>$0 out of pocket</em>.</h2>
@@ -1355,7 +1361,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== INTEREST RATES & BUYDOWNS (NEW) =================== -->
-<section class="alt">
+<section class="alt" data-section="Rates & Buydowns">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">10</span>Rates &amp; Buydowns</div>
     <h2 class="section-title">Why VA rates are typically lower.</h2>
@@ -1379,7 +1385,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== ASSUMPTION (NEW) =================== -->
-<section>
+<section data-section="Loan Assumption">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">11</span>VA Loan Assumption</div>
     <h2 class="section-title">Your low rate is a <em>marketing tool</em>.</h2>
@@ -1399,7 +1405,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== COMPARE TABLE =================== -->
-<section class="alt" id="vs">
+<section class="alt" id="vs" data-section="VA vs. FHA vs. Conventional">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">12</span>Side by Side</div>
     <h2 class="section-title">VA vs. FHA vs. Conventional.</h2>
@@ -1425,7 +1431,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== WINNING THE OFFER =================== -->
-<section class="dark">
+<section class="dark" data-section="Winning the Offer">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">13</span>Closing the Deal</div>
     <h2 class="section-title">Why some sellers reject VA — and how to win <em>anyway</em>.</h2>
@@ -1463,7 +1469,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== TIMELINE (NEW) =================== -->
-<section id="timeline">
+<section id="timeline" data-section="30-Day Timeline">
   <div class="wrap">
     <div class="eyebrow"><span class="step-num">14</span>Timeline</div>
     <h2 class="section-title">From offer to keys: a <em>30-day</em> path.</h2>
@@ -1503,7 +1509,7 @@ section[id], div[id] { scroll-margin-top: 96px; }
 </section>
 
 <!-- =================== GLOSSARY (NEW) =================== -->
-<section class="alt" id="glossary">
+<section class="alt" id="glossary" data-section="Glossary">
   <div class="wrap">
     <div class="eyebrow">Reference</div>
     <h2 class="section-title">Acronyms &amp; terms, decoded.</h2>
@@ -1523,20 +1529,6 @@ section[id], div[id] { scroll-margin-top: 96px; }
       <div class="glossary-item"><dt>UFMIP<span class="full">Up-Front Mortgage Insurance Premium</span></dt><dd>FHA's equivalent of the funding fee. Charged on every FHA loan. The VA's funding fee is one-time; FHA also charges monthly MIP on top.</dd></div>
       <div class="glossary-item"><dt>Tidewater<span class="full">Tidewater Initiative</span></dt><dd>Pre-appraisal value challenge process. If the appraiser believes value will come in low, the listing side gets 48 hours to defend the price.</dd></div>
     </dl>
-  </div>
-</section>
-
-<!-- =================== CTA =================== -->
-<section class="cta-final" id="cta">
-  <div class="wrap">
-    <h2>Get pre-approved without the hit.</h2>
-    <p class="lede">Soft credit pull, VA-experienced loan team, same-day Certificate of Eligibility. Most veterans are pre-approved within 24 hours.</p>
-    <a href="https://www.winthehouseyoulove.com" target="_blank" rel="noopener" class="btn-big">Start at winthehouseyoulove.com →</a>
-    <div class="perks">
-      <div class="perk"><h4>Soft Credit</h4><p>No hit to your score</p></div>
-      <div class="perk"><h4>VA-Experienced</h4><p>We know the playbook</p></div>
-      <div class="perk"><h4>Fast COE</h4><p>Usually same-day</p></div>
-    </div>
   </div>
 </section>
 
@@ -1572,16 +1564,42 @@ section[id], div[id] { scroll-margin-top: 96px; }
   if (document.readyState === 'complete') markLoaded();
   else window.addEventListener('load', markLoaded);
 
-  // Sticky nav state + scroll progress
+  // Sticky nav state + scroll progress + section-name scroll-spy
   var nav = document.querySelector('.nav');
+  var brand = nav.querySelector('.brand');
+  var brandSection = document.getElementById('brand-section');
   var progress = document.getElementById('progress');
+  var sectionEls = Array.prototype.slice.call(document.querySelectorAll('section[data-section]'));
+  var currentSection = '';
+
+  function updateBrand() {
+    var threshold = 100; // px from top of viewport — section is "current" once its top crosses this
+    var match = null;
+    for (var i = 0; i < sectionEls.length; i++) {
+      var r = sectionEls[i].getBoundingClientRect();
+      if (r.top <= threshold && r.bottom > threshold) { match = sectionEls[i]; break; }
+    }
+    var name = match ? match.getAttribute('data-section') : '';
+    if (name !== currentSection) {
+      currentSection = name;
+      if (name) {
+        brandSection.textContent = name;
+        brand.classList.add('in-section');
+      } else {
+        brand.classList.remove('in-section');
+      }
+    }
+  }
+
   function onScroll() {
     nav.classList.toggle('scrolled', window.scrollY > 8);
     var h = document.documentElement.scrollHeight - window.innerHeight;
     var pct = h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0;
     progress.style.width = pct + '%';
+    updateBrand();
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
   onScroll();
 
   if (reduced) {
