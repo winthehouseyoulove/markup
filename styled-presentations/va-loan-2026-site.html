@@ -31,13 +31,16 @@
   --rule-light: rgba(1, 65, 62, 0.07);
   --muted: rgba(1, 65, 62, 0.68);
 
-  /* Type for half-screen viewing */
-  --fs-body: 22px;
-  --fs-h2: clamp(48px, 6.2vw, 84px);
-  --fs-h3: clamp(28px, 3.2vw, 40px);
+  /* Type — Markup-app scale, sized for half-screen presentation */
+  --fs-body: 32px;
+  --fs-body-sm: 26px;
+  --fs-h2: clamp(56px, 7.6vw, 104px);
+  --fs-h3: clamp(34px, 3.8vw, 52px);
+  --tracking-body: -0.03em;
+  --tracking-display: -0.04em;
 
-  --maxw: 1100px;
-  --gutter: 40px;
+  --maxw: 1180px;
+  --gutter: 44px;
 
   --shadow-card: 0 1px 0 rgba(1,65,62,0.04), 0 8px 24px -12px rgba(1,65,62,0.12);
   --shadow-lift: 0 14px 40px -20px rgba(1,65,62,0.22);
@@ -49,7 +52,8 @@ body {
   font-family: 'Poppins', -apple-system, sans-serif;
   font-weight: 500;
   font-size: var(--fs-body);
-  line-height: 1.55;
+  line-height: 1.4;
+  letter-spacing: var(--tracking-body);
   color: var(--pine);
   background: var(--parchment);
   -webkit-font-smoothing: antialiased;
@@ -208,15 +212,15 @@ em { font-style: normal; color: var(--fern); font-weight: 700; }
   text-transform: uppercase; color: var(--fern);
 }
 .strip .item .v {
-  font-size: 21px; font-weight: 600; color: var(--pine);
-  letter-spacing: -0.012em; line-height: 1.25;
+  font-size: 26px; font-weight: 600; color: var(--pine);
+  letter-spacing: var(--tracking-body); line-height: 1.25;
 }
 @media (max-width: 720px) { .strip .wrap { grid-template-columns: 1fr; gap: 16px; } }
 
 /* ============================================================
    SECTION layout
    ============================================================ */
-section { padding: 120px 0; position: relative; }
+section { padding: 140px 0; position: relative; }
 section.alt { background: var(--parchment-soft); }
 section.dark { background: var(--pine); color: var(--parchment); }
 section.dark em { color: #a8c8aa; }
@@ -237,33 +241,87 @@ section.dark .eyebrow { color: #a8c8aa; }
 
 h2.section-title {
   font-size: var(--fs-h2);
-  line-height: 1.04; letter-spacing: -0.03em; font-weight: 700;
-  margin-bottom: 28px; max-width: 22ch;
+  line-height: 1.02; letter-spacing: var(--tracking-display); font-weight: 700;
+  margin-bottom: 36px; max-width: 22ch;
 }
 h2.section-title em { color: var(--fern); }
 section.dark h2.section-title { color: var(--parchment); }
 section.dark h2.section-title em { color: #a8c8aa; }
 
 .section-lede {
-  font-size: clamp(20px, 1.8vw, 26px); line-height: 1.55;
-  color: var(--muted); max-width: 60ch; margin-bottom: 64px;
+  font-size: clamp(26px, 2.4vw, 36px); line-height: 1.4;
+  letter-spacing: var(--tracking-body);
+  color: var(--muted); max-width: 38ch; margin-bottom: 64px;
   font-weight: 400;
 }
 section.dark .section-lede { color: rgba(240, 239, 237, 0.82); }
 
 .subhead {
-  font-size: 14px; font-weight: 600; letter-spacing: 0.22em;
+  font-size: 16px; font-weight: 600; letter-spacing: 0.22em;
   text-transform: uppercase; color: var(--fern);
-  margin: 72px 0 24px;
+  margin: 88px 0 32px;
 }
 .subhead:first-child { margin-top: 0; }
 section.dark .subhead { color: #a8c8aa; }
 
-.lead-paragraph {
-  font-size: 22px; line-height: 1.6; color: var(--pine);
-  max-width: 64ch; margin-bottom: 24px; font-weight: 500;
+/* ============================================================
+   BULLET LISTS — Markup-app style, big and confident
+   ============================================================ */
+ul.bullets, ol.bullets {
+  list-style: none; padding: 0; margin: 24px 0 32px;
+  max-width: 36ch;
 }
-.lead-paragraph + .lead-paragraph { margin-top: -8px; }
+ul.bullets li, ol.bullets li {
+  position: relative;
+  padding: 14px 0 14px 44px;
+  font-size: var(--fs-body);
+  line-height: 1.4;
+  letter-spacing: var(--tracking-body);
+  color: var(--pine);
+  font-weight: 500;
+}
+ul.bullets li strong, ol.bullets li strong { font-weight: 600; color: var(--pine); }
+ul.bullets li::before {
+  content: ''; position: absolute; left: 8px; top: 28px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--fern);
+}
+ol.bullets {
+  counter-reset: bullet;
+}
+ol.bullets li::before {
+  counter-increment: bullet;
+  content: counter(bullet);
+  position: absolute; left: 0; top: 14px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--fern); color: var(--parchment);
+  font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  letter-spacing: 0;
+}
+ol.bullets li { padding-left: 56px; }
+
+ul.bullets li + li, ol.bullets li + li { border-top: 1px solid var(--rule-light, rgba(1,65,62,0.07)); }
+section.dark ul.bullets li, section.dark ol.bullets li { color: var(--parchment); }
+section.dark ul.bullets li + li, section.dark ol.bullets li + li { border-color: rgba(240,239,237,0.12); }
+section.dark ul.bullets li::before { background: #a8c8aa; }
+section.dark ol.bullets li::before { background: #a8c8aa; color: var(--pine); }
+
+/* ochre variant for myth-style bullets */
+ul.bullets.warn li::before { background: var(--ochre); }
+ul.bullets.warn li::before { content: '✕'; color: var(--parchment); width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;
+  top: 24px; left: 4px; border-radius: 50%; }
+
+/* plum variant for "important" bullets */
+ul.bullets.note-bullets li::before { background: var(--plum); }
+
+.lead-paragraph {
+  font-size: 30px; line-height: 1.4; color: var(--pine);
+  letter-spacing: var(--tracking-body);
+  max-width: 36ch; margin-bottom: 28px; font-weight: 500;
+}
+.lead-paragraph + .lead-paragraph { margin-top: -10px; }
 
 /* ============================================================
    STAT BLOCK
@@ -280,9 +338,9 @@ section.dark .subhead { color: #a8c8aa; }
 .stat-block .num .pct { color: var(--fern); font-size: 0.55em; }
 .stat-block h3 {
   font-size: var(--fs-h3); line-height: 1.1;
-  letter-spacing: -0.02em; font-weight: 700; margin-bottom: 22px;
+  letter-spacing: var(--tracking-display); font-weight: 700; margin-bottom: 28px;
 }
-.stat-block p { font-size: var(--fs-body); line-height: 1.55; color: var(--muted); margin-bottom: 16px; }
+.stat-block p { font-size: 28px; line-height: 1.4; letter-spacing: var(--tracking-body); color: var(--muted); margin-bottom: 20px; font-weight: 500; }
 .stat-block .tag {
   display: inline-block; padding: 8px 16px;
   background: var(--fern-soft); border: 1px solid var(--fern-line);
@@ -309,22 +367,22 @@ section.dark .subhead { color: #a8c8aa; }
 .compare .col.myth { background: var(--ochre-soft); border: 1.5px solid var(--ochre-line); }
 .compare .col.real { background: var(--fern-soft); border: 1.5px solid var(--fern-line); }
 .compare .col h3 {
-  font-size: 14px; letter-spacing: 0.26em;
+  font-size: 15px; letter-spacing: 0.26em;
   text-transform: uppercase; font-weight: 600; margin-bottom: 28px;
   display: inline-flex; align-items: center; gap: 10px;
 }
 .compare .col.myth h3 { color: var(--ochre); }
 .compare .col.real h3 { color: var(--fern); }
 .compare .col .row {
-  display: flex; gap: 16px; align-items: flex-start;
-  padding: 20px 0; border-bottom: 1px solid var(--rule);
+  display: flex; gap: 18px; align-items: flex-start;
+  padding: 22px 0; border-bottom: 1px solid var(--rule);
 }
 .compare .col .row:first-of-type { padding-top: 0; }
 .compare .col .row:last-child { border-bottom: none; padding-bottom: 0; }
-.compare .col .row .mark { flex-shrink: 0; font-size: 22px; line-height: 1.35; font-weight: 700; }
+.compare .col .row .mark { flex-shrink: 0; font-size: 28px; line-height: 1.3; font-weight: 700; }
 .compare .col.myth .mark { color: var(--ochre); }
 .compare .col.real .mark { color: var(--fern); }
-.compare .col p { font-size: 20px; line-height: 1.4; color: var(--pine); }
+.compare .col p { font-size: 26px; line-height: 1.35; letter-spacing: var(--tracking-body); color: var(--pine); }
 @media (max-width: 880px) { .compare { grid-template-columns: 1fr; } }
 
 /* ============================================================
@@ -351,10 +409,10 @@ section.dark .card:hover { box-shadow: 0 14px 40px -20px rgba(0,0,0,0.5); }
 }
 section.dark .card .icon { background: rgba(168, 200, 170, 0.18); color: #c8e0c9; }
 .card h4 {
-  font-size: 22px; font-weight: 700; line-height: 1.2;
-  letter-spacing: -0.01em; margin-bottom: 10px;
+  font-size: 28px; font-weight: 700; line-height: 1.15;
+  letter-spacing: -0.015em; margin-bottom: 14px;
 }
-.card p { font-size: 17px; line-height: 1.5; color: var(--muted); }
+.card p { font-size: 22px; line-height: 1.4; letter-spacing: var(--tracking-body); color: var(--muted); font-weight: 500; }
 section.dark .card p { color: rgba(240, 239, 237, 0.72); }
 
 /* ============================================================
@@ -374,14 +432,14 @@ section.dark .card p { color: rgba(240, 239, 237, 0.72); }
 }
 .step:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
 .step .n {
-  font-size: 64px; line-height: 0.9; letter-spacing: -0.035em;
-  font-weight: 700; color: var(--fern); margin-bottom: 18px;
+  font-size: 72px; line-height: 0.9; letter-spacing: -0.035em;
+  font-weight: 700; color: var(--fern); margin-bottom: 20px;
 }
 .step h4 {
-  font-size: 20px; font-weight: 700; line-height: 1.2;
-  margin-bottom: 10px; letter-spacing: -0.005em;
+  font-size: 24px; font-weight: 700; line-height: 1.15;
+  margin-bottom: 12px; letter-spacing: -0.015em;
 }
-.step p { font-size: 16px; line-height: 1.5; color: var(--muted); }
+.step p { font-size: 20px; line-height: 1.4; letter-spacing: var(--tracking-body); color: var(--muted); font-weight: 500; }
 @media (max-width: 880px) { .steps { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
 
@@ -393,10 +451,10 @@ section.dark .card p { color: rgba(240, 239, 237, 0.72); }
   border-radius: 22px; overflow: hidden;
 }
 table { width: 100%; border-collapse: collapse; }
-th, td { padding: 22px 28px; text-align: left; font-size: 19px; line-height: 1.4; }
+th, td { padding: 26px 30px; text-align: left; font-size: 24px; line-height: 1.35; letter-spacing: var(--tracking-body); }
 thead th {
   background: var(--pine); color: var(--parchment);
-  font-size: 13px; font-weight: 600; letter-spacing: 0.22em;
+  font-size: 15px; font-weight: 600; letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 tbody tr { border-bottom: 1px solid var(--rule); transition: background-color 0.2s ease; }
@@ -518,21 +576,22 @@ section.dark .feature-list li { border-color: rgba(240,239,237,0.16); }
 .feature-list .x { background: var(--ochre); }
 .feature-list .neutral { background: var(--plum); }
 .feature-list h4 {
-  font-size: 20px; font-weight: 600; margin-bottom: 6px;
-  letter-spacing: -0.01em;
+  font-size: 26px; font-weight: 600; margin-bottom: 8px;
+  letter-spacing: -0.015em;
 }
-.feature-list p { font-size: 17px; line-height: 1.5; color: var(--muted); }
+.feature-list p { font-size: 22px; line-height: 1.4; letter-spacing: var(--tracking-body); color: var(--muted); font-weight: 500; }
 section.dark .feature-list p { color: rgba(240,239,237,0.72); }
 
 /* ============================================================
    NOTE / CALLOUT
    ============================================================ */
 .note {
-  margin-top: 28px; padding: 24px 28px;
-  background: var(--plum-soft); border-left: 4px solid var(--plum);
-  border-radius: 8px;
-  font-size: 18px; line-height: 1.5; color: var(--pine); font-weight: 500;
-  max-width: 64ch;
+  margin-top: 32px; padding: 28px 32px;
+  background: var(--plum-soft); border-left: 5px solid var(--plum);
+  border-radius: 10px;
+  font-size: 24px; line-height: 1.45; letter-spacing: var(--tracking-body);
+  color: var(--pine); font-weight: 500;
+  max-width: 40ch;
 }
 .note strong { color: var(--plum); }
 .note.fern { background: var(--fern-soft); border-left-color: var(--fern); }
@@ -559,29 +618,30 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
   background: var(--plum);
 }
 .example h4 {
-  font-size: 26px; font-weight: 700; line-height: 1.2;
-  letter-spacing: -0.015em; margin-bottom: 14px;
+  font-size: 32px; font-weight: 700; line-height: 1.15;
+  letter-spacing: -0.02em; margin-bottom: 16px;
   color: var(--pine);
 }
 .example > p {
-  font-size: 18px; line-height: 1.55; color: var(--muted);
-  margin-bottom: 24px;
+  font-size: 22px; line-height: 1.45; letter-spacing: var(--tracking-body);
+  color: var(--muted); font-weight: 500;
+  margin-bottom: 28px;
 }
 .math {
   background: var(--parchment-soft);
-  border-radius: 14px; padding: 24px;
+  border-radius: 16px; padding: 28px 32px;
   font-family: 'Poppins', sans-serif;
-  display: flex; flex-direction: column; gap: 8px;
-  font-size: 17px;
+  display: flex; flex-direction: column; gap: 12px;
+  font-size: 22px; letter-spacing: var(--tracking-body);
 }
 .math .row { display: flex; justify-content: space-between; gap: 16px; }
 .math .row .k { color: var(--muted); font-weight: 500; }
 .math .row .v { font-weight: 600; color: var(--pine); font-variant-numeric: tabular-nums; }
 .math .row.total {
-  border-top: 2px solid var(--pine); margin-top: 8px; padding-top: 14px;
+  border-top: 2px solid var(--pine); margin-top: 10px; padding-top: 18px;
 }
 .math .row.total .k { color: var(--pine); font-weight: 700; }
-.math .row.total .v { color: var(--fern); font-size: 22px; }
+.math .row.total .v { color: var(--fern); font-size: 28px; }
 .math .row.subtract .v::before { content: '− '; }
 .math .row.add .v::before { content: '+ '; }
 
@@ -657,12 +717,12 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
   font-family: 'Fraunces', Georgia, serif;
 }
 .timeline-row .what h4 {
-  font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
-  margin-bottom: 8px;
+  font-size: 28px; font-weight: 700; letter-spacing: -0.015em;
+  margin-bottom: 10px;
 }
 .timeline-row .what p {
-  font-size: 17px; line-height: 1.55; color: var(--muted);
-  max-width: 56ch;
+  font-size: 22px; line-height: 1.4; letter-spacing: var(--tracking-body);
+  color: var(--muted); max-width: 42ch; font-weight: 500;
 }
 @media (max-width: 720px) {
   .timeline-row { grid-template-columns: 1fr; gap: 12px; }
@@ -716,16 +776,16 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
   padding: 24px 0; border-top: 1px solid var(--rule);
 }
 .glossary-item dt {
-  font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
+  font-size: 16px; font-weight: 700; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--fern);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .glossary-item dt .full {
-  display: block; font-size: 18px; letter-spacing: -0.01em;
+  display: block; font-size: 24px; letter-spacing: -0.015em;
   text-transform: none; color: var(--pine);
-  margin-top: 2px; font-weight: 600;
+  margin-top: 4px; font-weight: 700;
 }
-.glossary-item dd { font-size: 17px; line-height: 1.55; color: var(--muted); }
+.glossary-item dd { font-size: 22px; line-height: 1.45; letter-spacing: var(--tracking-body); color: var(--muted); font-weight: 500; }
 @media (max-width: 720px) { .glossary-grid { grid-template-columns: 1fr; } }
 
 /* ============================================================
@@ -750,7 +810,7 @@ section.dark .feature-list p { color: rgba(240,239,237,0.72); }
   font-size: 14px; font-weight: 700; margin-top: 2px;
 }
 .checklist-item .text {
-  font-size: 17px; font-weight: 500; line-height: 1.4; color: var(--pine);
+  font-size: 22px; font-weight: 500; line-height: 1.35; letter-spacing: var(--tracking-body); color: var(--pine);
 }
 
 /* ============================================================
@@ -942,6 +1002,14 @@ section[id], div[id] { scroll-margin-top: 96px; }
 
     <p class="lead-paragraph">The VA guarantees <strong>25% of your loan</strong> to the lender. That guaranty is why lenders are willing to lend with no down payment — they're already protected on the first 25%.</p>
 
+    <div class="subhead">What entitlement gives you</div>
+    <ul class="bullets">
+      <li><strong>$0 down</strong> on a primary residence, at any price your income supports</li>
+      <li>No private mortgage insurance — <strong>ever</strong></li>
+      <li>The right to use it again — and again — for life</li>
+      <li>Two active VA loans at once if you have partial entitlement left</li>
+    </ul>
+
     <div class="entitlement-visual">
       <h4>How a $500,000 VA loan is backed</h4>
       <p class="caption">The VA covers the first 25% of the loan amount. Your lender takes the rest.</p>
@@ -1039,6 +1107,15 @@ section[id], div[id] { scroll-margin-top: 96px; }
       <cite>VA Lender's Handbook, Chapter 4</cite>
     </div>
 
+    <div class="subhead">Move your score fast</div>
+    <ul class="bullets">
+      <li>Pay every revolving account down <strong>below 30%</strong> utilization (under 10% is better)</li>
+      <li>Don't close old accounts — length of history matters</li>
+      <li>Dispute inaccurate items in writing, with documentation</li>
+      <li>Avoid new credit pulls in the 90 days before applying</li>
+      <li>Ask for a <strong>rapid rescore</strong> if you've paid down debt — your LO can do this in 3–5 days</li>
+    </ul>
+
     <div class="subhead">What underwriters actually look at</div>
     <div class="cards reveal-stagger">
       <div class="card"><div class="icon">12</div><h4>The last 12 months</h4><p>Recent on-time payments matter far more than old delinquencies. Twelve clean months is the working benchmark.</p></div>
@@ -1070,6 +1147,16 @@ section[id], div[id] { scroll-margin-top: 96px; }
     <div class="eyebrow"><span class="step-num">5</span>DTI &amp; Residual Income</div>
     <h2 class="section-title">The VA does something <em>no other loan</em> does.</h2>
     <p class="section-lede">It pairs DTI with <strong>residual income</strong> — the cash you actually have left over each month after taxes, housing, debts, and basic living costs. A 50%+ DTI can pass if residual is strong.</p>
+
+    <div class="subhead">The residual income equation</div>
+    <ol class="bullets">
+      <li>Start with <strong>gross monthly income</strong></li>
+      <li>Subtract federal, state, and Social Security taxes</li>
+      <li>Subtract your full housing payment (principal, interest, taxes, insurance)</li>
+      <li>Subtract minimum payments on every other debt</li>
+      <li>Subtract a <strong>maintenance &amp; utilities</strong> allowance (~14¢/sq ft per month)</li>
+      <li>What's left is your <em>residual income</em> — it must clear the regional minimum</li>
+    </ol>
 
     <div class="cards reveal-stagger">
       <div class="card"><div class="icon">%</div><h4>DTI Benchmark</h4><p>41% is the VA's guideline — not a hard cap. Higher is fine if residual income is solid.</p></div>
@@ -1146,6 +1233,15 @@ section[id], div[id] { scroll-margin-top: 96px; }
     <h2 class="section-title">What you can buy — and what the VA will reject.</h2>
     <p class="section-lede">Two checks: the <strong>property type</strong> has to be eligible, and the <strong>condition</strong> has to clear the VA's Minimum Property Requirements (MPRs).</p>
 
+    <div class="subhead">What the VA will never finance</div>
+    <ul class="bullets warn">
+      <li>Investment properties — primary residence only</li>
+      <li>Co-ops (yes, even in NYC)</li>
+      <li>Working farms and commercial buildings</li>
+      <li>Vacation or second homes</li>
+      <li>Bare land with no plans to build immediately</li>
+    </ul>
+
     <div class="two-col">
       <div>
         <div class="subhead">Property types allowed</div>
@@ -1188,6 +1284,14 @@ section[id], div[id] { scroll-margin-top: 96px; }
     </div>
 
     <div class="note"><strong>Why veterans should want this:</strong> Tidewater is a free second opinion on whether the seller's asking price is defensible. Cash buyers don't get this. Conventional buyers don't get this.</div>
+
+    <div class="subhead">If the appraisal comes in low</div>
+    <ul class="bullets">
+      <li><strong>Renegotiate</strong> the contract price down to the appraised value</li>
+      <li>Pay the gap in <strong>cash</strong> at closing (funds must be documented)</li>
+      <li>Request a <strong>Reconsideration of Value</strong> with new comps your agent finds</li>
+      <li>Walk away — your earnest money is protected by the VA appraisal contingency</li>
+    </ul>
   </div>
 </section>
 
@@ -1197,6 +1301,17 @@ section[id], div[id] { scroll-margin-top: 96px; }
     <div class="eyebrow"><span class="step-num">9</span>Closing Costs &amp; Seller Concessions</div>
     <h2 class="section-title">How veterans close with <em>$0 out of pocket</em>.</h2>
     <p class="section-lede">Typical closing costs run 2–5% of the purchase price. With the right offer structure, the seller pays all of it — and the funding fee, and your prepaids, and your debts.</p>
+
+    <div class="subhead">What "100% seller-paid closing" really covers</div>
+    <ul class="bullets">
+      <li>Lender origination, processing, and underwriting fees</li>
+      <li>Title insurance — both lender's and owner's</li>
+      <li>Escrow and recording fees</li>
+      <li>VA appraisal fee</li>
+      <li>Transfer taxes (where applicable)</li>
+      <li>Property tax and homeowners insurance escrow setup</li>
+      <li><strong>Plus</strong> 4% concessions: funding fee, debt payoff, prepaids, points</li>
+    </ul>
 
     <div class="subhead">Typical closing-cost buckets</div>
     <div class="cards reveal-stagger">
@@ -1245,6 +1360,14 @@ section[id], div[id] { scroll-margin-top: 96px; }
     <div class="eyebrow"><span class="step-num">10</span>Rates &amp; Buydowns</div>
     <h2 class="section-title">Why VA rates are typically lower.</h2>
     <p class="section-lede">VA loans price 0.25%–0.50% below conventional, on average. The reason: the VA guaranty reduces lender risk, so they price the loan more aggressively.</p>
+
+    <div class="subhead">Why VA rates run lower</div>
+    <ul class="bullets">
+      <li><strong>Lender risk is capped</strong> — the VA guaranty backs the first 25%</li>
+      <li>The MBS market <strong>treats VA loans as premium collateral</strong> — they trade tighter</li>
+      <li>Servicing is cleaner — VA borrowers default at lower rates than conventional</li>
+      <li>You don't need stellar credit for the best pricing — score buckets are flatter</li>
+    </ul>
 
     <div class="subhead">Three ways to lower your rate further</div>
     <div class="cards reveal-stagger">
