@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lock vs. Float — The Mortgage Rate Masterclass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500&family=JetBrains+Mono:wght@500;700&display=swap"/>
+<style>
+:root {
+  --pine: #01413e;
+  --fern: #447247;
+  --ochre: #cc451c;
+  --plum: #7a306c;
+  --parchment: #f0efed;
+
+  --pine-deep: #022e2c;
+  --pine-soft: rgba(1, 65, 62, 0.08);
+  --fern-soft: rgba(68, 114, 71, 0.10);
+  --fern-line: rgba(68, 114, 71, 0.28);
+  --ochre-soft: rgba(204, 69, 28, 0.08);
+  --ochre-line: rgba(204, 69, 28, 0.25);
+  --plum-soft: rgba(122, 48, 108, 0.10);
+  --plum-line: rgba(122, 48, 108, 0.30);
+  --parchment-soft: #fafaf8;
+  --rule: rgba(1, 65, 62, 0.13);
+  --muted: rgba(1, 65, 62, 0.68);
+
+  --fs-body: 22px;
+  --fs-h2: clamp(48px, 6.2vw, 84px);
+  --fs-h3: clamp(28px, 3.2vw, 40px);
+
+  --maxw: 1100px;
+  --gutter: 40px;
+
+  --shadow-card: 0 1px 0 rgba(1,65,62,0.04), 0 8px 24px -12px rgba(1,65,62,0.12);
+  --shadow-lift: 0 14px 40px -20px rgba(1,65,62,0.22);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Poppins', -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--pine);
+  background: var(--parchment);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+strong { font-weight: 600; }
+em { font-style: normal; color: var(--fern); font-weight: 700; }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+/* Reading progress bar */
+.progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px; width: 0;
+  background: var(--fern);
+  z-index: 200;
+  transition: width 0.1s linear;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(240, 239, 237, 0.94);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--rule);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.nav.scrolled {
+  box-shadow: 0 4px 20px -10px rgba(1, 65, 62, 0.12);
+  border-bottom-color: transparent;
+}
+.nav .inner {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 20px var(--gutter);
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.nav .brand {
+  font-size: 20px; font-weight: 700; letter-spacing: -0.01em;
+  color: var(--pine); white-space: nowrap;
+}
+.nav .brand .accent { color: var(--fern); }
+.nav ul {
+  list-style: none; display: flex; gap: 22px; flex-wrap: wrap;
+  font-size: 15px; font-weight: 500; color: var(--muted);
+}
+.nav ul a {
+  position: relative; padding-bottom: 4px;
+  transition: color 0.15s ease;
+}
+.nav ul a::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 2px; background: var(--fern); transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.nav ul a:hover { color: var(--pine); }
+.nav ul a:hover::after { transform: scaleX(1); }
+
+.nav .cta-btn {
+  background: var(--pine); color: var(--parchment);
+  padding: 12px 22px; border-radius: 100px;
+  font-size: 15px; font-weight: 600; letter-spacing: -0.005em;
+  transition: background 0.15s ease, transform 0.18s ease;
+  white-space: nowrap;
+}
+.nav .cta-btn:hover { background: var(--fern); transform: translateY(-2px); }
+
+@media (max-width: 960px) { .nav ul { display: none; } }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  background: var(--pine-deep); color: var(--parchment);
+  padding: 140px 0 120px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(55% 45% at 100% 0%, rgba(68, 114, 71, 0.32), transparent 70%),
+    radial-gradient(45% 35% at 0% 100%, rgba(204, 69, 28, 0.16), transparent 70%);
+  pointer-events: none;
+}
+.hero .wrap { position: relative; z-index: 1; }
+.hero .overline {
+  font-size: 15px; font-weight: 600; letter-spacing: 0.32em;
+  text-transform: uppercase; color: var(--parchment); opacity: 0.6;
+  margin-bottom: 36px;
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.hero .overline .dot {
+  display: inline-block; width: 8px; height: 8px;
+  background: var(--fern); border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(68,114,71,0.25);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(68,114,71,0.25); }
+  50% { box-shadow: 0 0 0 8px rgba(68,114,71,0.05); }
+}
+.hero h1 {
+  font-size: clamp(64px, 9vw, 124px);
+  line-height: 0.96; letter-spacing: -0.038em; font-weight: 700;
+  max-width: 14ch; margin-bottom: 40px;
+}
+.hero h1 em { color: var(--fern); }
+.hero h1 .strike { position: relative; }
+.hero h1 .strike::after {
+  content: ''; position: absolute; left: -2%; right: -2%; top: 52%;
+  height: 6px; background: var(--ochre); border-radius: 4px;
+  transform: rotate(-2deg);
+}
+.hero .lede {
+  font-size: clamp(22px, 2.2vw, 30px); line-height: 1.5;
+  max-width: 50ch; color: var(--parchment); opacity: 0.82;
+  margin-bottom: 52px; font-weight: 400;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 20px 32px; border-radius: 100px;
+  font-size: 18px; font-weight: 600;
+  transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.btn.primary { background: var(--fern); color: var(--parchment); }
+.btn.primary:hover { background: #5a8c5d; transform: translateY(-2px); }
+.btn.ghost {
+  background: transparent; color: var(--parchment);
+  border: 1.5px solid rgba(240, 239, 237, 0.32);
+}
+.btn.ghost:hover { border-color: var(--parchment); transform: translateY(-2px); }
+.hero .actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero .meta {
+  margin-top: 80px; padding-top: 40px;
+  border-top: 1px solid rgba(240, 239, 237, 0.16);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  font-size: 17px; line-height: 1.5;
+  color: var(--parchment); opacity: 0.78;
+}
+.hero .meta strong {
+  display: block; margin-bottom: 6px; font-weight: 600;
+  font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #a8c8aa; opacity: 1;
+}
+@media (max-width: 720px) { .hero .meta { grid-template-columns: 1fr; gap: 20px; } }
+
+/* ============================================================
+   STRIP
+   ============================================================ */
+.strip {
+  background: var(--parchment); border-bottom: 1px solid var(--rule);
+  padding: 36px 0;
+}
+.strip .wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px 40px; }
+.strip .item { display: flex; flex-direction: column; gap: 6px; }
+.strip .item .k {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--fern);
+}
+.strip .item .v {
+  font-size: 21px; font-weight: 600; color: var(--pine);
+  letter-spacing: -0.012em; line-height: 1.25;
+}
+@media (max-width: 720px) { .strip .wrap { grid-template-columns: 1fr; gap: 16px; } }
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+section { padding: 120px 0; position: relative; }
+section.alt { background: var(--parchment-soft); }
+section.dark { background: var(--pine); color: var(--parchment); }
+section.dark em { color: #a8c8aa; }
+
+.eyebrow {
+  font-size: 13px; font-weight: 600; letter-spacing: 0.32em;
+  text-transform: uppercase; color: var(--fern);
+  margin-bottom: 24px;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.eyebrow .step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--fern); color: var(--parchment);
+  font-size: 13px; font-weight: 700; letter-spacing: 0;
+}
+section.dark .eyebrow { color: #a8c8aa; }
+
+h2.section-title {
+  font-size: var(--fs-h2);
+  line-height: 1.04; letter-spacing: -0.03em; font-weight: 700;
+  margin-bottom: 28px; max-width: 22ch;
+}
+h2.section-title em { color: var(--fern); }
+section.dark h2.section-title { color: var(--parchment); }
+section.dark h2.section-title em { color: #a8c8aa; }
+
+.section-lede {
+  font-size: clamp(20px, 1.8vw, 26px); line-height: 1.55;
+  color: var(--muted); max-width: 60ch; margin-bottom: 64px;
+  font-weight: 400;
+}
+section.dark .section-lede { color: rgba(240, 239, 237, 0.82); }
+
+.subhead {
+  font-size: 14px; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--fern);
+  margin: 72px 0 24px;
+}
+.subhead:first-child { margin-top: 0; }
+section.dark .subhead { color: #a8c8aa; }
+
+.lead-paragraph {
+  font-size: 22px; line-height: 1.6; color: var(--pine);
+  max-width: 64ch; margin-bottom: 24px; font-weight: 500;
+}
+
+/* ============================================================
+   DEFINE — the lock/float definition pair
+   ============================================================ */
+.define {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+}
+.define .term {
+  background: white; border: 1px solid var(--rule);
+  border-radius: 24px; padding: 40px;
+  border-top: 6px solid var(--fern);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.define .term:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.define .term.float { border-top-color: var(--ochre); }
+.define .term .word {
+  font-size: 56px; line-height: 1; letter-spacing: -0.035em;
+  font-weight: 700; color: var(--pine);
+  font-family: 'Fraunces', Georgia, serif;
+  margin-bottom: 6px;
+}
+.define .term .word em { color: var(--fern); font-style: italic; }
+.define .term.float .word em { color: var(--ochre); }
+.define .term .pos {
+  font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; margin-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+.define .term .def {
+  font-size: 19px; line-height: 1.55; color: var(--pine);
+  font-weight: 500; margin-bottom: 20px;
+}
+.define .term .feel {
+  font-size: 16px; line-height: 1.55; color: var(--muted);
+  padding-top: 20px; border-top: 1px solid var(--rule);
+}
+.define .term .feel strong { color: var(--pine); }
+@media (max-width: 720px) { .define { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   STAT BLOCK
+   ============================================================ */
+.stat-block { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.stat-block .num {
+  font-size: clamp(140px, 18vw, 280px);
+  line-height: 0.85; letter-spacing: -0.05em; font-weight: 700;
+  color: var(--pine); text-align: center;
+  transform-origin: center center;
+}
+.stat-block .num .unit { color: var(--fern); font-size: 0.55em; }
+.stat-block h3 {
+  font-size: var(--fs-h3); line-height: 1.1;
+  letter-spacing: -0.02em; font-weight: 700; margin-bottom: 22px;
+}
+.stat-block p { font-size: var(--fs-body); line-height: 1.55; color: var(--muted); margin-bottom: 16px; }
+.stat-block .tag {
+  display: inline-block; padding: 8px 16px;
+  background: var(--fern-soft); border: 1px solid var(--fern-line);
+  border-radius: 100px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--fern);
+  margin-top: 16px;
+}
+@media (max-width: 880px) {
+  .stat-block { grid-template-columns: 1fr; gap: 32px; }
+  .stat-block .num { text-align: left; }
+}
+
+/* ============================================================
+   COMPARE
+   ============================================================ */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.compare .col { border-radius: 24px; padding: 40px; background: white; }
+.compare .col.myth { background: var(--ochre-soft); border: 1.5px solid var(--ochre-line); }
+.compare .col.real { background: var(--fern-soft); border: 1.5px solid var(--fern-line); }
+.compare .col h3 {
+  font-size: 14px; letter-spacing: 0.26em;
+  text-transform: uppercase; font-weight: 600; margin-bottom: 28px;
+}
+.compare .col.myth h3 { color: var(--ochre); }
+.compare .col.real h3 { color: var(--fern); }
+.compare .col .row {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px 0; border-bottom: 1px solid var(--rule);
+}
+.compare .col .row:first-of-type { padding-top: 0; }
+.compare .col .row:last-child { border-bottom: none; padding-bottom: 0; }
+.compare .col .row .mark { flex-shrink: 0; font-size: 22px; line-height: 1.35; font-weight: 700; }
+.compare .col.myth .mark { color: var(--ochre); }
+.compare .col.real .mark { color: var(--fern); }
+.compare .col p { font-size: 20px; line-height: 1.4; color: var(--pine); }
+@media (max-width: 880px) { .compare { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.cards {
+  display: grid; gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.card {
+  background: white; border-radius: 22px; padding: 36px;
+  border: 1px solid var(--rule);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+section.dark .card { background: rgba(240, 239, 237, 0.06); border-color: rgba(240, 239, 237, 0.14); color: var(--parchment); }
+.card .icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: var(--fern-soft); color: var(--fern);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 700; margin-bottom: 24px;
+  font-family: 'JetBrains Mono', monospace;
+}
+section.dark .card .icon { background: rgba(168, 200, 170, 0.18); color: #c8e0c9; }
+.card h4 {
+  font-size: 22px; font-weight: 700; line-height: 1.2;
+  letter-spacing: -0.01em; margin-bottom: 10px;
+}
+.card p { font-size: 17px; line-height: 1.5; color: var(--muted); }
+section.dark .card p { color: rgba(240, 239, 237, 0.72); }
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.table-wrap {
+  background: white; border: 1px solid var(--rule);
+  border-radius: 22px; overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 22px 28px; text-align: left; font-size: 19px; line-height: 1.4; }
+thead th {
+  background: var(--pine); color: var(--parchment);
+  font-size: 13px; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+tbody tr { border-bottom: 1px solid var(--rule); transition: background-color 0.2s ease; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--parchment-soft); }
+tbody tr:hover { background: var(--fern-soft); }
+tbody td:first-child { font-weight: 600; color: var(--pine); width: 32%; }
+
+/* ============================================================
+   PULL QUOTE
+   ============================================================ */
+.pull {
+  background: var(--pine); color: var(--parchment);
+  border-radius: 28px; padding: 72px;
+  margin: 24px 0;
+  position: relative;
+  border-left: 6px solid var(--plum);
+}
+.pull::before {
+  content: '"'; position: absolute; top: 20px; left: 56px;
+  font-size: 200px; line-height: 1; color: var(--fern); opacity: 0.4;
+  font-family: 'Fraunces', Georgia, serif;
+}
+.pull p {
+  font-size: clamp(26px, 2.6vw, 38px); line-height: 1.3;
+  letter-spacing: -0.018em; font-weight: 500;
+  max-width: 32ch; margin-left: 96px;
+  font-family: 'Fraunces', Georgia, serif;
+}
+.pull cite {
+  display: block; margin-left: 96px; margin-top: 28px;
+  font-size: 14px; font-style: normal; letter-spacing: 0.22em;
+  text-transform: uppercase; opacity: 0.65; font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+@media (max-width: 720px) {
+  .pull { padding: 48px 36px; }
+  .pull p, .pull cite { margin-left: 0; }
+  .pull::before { font-size: 120px; left: 28px; top: 16px; }
+}
+
+/* ============================================================
+   WORKED EXAMPLE
+   ============================================================ */
+.example {
+  background: white; border: 1px solid var(--rule);
+  border-radius: 22px; padding: 40px; margin: 32px 0;
+  box-shadow: var(--shadow-card);
+}
+.example .label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--plum);
+  margin-bottom: 20px;
+}
+.example .label::before {
+  content: ''; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--plum);
+}
+.example h4 {
+  font-size: 26px; font-weight: 700; line-height: 1.2;
+  letter-spacing: -0.015em; margin-bottom: 14px;
+  color: var(--pine);
+}
+.example > p {
+  font-size: 18px; line-height: 1.55; color: var(--muted);
+  margin-bottom: 24px;
+}
+.math {
+  background: var(--parchment-soft);
+  border-radius: 14px; padding: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  font-size: 17px;
+}
+.math .row { display: flex; justify-content: space-between; gap: 16px; }
+.math .row .k { color: var(--muted); font-weight: 500; }
+.math .row .v { font-weight: 600; color: var(--pine); font-variant-numeric: tabular-nums; }
+.math .row.total {
+  border-top: 2px solid var(--pine); margin-top: 8px; padding-top: 14px;
+}
+.math .row.total .k { color: var(--pine); font-weight: 700; }
+.math .row.total .v { color: var(--fern); font-size: 22px; }
+.math .row.subtract .v::before { content: '− '; }
+.math .row.add .v::before { content: '+ '; }
+.math .row.bad .v { color: var(--ochre); }
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+.note {
+  margin-top: 28px; padding: 24px 28px;
+  background: var(--plum-soft); border-left: 4px solid var(--plum);
+  border-radius: 8px;
+  font-size: 18px; line-height: 1.5; color: var(--pine); font-weight: 500;
+  max-width: 64ch;
+}
+.note strong { color: var(--plum); }
+.note.fern { background: var(--fern-soft); border-left-color: var(--fern); }
+.note.fern strong { color: var(--fern); }
+.note.ochre { background: var(--ochre-soft); border-left-color: var(--ochre); }
+.note.ochre strong { color: var(--ochre); }
+
+/* ============================================================
+   RATE CHART — bars showing rate movement
+   ============================================================ */
+.rate-chart {
+  background: white; border: 1px solid var(--rule);
+  border-radius: 22px; padding: 40px;
+  margin: 32px 0;
+}
+.rate-chart h4 {
+  font-size: 22px; font-weight: 700; margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.rate-chart .caption { font-size: 16px; color: var(--muted); margin-bottom: 32px; }
+.rate-chart .chart {
+  display: grid; grid-template-columns: repeat(10, 1fr);
+  gap: 8px; align-items: end; height: 220px;
+  border-bottom: 2px solid var(--rule); margin-bottom: 16px;
+  padding: 0 4px;
+  position: relative;
+}
+.rate-chart .chart::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%;
+  border-top: 1px dashed var(--rule);
+  pointer-events: none;
+}
+.rate-chart .bar {
+  background: var(--fern); border-radius: 6px 6px 0 0;
+  position: relative;
+  transition: filter 0.2s ease;
+  transform-origin: bottom center;
+}
+.rate-chart .bar.up { background: var(--ochre); }
+.rate-chart .bar:hover { filter: brightness(1.1); }
+.rate-chart .bar .v {
+  position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+  font-size: 13px; font-weight: 700; color: var(--pine);
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+}
+.rate-chart .labels {
+  display: grid; grid-template-columns: repeat(10, 1fr);
+  gap: 8px; font-size: 12px; color: var(--muted);
+  text-align: center; letter-spacing: 0.08em; text-transform: uppercase;
+  font-weight: 500;
+}
+.rate-chart .annotate {
+  margin-top: 24px; padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+  font-size: 16px; color: var(--muted);
+}
+.rate-chart .annotate strong { color: var(--pine); display: block; margin-bottom: 4px; }
+@media (max-width: 720px) {
+  .rate-chart .chart { height: 160px; }
+  .rate-chart .bar .v { font-size: 11px; }
+  .rate-chart .labels { font-size: 10px; }
+  .rate-chart .annotate { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   DECISION MATRIX
+   ============================================================ */
+.matrix {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  max-width: 700px;
+}
+.matrix .cell {
+  background: white; border: 1.5px solid var(--rule);
+  border-radius: 18px; padding: 28px;
+  display: flex; flex-direction: column;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.matrix .cell:hover { transform: translateY(-4px); border-color: var(--fern-line); }
+.matrix .cell .tag {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+}
+.matrix .cell.lock { background: var(--fern-soft); border-color: var(--fern-line); }
+.matrix .cell.lock .tag { color: var(--fern); }
+.matrix .cell.float { background: var(--ochre-soft); border-color: var(--ochre-line); }
+.matrix .cell.float .tag { color: var(--ochre); }
+.matrix .cell h4 {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+  margin-bottom: 10px; line-height: 1.2;
+}
+.matrix .cell p { font-size: 17px; line-height: 1.5; color: var(--muted); }
+@media (max-width: 720px) { .matrix { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   FEATURE LIST
+   ============================================================ */
+.feature-list { display: flex; flex-direction: column; gap: 0; }
+.feature-list li {
+  list-style: none; display: flex; gap: 20px;
+  padding: 22px 0; border-bottom: 1px solid var(--rule);
+}
+.feature-list li:first-child { padding-top: 0; }
+.feature-list li:last-child { border-bottom: none; padding-bottom: 0; }
+section.dark .feature-list li { border-color: rgba(240,239,237,0.16); }
+.feature-list .check, .feature-list .x, .feature-list .neutral {
+  flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: var(--parchment);
+}
+.feature-list .check { background: var(--fern); }
+.feature-list .x { background: var(--ochre); }
+.feature-list .neutral { background: var(--plum); }
+.feature-list h4 {
+  font-size: 20px; font-weight: 600; margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.feature-list p { font-size: 17px; line-height: 1.5; color: var(--muted); }
+section.dark .feature-list p { color: rgba(240,239,237,0.72); }
+
+/* ============================================================
+   TWO COLUMN
+   ============================================================ */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+@media (max-width: 880px) { .two-col { grid-template-columns: 1fr; gap: 40px; } }
+
+/* ============================================================
+   GLOSSARY
+   ============================================================ */
+.glossary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 40px; }
+.glossary-item { padding: 24px 0; border-top: 1px solid var(--rule); }
+.glossary-item dt {
+  font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--fern); margin-bottom: 8px;
+}
+.glossary-item dt .full {
+  display: block; font-size: 18px; letter-spacing: -0.01em;
+  text-transform: none; color: var(--pine);
+  margin-top: 2px; font-weight: 600;
+}
+.glossary-item dd { font-size: 17px; line-height: 1.55; color: var(--muted); }
+@media (max-width: 720px) { .glossary-grid { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   FINAL CTA
+   ============================================================ */
+.cta-final {
+  background: var(--fern); color: var(--parchment);
+  padding: 140px 0; text-align: center;
+}
+.cta-final h2 {
+  font-size: clamp(56px, 6.8vw, 96px);
+  line-height: 1; letter-spacing: -0.038em; font-weight: 700;
+  margin-bottom: 32px; max-width: 18ch; margin-inline: auto;
+}
+.cta-final .lede {
+  font-size: clamp(22px, 1.8vw, 28px); line-height: 1.5;
+  max-width: 50ch; margin: 0 auto 48px; opacity: 0.88;
+  font-weight: 400;
+}
+.cta-final .btn-big {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--parchment); color: var(--pine);
+  padding: 24px 44px; border-radius: 100px;
+  font-size: 20px; font-weight: 600;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.cta-final .btn-big:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -12px rgba(0,0,0,0.25); }
+.cta-final .perks {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+  max-width: 800px; margin: 72px auto 0;
+  padding-top: 48px; border-top: 1px solid rgba(240, 239, 237, 0.22);
+}
+.cta-final .perk h4 {
+  font-size: 13px; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; opacity: 0.78; margin-bottom: 8px;
+}
+.cta-final .perk p { font-size: 20px; font-weight: 500; }
+@media (max-width: 720px) { .cta-final .perks { grid-template-columns: 1fr; gap: 24px; } }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer { background: var(--pine-deep); color: var(--parchment); padding: 64px 0 48px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+footer .brand { font-size: 20px; font-weight: 700; }
+footer .brand .accent { color: var(--fern); }
+footer .legal { font-size: 15px; opacity: 0.68; max-width: 52ch; line-height: 1.6; }
+footer .legal a { text-decoration: underline; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.in-view { opacity: 1; transform: none; }
+
+  .reveal-stagger > * {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-stagger.in-view > * { opacity: 1; transform: none; }
+  .reveal-stagger.in-view > *:nth-child(1) { transition-delay: 0.00s; }
+  .reveal-stagger.in-view > *:nth-child(2) { transition-delay: 0.07s; }
+  .reveal-stagger.in-view > *:nth-child(3) { transition-delay: 0.14s; }
+  .reveal-stagger.in-view > *:nth-child(4) { transition-delay: 0.21s; }
+  .reveal-stagger.in-view > *:nth-child(5) { transition-delay: 0.28s; }
+  .reveal-stagger.in-view > *:nth-child(6) { transition-delay: 0.35s; }
+
+  .hero .overline, .hero h1, .hero .lede, .hero .actions, .hero .meta {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  body.loaded .hero .overline { opacity: 0.6; transform: none; transition-delay: 0.10s; }
+  body.loaded .hero h1 { opacity: 1; transform: none; transition-delay: 0.20s; }
+  body.loaded .hero .lede { opacity: 0.82; transform: none; transition-delay: 0.35s; }
+  body.loaded .hero .actions { opacity: 1; transform: none; transition-delay: 0.50s; }
+  body.loaded .hero .meta { opacity: 0.78; transform: none; transition-delay: 0.65s; }
+
+  .stat-block .num {
+    transition: opacity 1s cubic-bezier(0.2, 0.7, 0.2, 1), transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .stat-block.reveal:not(.in-view) .num { opacity: 0; transform: scale(0.92); }
+  .stat-block.in-view .num { opacity: 1; transform: scale(1); }
+
+  /* Rate-chart bars grow from bottom on reveal */
+  .rate-chart .bar { transform: scaleY(0); transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .rate-chart.in-view .bar { transform: scaleY(1); }
+  .rate-chart.in-view .bar:nth-child(1) { transition-delay: 0.05s; }
+  .rate-chart.in-view .bar:nth-child(2) { transition-delay: 0.10s; }
+  .rate-chart.in-view .bar:nth-child(3) { transition-delay: 0.15s; }
+  .rate-chart.in-view .bar:nth-child(4) { transition-delay: 0.20s; }
+  .rate-chart.in-view .bar:nth-child(5) { transition-delay: 0.25s; }
+  .rate-chart.in-view .bar:nth-child(6) { transition-delay: 0.30s; }
+  .rate-chart.in-view .bar:nth-child(7) { transition-delay: 0.35s; }
+  .rate-chart.in-view .bar:nth-child(8) { transition-delay: 0.40s; }
+  .rate-chart.in-view .bar:nth-child(9) { transition-delay: 0.45s; }
+  .rate-chart.in-view .bar:nth-child(10) { transition-delay: 0.50s; }
+}
+
+section[id], div[id] { scroll-margin-top: 96px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="inner">
+    <div class="brand">Lock <span class="accent">vs.</span> Float</div>
+    <ul>
+      <li><a href="#basics">The Basics</a></li>
+      <li><a href="#movers">What Moves Rates</a></li>
+      <li><a href="#cost">The Real Cost</a></li>
+      <li><a href="#framework">Framework</a></li>
+      <li><a href="#extensions">Extensions</a></li>
+      <li><a href="#mistakes">Mistakes</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+    </ul>
+    <a href="#cta" class="cta-btn">Get a rate quote →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="overline"><span class="dot"></span>Win The House You Love · 2026 Edition</div>
+    <h1>Lock <em>vs.</em> Float — and how to <span class="strike">guess</span> decide.</h1>
+    <p class="lede">A teaching walkthrough of the most consequential decision in the mortgage process. What locking actually buys you, what floating is really risking, and a framework that doesn't rely on predicting the future.</p>
+    <div class="actions">
+      <a href="#cta" class="btn primary">Get a rate quote →</a>
+      <a href="#basics" class="btn ghost">Start with the basics</a>
+    </div>
+    <div class="meta">
+      <div><strong>Instructor</strong>Kyle Seagraves<br/>NMLS 1701021 · NFM Lending 2893</div>
+      <div><strong>Format</strong>14-minute scroll<br/>Worked examples + decision framework</div>
+      <div><strong>For</strong>Buyers under contract<br/>Refinancers · LOs &amp; agents</div>
+    </div>
+  </div>
+</header>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="wrap">
+    <div class="item"><div class="k">Typical Lock Length</div><div class="v">30 / 45 / 60 days</div></div>
+    <div class="item"><div class="k">Cost of Locking Longer</div><div class="v">~0.125% per 15 days</div></div>
+    <div class="item"><div class="k">Lock Extension</div><div class="v">~0.125% per 15 days</div></div>
+    <div class="item"><div class="k">Float-Down Trigger</div><div class="v">Usually 0.25% drop</div></div>
+    <div class="item"><div class="k">Rate Volatility (Day)</div><div class="v">0.05–0.25% swings</div></div>
+    <div class="item"><div class="k">What Sets Rates</div><div class="v">MBS market, not the Fed</div></div>
+  </div>
+</div>
+
+<!-- MYTHS -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Reset Expectations</div>
+    <h2 class="section-title">What buyers <em>think</em> vs. what's actually true.</h2>
+    <p class="section-lede">Most of the lock-vs-float advice you've heard is wrong. Let's clear that out before we build the framework.</p>
+
+    <div class="compare reveal-stagger">
+      <div class="col myth">
+        <h3>What buyers think</h3>
+        <div class="row"><div class="mark">✕</div><p>"The Fed cut rates — my mortgage rate will drop tomorrow."</p></div>
+        <div class="row"><div class="mark">✕</div><p>"My rate is locked the moment I'm pre-approved."</p></div>
+        <div class="row"><div class="mark">✕</div><p>"If rates drop after I lock, I'm stuck."</p></div>
+        <div class="row"><div class="mark">✕</div><p>"Floating is always cheaper than locking."</p></div>
+        <div class="row"><div class="mark">✕</div><p>"Good economic news is good for my rate."</p></div>
+      </div>
+      <div class="col real">
+        <h3>What's actually true</h3>
+        <div class="row"><div class="mark">✓</div><p>The <strong>Fed Funds Rate</strong> doesn't directly set mortgage rates. The bond market does.</p></div>
+        <div class="row"><div class="mark">✓</div><p>The lock is a <strong>separate, explicit step</strong> — usually after contract acceptance.</p></div>
+        <div class="row"><div class="mark">✓</div><p>Many lenders offer a <strong>one-time float-down</strong> if rates drop after lock.</p></div>
+        <div class="row"><div class="mark">✓</div><p>Floating means <strong>taking market risk</strong> — sometimes profitable, sometimes painful.</p></div>
+        <div class="row"><div class="mark">✓</div><p>Strong economy = <strong>higher</strong> mortgage rates (Fed will fight inflation).</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEFINITIONS -->
+<section class="alt" id="basics">
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">1</span>The Basics</div>
+    <h2 class="section-title">Lock or float — what each one <em>actually</em> is.</h2>
+    <p class="section-lede">Before any framework, the definitions have to be crisp. These are the two doors. You pick one.</p>
+
+    <div class="define reveal-stagger">
+      <div class="term">
+        <div class="word">to <em>lock</em></div>
+        <div class="pos">verb · finance</div>
+        <p class="def">To secure today's interest rate for a fixed window (usually 30, 45, or 60 days). If market rates rise, you're protected. If they fall, you generally keep the higher rate — unless your lender offers a float-down.</p>
+        <p class="feel"><strong>Feels like:</strong> Buying insurance. You pay a small premium (built into the rate) for certainty. Most buyers should lock.</p>
+      </div>
+      <div class="term float">
+        <div class="word">to <em>float</em></div>
+        <div class="pos">verb · finance</div>
+        <p class="def">To <em>not</em> lock — leaving your rate exposed to daily market moves until you choose to lock or until your lender requires you to. Your rate is whatever the market gives you on lock day.</p>
+        <p class="feel"><strong>Feels like:</strong> Holding a stock you have to sell soon. Upside is real, downside is real, and you can't control the timing perfectly.</p>
+      </div>
+    </div>
+
+    <div class="subhead">When the lock decision actually happens</div>
+    <ul class="feature-list">
+      <li><div class="neutral">1</div><div><h4>Application (Day 0)</h4><p>Pre-approval pulls credit and verifies income, but doesn't lock anything. The rate on your pre-approval is an estimate, not a guarantee.</p></div></li>
+      <li><div class="neutral">2</div><div><h4>Contract Accepted (Day 1)</h4><p>Now you can lock. Most lenders require an address — until you're under contract, you're "shopping," not "buying."</p></div></li>
+      <li><div class="neutral">3</div><div><h4>Anytime in the Lock Window</h4><p>You can lock on Day 1, Day 14, or wait until Day 25. The decision is yours — within your lender's policy.</p></div></li>
+      <li><div class="neutral">4</div><div><h4>Final Lock Required (~7 Days Out)</h4><p>Most lenders require a final lock 7–10 days before closing — they need the rate to draw final documents.</p></div></li>
+    </ul>
+
+    <div class="note fern"><strong>Lock &amp; shop:</strong> Some lenders offer a "lock &amp; shop" program where you can lock <em>before</em> you're under contract. Useful in a rising-rate environment, but typically costs an extra 0.125–0.25% on the rate.</div>
+  </div>
+</section>
+
+<!-- BIG STAT -->
+<section>
+  <div class="wrap">
+    <div class="stat-block reveal">
+      <div class="num">0.25<span class="unit">%</span></div>
+      <div>
+        <div class="eyebrow">The Stakes</div>
+        <h3>What a quarter-point actually costs.</h3>
+        <p>On a $400,000 loan over 30 years, a 0.25% higher rate adds roughly <strong>$20,000 in interest</strong> — and about <strong>$60/month</strong> to your payment.</p>
+        <p>That's the rough scale of what you're trading when you lock vs. float. Worth thinking carefully about. Not worth losing sleep over.</p>
+        <span class="tag">$20K · 30 years · 0.25%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT MOVES RATES -->
+<section class="alt" id="movers">
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">2</span>What Moves Rates</div>
+    <h2 class="section-title">Mortgage rates follow <em>bonds</em>, not the Fed.</h2>
+    <p class="section-lede">This is the single most important thing to understand — and the thing the news gets wrong every week. Your rate tracks the bond market, specifically Mortgage-Backed Securities (MBS).</p>
+
+    <p class="lead-paragraph">When investors buy <strong>more</strong> MBS (because they're worried about the economy and want safe assets), prices go up and yields — your mortgage rate — go <strong>down</strong>.</p>
+    <p class="lead-paragraph">When investors <strong>sell</strong> MBS (because the economy is hot and they want stocks instead), prices fall and yields — your mortgage rate — go <strong>up</strong>.</p>
+
+    <div class="pull reveal">
+      <p>Good news for the economy is bad news for mortgage rates. Strong jobs report, hot inflation, booming GDP — every one of them pushes rates higher.</p>
+      <cite>The Bond Market, every Friday</cite>
+    </div>
+
+    <div class="subhead">The five events that move rates the most</div>
+    <div class="cards reveal-stagger">
+      <div class="card"><div class="icon">CPI</div><h4>Consumer Price Index</h4><p>Monthly inflation print. The single biggest market mover. Hot CPI → rates spike. Cool CPI → rates drop.</p></div>
+      <div class="card"><div class="icon">JOBS</div><h4>Non-Farm Payrolls</h4><p>First Friday of every month. Strong jobs report = strong economy = rates up. Weak report = rates down.</p></div>
+      <div class="card"><div class="icon">FED</div><h4>FOMC Meetings</h4><p>Eight times a year. The Fed Funds Rate matters less than the language — markets price in the path, not the cut itself.</p></div>
+      <div class="card"><div class="icon">GDP</div><h4>GDP Releases</h4><p>Quarterly. Confirms whether the economy is actually slowing or running hot — moves rates either way.</p></div>
+      <div class="card"><div class="icon">CRISIS</div><h4>Geopolitical Risk</h4><p>War, banking stress, anything that drives a "flight to safety" pulls money into bonds — rates drop fast.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOLATILITY VISUAL -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">3</span>Day-to-Day Reality</div>
+    <h2 class="section-title">Rates don't move smoothly. They <em>jump</em>.</h2>
+    <p class="section-lede">A typical 30-day stretch can see rates swing 0.5% in either direction. Here's a real-feeling example — what a 10-day window looked like in a recent volatile month.</p>
+
+    <div class="rate-chart reveal">
+      <h4>10 consecutive trading days · 30-year fixed rate</h4>
+      <p class="caption">Big jumps happened on CPI day and the jobs report. Locking on Day 4 vs. Day 9 was a 0.45% swing — about $36,000 on a $400K loan over 30 years.</p>
+      <div class="chart">
+        <div class="bar" style="height:62%;"><span class="v">6.85</span></div>
+        <div class="bar up" style="height:70%;"><span class="v">6.92</span></div>
+        <div class="bar up" style="height:78%;"><span class="v">7.05</span></div>
+        <div class="bar" style="height:64%;"><span class="v">6.78</span></div>
+        <div class="bar" style="height:58%;"><span class="v">6.71</span></div>
+        <div class="bar" style="height:55%;"><span class="v">6.65</span></div>
+        <div class="bar up" style="height:74%;"><span class="v">6.98</span></div>
+        <div class="bar up" style="height:88%;"><span class="v">7.18</span></div>
+        <div class="bar up" style="height:82%;"><span class="v">7.10</span></div>
+        <div class="bar" style="height:72%;"><span class="v">6.95</span></div>
+      </div>
+      <div class="labels">
+        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div>
+        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div>
+      </div>
+      <div class="annotate">
+        <div><strong>Day 3 spike (Wed):</strong> Hot CPI print, 0.4% above expectations. MBS sold off hard.</div>
+        <div><strong>Day 8 spike (Wed):</strong> Surprise upward jobs revision. Rate up 0.20% in one session.</div>
+      </div>
+    </div>
+
+    <div class="note ochre"><strong>What this means in practice:</strong> Locking <em>the day before</em> a major data release is a coin flip. Pros generally lock the day after — once the surprise is priced in.</div>
+  </div>
+</section>
+
+<!-- THE COST -->
+<section class="alt" id="cost">
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">4</span>The Real Cost</div>
+    <h2 class="section-title">What you're <em>actually</em> trading.</h2>
+    <p class="section-lede">Two worked examples — same buyer, same property, same lender. One locks early. One floats and gets lucky. One floats and gets unlucky.</p>
+
+    <div class="example">
+      <div class="label">Scenario A · Lock Early</div>
+      <h4>Day 1 lock — certainty wins</h4>
+      <p>Buyer is under contract on a $450K home. Locks at 6.85% on Day 1 of contract. Closes Day 30 at the same rate. The market moved — but it didn't matter to her.</p>
+      <div class="math">
+        <div class="row"><span class="k">Loan amount</span><span class="v">$425,000</span></div>
+        <div class="row"><span class="k">Locked rate (Day 1)</span><span class="v">6.85%</span></div>
+        <div class="row"><span class="k">Rate at closing (Day 30 market)</span><span class="v">7.15%</span></div>
+        <div class="row total"><span class="k">Savings from locking early</span><span class="v">$25,500 over 30 yr</span></div>
+      </div>
+      <p style="margin-top:20px;font-size:17px;color:var(--muted);">She didn't pick the bottom — she just removed the question. Most buyers should think of locking this way.</p>
+    </div>
+
+    <div class="example">
+      <div class="label">Scenario B · Float and Win</div>
+      <h4>Floated through CPI — caught the cooling print</h4>
+      <p>Buyer floats from Day 1, watches the bond market, locks the morning after a cool CPI. Caught 0.30% lower than Day 1.</p>
+      <div class="math">
+        <div class="row"><span class="k">Day 1 market rate</span><span class="v">6.85%</span></div>
+        <div class="row"><span class="k">Locked rate (Day 12, post-CPI)</span><span class="v">6.55%</span></div>
+        <div class="row total"><span class="k">Savings from floating</span><span class="v">$25,500 over 30 yr</span></div>
+      </div>
+      <p style="margin-top:20px;font-size:17px;color:var(--muted);">Worked out — but the buyer was watching the market and listening to her loan officer. Floating on autopilot is gambling.</p>
+    </div>
+
+    <div class="example">
+      <div class="label">Scenario C · Float and Lose</div>
+      <h4>Floated into a hot CPI — got caught</h4>
+      <p>Same buyer, different CPI surprise. Print came in hot, MBS sold off, lock window closing on her. Locked at 7.20% on Day 21 just to get to closing.</p>
+      <div class="math">
+        <div class="row"><span class="k">Day 1 market rate</span><span class="v">6.85%</span></div>
+        <div class="row bad"><span class="k">Locked rate (Day 21, forced)</span><span class="v">7.20%</span></div>
+        <div class="row total"><span class="k">Cost vs. locking Day 1</span><span class="v">$30,000 over 30 yr</span></div>
+      </div>
+      <p style="margin-top:20px;font-size:17px;color:var(--muted);">Same buyer, two CPI prints, two completely different outcomes. The difference between B and C is not skill — it's <em>data luck</em>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FLOAT-DOWN -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">5</span>Float-Down Options</div>
+    <h2 class="section-title">The "have your cake" feature most buyers don't ask about.</h2>
+    <p class="section-lede">A float-down lets you lock for protection — and re-lock at a lower rate if the market drops significantly. It's the closest thing to a free lunch in lending.</p>
+
+    <div class="cards reveal-stagger">
+      <div class="card"><div class="icon">1×</div><h4>One-time use</h4><p>Most lenders give you exactly one float-down per loan. Use it wisely — usually waiting until at least a 0.25% drop.</p></div>
+      <div class="card"><div class="icon">Δ</div><h4>Minimum delta</h4><p>Typical trigger is a <em>0.25%</em> rate drop from your locked rate. Smaller drops won't qualify.</p></div>
+      <div class="card"><div class="icon">$</div><h4>The cost</h4><p>Some lenders bake it in at no charge. Others charge 0.125% on the locked rate, or a flat fee ($500–$1,500).</p></div>
+      <div class="card"><div class="icon">⏱</div><h4>Timing window</h4><p>Usually must be exercised at least 7–10 days before close. Past that, the rate is final.</p></div>
+    </div>
+
+    <div class="note fern"><strong>The smart-money play:</strong> Lock on contract acceptance. Then watch the next CPI or jobs report. If the data pushes rates down 0.25%+, exercise the float-down. You get protection <em>and</em> upside.</div>
+    <div class="note ochre"><strong>Watch out:</strong> Always ask "is there a float-down on this loan, and what's the cost and trigger?" before you lock. Some lenders don't offer one. Some only offer it at significant cost.</div>
+  </div>
+</section>
+
+<!-- DECISION FRAMEWORK -->
+<section class="alt" id="framework">
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">6</span>Decision Framework</div>
+    <h2 class="section-title">The four questions that decide it for you.</h2>
+    <p class="section-lede">Skip the gut feel. Run through these four checks, in order, every time.</p>
+
+    <div class="subhead">1. How many days to close?</div>
+    <div class="matrix reveal-stagger">
+      <div class="cell lock">
+        <div class="tag">Lock</div>
+        <h4>Under 30 days</h4>
+        <p>You don't have time for a meaningful float thesis to play out. Lock and move on.</p>
+      </div>
+      <div class="cell float">
+        <div class="tag">Float-Candidate</div>
+        <h4>30+ days</h4>
+        <p>You have at least one data release ahead of you. Floating becomes a real choice.</p>
+      </div>
+    </div>
+
+    <div class="subhead">2. What's the next data print?</div>
+    <div class="matrix reveal-stagger">
+      <div class="cell lock">
+        <div class="tag">Lock</div>
+        <h4>Major event &lt; 48 hours away</h4>
+        <p>CPI, jobs, FOMC. Don't gamble going in — lock <em>before</em> or wait until <em>after</em>.</p>
+      </div>
+      <div class="cell float">
+        <div class="tag">Float-Candidate</div>
+        <h4>Calm calendar for 2+ weeks</h4>
+        <p>No major events = lower daily volatility. Floating costs less in tail risk.</p>
+      </div>
+    </div>
+
+    <div class="subhead">3. What's the rate trend?</div>
+    <div class="matrix reveal-stagger">
+      <div class="cell lock">
+        <div class="tag">Lock</div>
+        <h4>10-day trend rising</h4>
+        <p>Trending up = market thinks the economy is hot or inflation is sticky. Lock now.</p>
+      </div>
+      <div class="cell float">
+        <div class="tag">Float-Candidate</div>
+        <h4>10-day trend falling</h4>
+        <p>Trending down = market is pricing in cooling. Floating with discipline can capture more.</p>
+      </div>
+    </div>
+
+    <div class="subhead">4. How would a 0.5% bump affect you?</div>
+    <div class="matrix reveal-stagger">
+      <div class="cell lock">
+        <div class="tag">Lock</div>
+        <h4>It kills the deal</h4>
+        <p>If a higher rate breaks your DTI or pushes the payment above what you can stomach, <em>always</em> lock.</p>
+      </div>
+      <div class="cell float">
+        <div class="tag">Float-Candidate</div>
+        <h4>It's a $90/month annoyance</h4>
+        <p>If you can absorb it without rethinking the purchase, you have the freedom to float.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXTENSIONS -->
+<section id="extensions">
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">7</span>Lock Extensions</div>
+    <h2 class="section-title">If closing slips, your lock is the cost.</h2>
+    <p class="section-lede">Your lock has an expiration date. If your closing moves past it — appraisal delay, title issue, repair holdup — you need an extension. They aren't free.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="subhead">Typical cost</div>
+        <ul class="feature-list">
+          <li><div class="neutral">$</div><div><h4>7-day extension</h4><p>Around 0.06%–0.10% in points (~$240–$400 on a $400K loan).</p></div></li>
+          <li><div class="neutral">$</div><div><h4>15-day extension</h4><p>Around 0.125% in points (~$500 on a $400K loan).</p></div></li>
+          <li><div class="neutral">$</div><div><h4>30-day extension</h4><p>Around 0.25% in points (~$1,000 on a $400K loan).</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="subhead">How to avoid them</div>
+        <ul class="feature-list">
+          <li><div class="check">✓</div><div><h4>Pick the right lock length</h4><p>If your contract is 45 days, lock for 45 — not 30. Extensions cost more than buying the longer lock up front.</p></div></li>
+          <li><div class="check">✓</div><div><h4>Push the agent to file early</h4><p>Title, HOA docs, repair receipts — every missing item buys delay risk.</p></div></li>
+          <li><div class="check">✓</div><div><h4>Know your lender's policy</h4><p>Some lenders absorb the first extension. Some charge from day one. Ask before you sign.</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note ochre"><strong>The exception:</strong> If rates have <em>dropped</em> since you locked and you'd extend anyway, ask your LO about re-locking at the new lower rate. Sometimes a "re-lock" beats an extension.</div>
+  </div>
+</section>
+
+<!-- MISTAKES -->
+<section class="dark" id="mistakes">
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">8</span>Common Mistakes</div>
+    <h2 class="section-title">The five mistakes that cost buyers <em>real</em> money.</h2>
+    <p class="section-lede">In a decade of watching this decision play out across thousands of loans, the same five mistakes show up over and over.</p>
+
+    <ul class="feature-list">
+      <li><div class="x">1</div><div><h4>Trying to pick the bottom</h4><p>You won't. Even the bond market doesn't. The right question isn't "can I get a lower rate?" — it's "can I live with this rate?"</p></div></li>
+      <li><div class="x">2</div><div><h4>Floating into a major data release</h4><p>If your lock has to happen this week and CPI prints tomorrow, that's not floating — that's gambling.</p></div></li>
+      <li><div class="x">3</div><div><h4>Not asking about float-down</h4><p>The smartest hedge in lending. Half of buyers don't know it exists. Almost none ask about it before locking.</p></div></li>
+      <li><div class="x">4</div><div><h4>Locking for the wrong window</h4><p>30-day lock on a 45-day contract is asking for an extension. Match the lock to the contract, not to the cheapest option.</p></div></li>
+      <li><div class="x">5</div><div><h4>Treating the Fed Funds Rate as the mortgage rate</h4><p>"They cut today, my rate should be lower tomorrow." Wrong. Mortgage rates often move <em>opposite</em> the Fed announcement.</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- DECISION COMPARE -->
+<section id="compare">
+  <div class="wrap">
+    <div class="eyebrow"><span class="step-num">9</span>Side by Side</div>
+    <h2 class="section-title">Lock vs. Float vs. Float-Down.</h2>
+    <p class="section-lede">Three paths, picked apart on the dimensions that actually matter.</p>
+
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th></th><th>Lock Early</th><th>Float</th><th>Lock + Float-Down</th></tr></thead>
+        <tbody>
+          <tr><td>Certainty</td><td>High</td><td>Low</td><td>High</td></tr>
+          <tr><td>Upside if rates drop</td><td>None</td><td>Full</td><td>Partial (after trigger)</td></tr>
+          <tr><td>Downside if rates rise</td><td>None</td><td>Full</td><td>None</td></tr>
+          <tr><td>Best when</td><td>Close &lt; 30 days, trend up</td><td>Long timeline, trend down, calm market</td><td>Volatile market, want both</td></tr>
+          <tr><td>Cost</td><td>Today's rate</td><td>Time + attention</td><td>Today's rate + 0.125% or fee</td></tr>
+          <tr><td>Risk profile</td><td>Conservative</td><td>Aggressive</td><td>Balanced</td></tr>
+          <tr><td>Best for</td><td>First-time buyers</td><td>Experienced + watching the market</td><td>Anyone with the option</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section class="alt" id="glossary">
+  <div class="wrap">
+    <div class="eyebrow">Reference</div>
+    <h2 class="section-title">Lock-and-rate language, decoded.</h2>
+    <p class="section-lede">Every term you'll hear from your loan officer, in plain English.</p>
+
+    <dl class="glossary-grid">
+      <div class="glossary-item"><dt>Lock<span class="full">Rate Lock</span></dt><dd>A binding agreement that secures your interest rate for a set window (typically 30–60 days), independent of market moves.</dd></div>
+      <div class="glossary-item"><dt>Float<span class="full">Floating Rate</span></dt><dd>Choosing not to lock — leaving your rate exposed to daily market changes until you lock or the lender requires it.</dd></div>
+      <div class="glossary-item"><dt>MBS<span class="full">Mortgage-Backed Security</span></dt><dd>The bond that actually determines your mortgage rate. Pools of home loans sold to investors. When MBS prices rise, rates fall.</dd></div>
+      <div class="glossary-item"><dt>CPI<span class="full">Consumer Price Index</span></dt><dd>Monthly inflation report. The single biggest mortgage-rate mover. Released around the 10th–14th of each month.</dd></div>
+      <div class="glossary-item"><dt>FOMC<span class="full">Federal Open Market Committee</span></dt><dd>The Fed's rate-setting body. Meets 8× a year. Its <em>statement</em> often matters more than the decision itself.</dd></div>
+      <div class="glossary-item"><dt>Float-Down<span class="full">Float-Down Option</span></dt><dd>A feature that lets you re-lock at a lower rate after the market drops by a minimum trigger (usually 0.25%).</dd></div>
+      <div class="glossary-item"><dt>Lock Period<span class="full">Lock Window</span></dt><dd>The number of days your rate is guaranteed. Longer locks cost more (in points or a higher base rate).</dd></div>
+      <div class="glossary-item"><dt>Extension<span class="full">Lock Extension</span></dt><dd>If closing slips past lock expiration, the buyer pays to extend — typically ~0.125% in points per 15 days.</dd></div>
+      <div class="glossary-item"><dt>10-Year<span class="full">10-Year Treasury</span></dt><dd>Government bond that broadly correlates with 30-year mortgage rates. A useful daily proxy — but MBS is the precise driver.</dd></div>
+      <div class="glossary-item"><dt>BPS<span class="full">Basis Point</span></dt><dd>One-hundredth of a percent. "Rates moved 25 bps" = a 0.25% change. The unit loan officers actually speak in.</dd></div>
+      <div class="glossary-item"><dt>Points<span class="full">Discount Points</span></dt><dd>Up-front cost paid to lower the rate. 1 point = 1% of loan amount, typically buys ~0.25% off the rate.</dd></div>
+      <div class="glossary-item"><dt>Re-Lock<span class="full">Re-Lock</span></dt><dd>Breaking your current lock to start a new one at the prevailing rate. Allowed by some lenders; can be cheaper than an extension.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-final" id="cta">
+  <div class="wrap">
+    <h2>Get a real rate quote in 24 hours.</h2>
+    <p class="lede">Soft credit pull, full underwriting, and a conversation about the right lock strategy for your timeline. No hard sell.</p>
+    <a href="https://www.winthehouseyoulove.com" target="_blank" rel="noopener" class="btn-big">Start at winthehouseyoulove.com →</a>
+    <div class="perks">
+      <div class="perk"><h4>Soft Credit</h4><p>No hit to your score</p></div>
+      <div class="perk"><h4>Strategy Call</h4><p>Lock vs. float, on your timeline</p></div>
+      <div class="perk"><h4>Real Rates</h4><p>Quoted off the live MBS market</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand">Lock <span class="accent">vs.</span> Float</div>
+      <p class="legal" style="margin-top:14px;">A 2026 walkthrough by Kyle Seagraves. Rates shown are illustrative; current market rates change daily. Educational; not a loan commitment, lock guarantee, or financial advice.</p>
+    </div>
+    <div class="legal">
+      <strong style="color:var(--parchment);display:block;margin-bottom:8px;font-weight:600;">Kyle Seagraves</strong>
+      NMLS 1701021 · NFM Lending NMLS 2893<br/>
+      Licensed in 49 states (except NY)<br/>
+      <a href="https://www.winthehouseyoulove.com">winthehouseyoulove.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('section .eyebrow, section .section-title, section .section-lede, section .subhead, section .lead-paragraph, section .note, section .example, section .pull, section .rate-chart, section .define').forEach(function (el) {
+    if (!el.classList.contains('reveal') && !el.classList.contains('reveal-stagger')) {
+      el.classList.add('reveal');
+    }
+  });
+
+  function markLoaded() { document.body.classList.add('loaded'); }
+  if (document.readyState === 'complete') markLoaded();
+  else window.addEventListener('load', markLoaded);
+
+  var nav = document.querySelector('.nav');
+  var progress = document.getElementById('progress');
+  function onScroll() {
+    nav.classList.toggle('scrolled', window.scrollY > 8);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0;
+    progress.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if (reduced) {
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(function (el) { el.classList.add('in-view'); });
+    return;
+  }
+
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal, .reveal-stagger'));
+
+  function check() {
+    var vh = window.innerHeight;
+    for (var i = revealEls.length - 1; i >= 0; i--) {
+      var el = revealEls[i];
+      var r = el.getBoundingClientRect();
+      if (r.top < vh * 0.9 && r.bottom > 0) {
+        el.classList.add('in-view');
+        revealEls.splice(i, 1);
+      }
+    }
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        io.unobserve(e.target);
+        var idx = revealEls.indexOf(e.target);
+        if (idx !== -1) revealEls.splice(idx, 1);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+
+  revealEls.forEach(function (el) { io.observe(el); });
+  window.addEventListener('scroll', check, { passive: true });
+  window.addEventListener('resize', check);
+  check();
+  setTimeout(check, 100);
+  setTimeout(check, 500);
+})();
+</script>
+</body>
+</html>
